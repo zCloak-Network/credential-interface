@@ -1,0 +1,14 @@
+{
+  "extends": "@zcloak/dev/config/tsconfig.json",
+  "compilerOptions": {
+    "noUnusedParameters": false,
+    "noUnusedLocals": false,
+    "composite": false,
+    "jsx": "react",
+    "paths": {
+      "@credential/app": ["app/src"],
+      "@credential/app/*": ["app/src/*"]
+    },
+    "skipLibCheck": true
+  }
+}
