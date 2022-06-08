@@ -9,7 +9,11 @@
       "@credential/app": ["app/src"],
       "@credential/app/*": ["app/src/*"],
       "@credential/react-components": ["react-components/src"],
-      "@credential/react-components/*": ["react-components/src/*"]
+      "@credential/react-components/*": ["react-components/src/*"],
+      "@credential/react-hooks": ["react-hooks/src"],
+      "@credential/react-hooks/*": ["react-hooks/src/*"],
+      "@credential/react-keystore": ["react-keystore/src"],
+      "@credential/react-keystore/*": ["react-keystore/src/*"]
     },
     "skipLibCheck": true
   }

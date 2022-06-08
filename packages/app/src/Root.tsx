@@ -4,6 +4,7 @@ import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
 
 import { ThemeProvider } from '@credential/react-components';
+import { KeystoreProvider } from '@credential/react-keystore';
 
 import App from './App';
 
@@ -12,8 +13,10 @@ const Root: React.FC = () => {
     <StyledEngineProvider injectFirst>
       <ThemeProvider>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
-          <CssBaseline />
-          <App />
+          <KeystoreProvider>
+            <CssBaseline />
+            <App />
+          </KeystoreProvider>
         </LocalizationProvider>
       </ThemeProvider>
     </StyledEngineProvider>
