@@ -1463,6 +1463,12 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@credential/app-config@workspace:packages/app-config":
+  version: 0.0.0-use.local
+  resolution: "@credential/app-config@workspace:packages/app-config"
+  languageName: unknown
+  linkType: soft
+
 "@credential/app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@credential/app@workspace:packages/app"
@@ -1508,6 +1514,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@credential/page-account@workspace:packages/page-account":
+  version: 0.0.0-use.local
+  resolution: "@credential/page-account@workspace:packages/page-account"
+  dependencies:
+    "@credential/react-keystore": 0.0.0
+  languageName: unknown
+  linkType: soft
+
 "@credential/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@credential/react-components@workspace:packages/react-components"
@@ -1540,7 +1554,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/react-keystore@workspace:packages/react-keystore":
+"@credential/react-keystore@0.0.0, @credential/react-keystore@workspace:packages/react-keystore":
   version: 0.0.0-use.local
   resolution: "@credential/react-keystore@workspace:packages/react-keystore"
   dependencies:

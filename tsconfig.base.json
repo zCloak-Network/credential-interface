@@ -8,6 +8,10 @@
     "paths": {
       "@credential/app": ["app/src"],
       "@credential/app/*": ["app/src/*"],
+      "@credential/app-config": ["app-config/src"],
+      "@credential/app-config/*": ["app-config/src/*"],
+      "@credential/page-account": ["page-account/src"],
+      "@credential/page-account/*": ["page-account/src/*"],
       "@credential/react-components": ["react-components/src"],
       "@credential/react-components/*": ["react-components/src/*"],
       "@credential/react-hooks": ["react-hooks/src"],

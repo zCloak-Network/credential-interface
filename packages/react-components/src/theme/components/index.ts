@@ -240,35 +240,22 @@ const createComponents: Func = () => ({
     styleOverrides: {
       root: {
         borderRadius: 10,
-        textTransform: 'initial',
-        transition:
-          'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+        textTransform: 'initial'
       },
-      outlined: {
-        borderRadius: 10,
-        border: '1px solid #ba60f2',
-        boxShadow: '0px 3px 6px rgba(102, 102, 102, 0.4)',
-        background: 'rgba(255, 255, 255, 0.3)',
-        color: '#BA60F2',
-        ':hover': {
-          background: 'rgba(255, 255, 255, 0.7)'
-        }
-      },
-      contained: ({ theme }) => ({
-        color: '#fff',
-        ':hover': {
-          background: `${theme.palette.primary.main}`
-        }
+      outlined: ({ theme }) => ({
+        borderColor: theme.palette.primary.main
       }),
       sizeSmall: {
-        padding: '4px 10px'
+        padding: '4px 10px',
+        fontSize: '0.9375rem'
       },
       sizeMedium: {
-        padding: '6px 16px'
+        padding: '6px 16px',
+        fontSize: '0.9375rem'
       },
       sizeLarge: {
         padding: '8px 22px',
-        fontSize: '0.9375rem'
+        fontSize: '1rem'
       }
     }
   },

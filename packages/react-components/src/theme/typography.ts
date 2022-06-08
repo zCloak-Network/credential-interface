@@ -26,6 +26,7 @@ const createTypography: Func = () => ({
   h1: {
     fontSize: '2.5rem',
     fontWeight: 500,
+    lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '2.125rem'
     }
