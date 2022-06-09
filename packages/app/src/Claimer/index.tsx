@@ -1,11 +1,16 @@
+import { Box } from '@mui/material';
 import React from 'react';
+import { Outlet } from 'react-router-dom';
 
-import { useKeystore } from '@credential/react-keystore';
+import Header from '../Header';
 
 const Claimer: React.FC = () => {
-  const { claimerKeystore } = useKeystore();
-
-  return <>{claimerKeystore ? 'claimer' : 'no claimer keystore'}</>;
+  return (
+    <Box bgcolor="#F5F6FA" minHeight="100vh">
+      <Header />
+      <Outlet />
+    </Box>
+  );
 };
 
 export default Claimer;

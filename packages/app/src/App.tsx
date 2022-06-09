@@ -24,7 +24,9 @@ const App: React.FC = () => {
             </AccountAuth>
           }
           path="/"
-        />
+        >
+          <Route element={<div>111</div>} index />
+        </Route>
         <Route element={<Account />} path="/account">
           <Route element={<PageCreateAccount />} path="create" />
           <Route element={<PageRestoreAccount />} path="restore" />
