@@ -28,16 +28,18 @@ const App: React.FC = () => {
               </DidsProvider>
             </AccountAuth>
           }
-          path="/"
+          path="/claimer"
         >
-          <Route element={<div>111</div>} index />
+          <Route element={<div>ctype</div>} path="ctype" />
+          <Route element={<div>claims</div>} path="claims" />
+          <Route element={<div>message</div>} path="message" />
         </Route>
         <Route element={<Account />} path="/account">
           <Route element={<PageCreateAccount />} path="create" />
           <Route element={<PageRestoreAccount />} path="restore" />
           <Route element={<PageAccount />} index />
         </Route>
-        <Route element={<NoMatch to="/" />} path="*" />
+        <Route element={<NoMatch to="/claimer/ctype" />} path="*" />
       </Routes>
     </HashRouter>
   );

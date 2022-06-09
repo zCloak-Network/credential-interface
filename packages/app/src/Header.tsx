@@ -1,4 +1,6 @@
-import { Box, Link, Stack } from '@mui/material';
+import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
+import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
+import { Box, IconButton, Link, Stack } from '@mui/material';
 import React from 'react';
 
 import { useClaimer } from '@credential/react-components';
@@ -26,21 +28,29 @@ const Logo: React.FC = () => {
   );
 };
 
-const Header: React.FC = () => {
-  const { account, api, claimer, isReady } = useClaimer();
-
-  console.log(claimer, isReady, api);
+const Header: React.FC<{ open: boolean; toggleOpen: () => void }> = ({ open, toggleOpen }) => {
+  const { account } = useClaimer();
 
   return (
     <Stack
       alignItems="center"
       bgcolor="white"
+      borderBottom="1px solid #F0F0F3"
       direction="row"
       height={70}
       justifyContent="space-between"
+      position="fixed"
       px={5}
+      width="100%"
+      zIndex={9999}
     >
-      <Logo />
+      <Stack alignItems="center" direction="row" spacing={2}>
+        <IconButton color="inherit" edge="start" onClick={toggleOpen}>
+          {open ? <FormatIndentDecreaseIcon /> : <FormatAlignJustifyIcon />}
+        </IconButton>
+
+        <Logo />
+      </Stack>
       <Stack direction="row" spacing={2}>
         <Network />
         {account && <AccountInfo account={account} />}

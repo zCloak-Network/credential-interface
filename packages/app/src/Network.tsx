@@ -15,7 +15,7 @@ const Network: React.FC = () => {
 
   return (
     <Button
-      startIcon={!isReady && <CircularProgress size={16} />}
+      startIcon={!isReady && <CircularProgress size={20} />}
       sx={({ palette }) => ({
         background: '#E0E1EE',
         borderRadius: 50,

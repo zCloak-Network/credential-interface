@@ -14,6 +14,24 @@ const createComponents: Func = () => ({
     * {
       box-sizing: border-box;
     }
+    ::-webkit-scrollbar {
+      width: 4px;
+      height: 4px;
+    }
+    ::-webkit-scrollbar-track {
+      background: transparent;
+      border-radius: 2px;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #bfbfbf;
+      border-radius: 10px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #333;
+    }
+    ::-webkit-scrollbar-corner {
+      background: #179a16;
+    }
     @font-face {
       font-family: "Kanit";
       font-style: normal;
