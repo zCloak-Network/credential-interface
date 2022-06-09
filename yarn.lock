@@ -1536,6 +1536,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.83
     "@mui/material": ^5.8.1
     "@mui/x-date-pickers": ^5.0.0-alpha.4
+    "@zcloak/credential-core": ^0.0.2-6
   languageName: unknown
   linkType: soft
 

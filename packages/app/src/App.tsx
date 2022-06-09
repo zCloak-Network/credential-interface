@@ -1,9 +1,12 @@
 import React from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
+import { Claimer as ClaimerConstructor } from '@zcloak/credential-core';
+
 import PageAccount from '@credential/page-account';
 import PageCreateAccount from '@credential/page-account/Create';
 import PageRestoreAccount from '@credential/page-account/Restore';
+import { DidsProvider } from '@credential/react-components';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -20,7 +23,9 @@ const App: React.FC = () => {
         <Route
           element={
             <AccountAuth accountType="claimer">
-              <Claimer />
+              <DidsProvider DidsConstructor={ClaimerConstructor}>
+                <Claimer />
+              </DidsProvider>
             </AccountAuth>
           }
           path="/"

@@ -2,6 +2,8 @@ import Circle from '@mui/icons-material/Circle';
 import { Button } from '@mui/material';
 import React from 'react';
 
+import { Address } from '@credential/react-components';
+
 interface Props {
   account: string;
 }
@@ -22,7 +24,7 @@ const AccountInfo: React.FC<Props> = ({ account }) => {
       })}
       variant="contained"
     >
-      {account}
+      <Address value={account} />
     </Button>
   );
 };

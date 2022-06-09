@@ -1,9 +1,21 @@
-import { Button } from '@mui/material';
-import React from 'react';
+import { Button, CircularProgress } from '@mui/material';
+import React, { useEffect, useState } from 'react';
+
+import { useClaimer } from '@credential/react-components';
 
 const Network: React.FC = () => {
+  const { api, isReady } = useClaimer();
+  const [runtimeChain, setRuntimeChain] = useState<string>();
+
+  useEffect(() => {
+    if (isReady) {
+      setRuntimeChain(api.runtimeChain.toString());
+    }
+  }, [api, isReady]);
+
   return (
     <Button
+      startIcon={!isReady && <CircularProgress size={16} />}
       sx={({ palette }) => ({
         background: '#E0E1EE',
         borderRadius: 50,
@@ -15,7 +27,7 @@ const Network: React.FC = () => {
       })}
       variant="contained"
     >
-      KILT Peregrine
+      {isReady ? runtimeChain : 'Connecting to network'}
     </Button>
   );
 };

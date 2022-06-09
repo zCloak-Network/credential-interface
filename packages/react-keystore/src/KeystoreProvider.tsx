@@ -108,8 +108,6 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
     return json;
   }, []);
 
-  console.log(claimerKeystore?.address);
-
   const restoreKeystore = useCallback((text: string, type: TYPE, passphrase?: string) => {
     const pair = createFromJson(JSON.parse(text));
 

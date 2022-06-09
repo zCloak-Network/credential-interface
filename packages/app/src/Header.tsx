@@ -1,6 +1,8 @@
 import { Box, Link, Stack } from '@mui/material';
 import React from 'react';
 
+import { useClaimer } from '@credential/react-components';
+
 import AccountInfo from './AccountInfo';
 import Network from './Network';
 
@@ -25,6 +27,10 @@ const Logo: React.FC = () => {
 };
 
 const Header: React.FC = () => {
+  const { account, api, claimer, isReady } = useClaimer();
+
+  console.log(claimer, isReady, api);
+
   return (
     <Stack
       alignItems="center"
@@ -37,7 +43,7 @@ const Header: React.FC = () => {
       <Logo />
       <Stack direction="row" spacing={2}>
         <Network />
-        <AccountInfo account="fdsfsd" />
+        {account && <AccountInfo account={account} />}
       </Stack>
     </Stack>
   );
