@@ -5,12 +5,13 @@ import React, { createContext, useCallback, useContext, useMemo, useState } from
 
 import { JsonKeystore } from '@zcloak/credential-core';
 
-import { createAccount } from './createKeyring';
+import { createAccount, createFromJson } from './createKeyring';
 
 interface KeystoreState {
   claimerKeystore: DidKeystore | null;
   attesterKeystore: DidKeystore | null;
   addKeystore: (mnemonic: string, type: TYPE, passphrase?: string) => KeyringPair$Json;
+  restoreKeystore: (text: string, type: TYPE, passphrase?: string) => void;
 }
 
 export const KeystoreContext = createContext<KeystoreState>({
@@ -107,8 +108,30 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
     return json;
   }, []);
 
+  console.log(claimerKeystore?.address);
+
+  const restoreKeystore = useCallback((text: string, type: TYPE, passphrase?: string) => {
+    const pair = createFromJson(JSON.parse(text));
+
+    // try unlock
+    pair.unlock(passphrase);
+    pair.lock();
+
+    const key = `${PREFIX}:${type}:${pair.address}`;
+
+    localStorage.setItem(key, text);
+
+    if (type === 'claimer') {
+      setClaimerKeys((keys) => [...keys, key]);
+    } else {
+      setAttesterKeys((keys) => [...keys, key]);
+    }
+  }, []);
+
   return (
-    <KeystoreContext.Provider value={{ claimerKeystore, attesterKeystore, addKeystore }}>
+    <KeystoreContext.Provider
+      value={{ claimerKeystore, attesterKeystore, addKeystore, restoreKeystore }}
+    >
       {children}
     </KeystoreContext.Provider>
   );
