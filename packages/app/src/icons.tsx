@@ -1,6 +1,6 @@
 import React from 'react';
 
-export const CtypeIcon: React.FC<{ color?: string }> = ({ color = '#7f7f7f' }) => (
+export const CTypeIcon: React.FC<{ color?: string }> = ({ color = '#7f7f7f' }) => (
   <svg height="13.867" viewBox="0 0 16 13.867" width="16" xmlns="http://www.w3.org/2000/svg">
     <defs></defs>
     <path

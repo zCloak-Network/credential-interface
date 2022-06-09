@@ -52,7 +52,7 @@ const Restore: React.FC = () => {
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>
-          <Typography textAlign="center" variant="h5">
+          <Typography textAlign="center" variant="h3">
             Restore account
           </Typography>
           <Typography textAlign="center" variant="h5">

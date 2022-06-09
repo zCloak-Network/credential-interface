@@ -6,6 +6,7 @@ import { Claimer as ClaimerConstructor } from '@zcloak/credential-core';
 import PageAccount from '@credential/page-account';
 import PageCreateAccount from '@credential/page-account/Create';
 import PageRestoreAccount from '@credential/page-account/Restore';
+import PageCType from '@credential/page-ctype';
 import { DidsProvider } from '@credential/react-components';
 
 import AccountAuth from './Account/AccountAuth';
@@ -30,7 +31,7 @@ const App: React.FC = () => {
           }
           path="/claimer"
         >
-          <Route element={<div>ctype</div>} path="ctype" />
+          <Route element={<PageCType />} path="ctype" />
           <Route element={<div>claims</div>} path="claims" />
           <Route element={<div>message</div>} path="message" />
         </Route>

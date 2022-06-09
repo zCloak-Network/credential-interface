@@ -12,6 +12,8 @@
       "@credential/app-config/*": ["app-config/src/*"],
       "@credential/page-account": ["page-account/src"],
       "@credential/page-account/*": ["page-account/src/*"],
+      "@credential/page-ctype": ["page-ctype/src"],
+      "@credential/page-ctype/*": ["page-ctype/src/*"],
       "@credential/react-components": ["react-components/src"],
       "@credential/react-components/*": ["react-components/src/*"],
       "@credential/react-hooks": ["react-hooks/src"],

@@ -5,7 +5,7 @@ import { Outlet, useLocation } from 'react-router-dom';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
-import { ClaimsIcon, CtypeIcon, MessageIcon } from '../icons';
+import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
 import Sidebar from '../Sidebar';
 
 const Claimer: React.FC = () => {
@@ -19,7 +19,7 @@ const Claimer: React.FC = () => {
         to: '/claimer/ctype',
         active: pathname.startsWith('/claimer/ctype'),
         svgIcon: (
-          <CtypeIcon
+          <CTypeIcon
             color={pathname.startsWith('/claimer/ctype') ? palette.primary.main : undefined}
           />
         ),
