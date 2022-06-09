@@ -172,30 +172,18 @@ const createComponents: Func = () => ({
 
   MuiInputLabel: {
     styleOverrides: {
-      outlined: {
+      outlined: ({ theme }) => ({
         position: 'relative',
-        color: 'white',
         transform: 'none',
-        marginBottom: '8px'
-      },
-      root: {
-        '&.Mui-focused': {
-          color: 'white'
-        }
-      }
+        marginBottom: theme.spacing(0.75)
+      })
     }
   },
 
   MuiOutlinedInput: {
     styleOverrides: {
       root: {
-        background: 'rgba(255, 255, 255, 0.5)',
-        borderRadius: '10px',
-        '&.Mui-focused': {}
-      },
-      notchedOutline: {
-        border: '1px solid rgba(255, 255, 255, 0.6)',
-        ':hover': {}
+        borderRadius: '10px'
       }
     }
   },
@@ -240,7 +228,8 @@ const createComponents: Func = () => ({
     styleOverrides: {
       root: {
         borderRadius: 10,
-        textTransform: 'initial'
+        textTransform: 'initial',
+        minWidth: '140px'
       },
       outlined: ({ theme }) => ({
         borderColor: theme.palette.primary.main
@@ -264,32 +253,6 @@ const createComponents: Func = () => ({
     styleOverrides: {
       root: {
         boxShadow: 'none'
-      }
-    }
-  },
-
-  MuiStepConnector: {
-    styleOverrides: {
-      root: {
-        top: 16
-      }
-    }
-  },
-  MuiStepIcon: {
-    styleOverrides: {
-      root: {
-        width: 32,
-        height: 32,
-        color: 'rgba(255,255,255,0.26)',
-        '&.Mui-active, &.Mui-completed': {
-          color: '#fff',
-          '.MuiStepIcon-text': {
-            fill: '#000'
-          }
-        }
-      },
-      text: {
-        fontWeight: 500
       }
     }
   },

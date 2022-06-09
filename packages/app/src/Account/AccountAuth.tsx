@@ -3,7 +3,7 @@ import { Navigate } from 'react-router-dom';
 
 import { useKeystore } from '@credential/react-keystore';
 
-const AccountAuth: React.FC<React.PropsWithChildren<{ authType: 'claimer' | 'attester' }>> = ({
+const AccountAuth: React.FC<React.PropsWithChildren<{ accountType: 'claimer' | 'attester' }>> = ({
   children
 }) => {
   const { claimerKeystore } = useKeystore();

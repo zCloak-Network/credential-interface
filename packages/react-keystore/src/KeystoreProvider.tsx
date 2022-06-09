@@ -29,7 +29,7 @@ function getAccountKeys(): string[] {
   const keys: string[] = [];
 
   for (let i = 0; i < localStorage.length; i++) {
-    const key = localStorage.key(0);
+    const key = localStorage.key(i);
 
     if (key?.startsWith(PREFIX)) {
       keys.push(key);
@@ -89,7 +89,9 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
   }, [attesterKeys]);
 
   const addKeystore = useCallback((mnemonic: string, type: TYPE, passphrase?: string) => {
-    const pair = createAccount(mnemonic);
+    const pair = createAccount(mnemonic, {
+      type
+    });
 
     const json = pair.toJson(passphrase);
     const key = `${PREFIX}:${type}:${pair.address}`;

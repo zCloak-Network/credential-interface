@@ -41,7 +41,7 @@ const createTypography: Func = () => ({
   },
   h3: {
     fontSize: '2rem',
-    fontWeight: 400,
+    fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '1.625rem'
@@ -49,7 +49,7 @@ const createTypography: Func = () => ({
   },
   h4: {
     fontSize: '1.75rem',
-    fontWeight: 400,
+    fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '1.5rem'
@@ -57,7 +57,7 @@ const createTypography: Func = () => ({
   },
   h5: {
     fontSize: '1.5rem',
-    fontWeight: 400,
+    fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '1.25rem'
@@ -65,7 +65,7 @@ const createTypography: Func = () => ({
   },
   h6: {
     fontSize: '1.125rem',
-    fontWeight: 400,
+    fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '1.125rem'

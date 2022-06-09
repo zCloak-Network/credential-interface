@@ -2,6 +2,7 @@ import React from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import PageAccount from '@credential/page-account';
+import PageCreateAccount from '@credential/page-account/Create';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -17,14 +18,14 @@ const App: React.FC = () => {
       <Routes>
         <Route
           element={
-            <AccountAuth authType="claimer">
+            <AccountAuth accountType="claimer">
               <Claimer />
             </AccountAuth>
           }
           path="/"
         />
         <Route element={<Account />} path="/account">
-          <Route path="create" />
+          <Route element={<PageCreateAccount />} path="create" />
           <Route path="restore" />
           <Route element={<PageAccount />} index />
         </Route>
