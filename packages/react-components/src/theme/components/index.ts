@@ -172,30 +172,18 @@ const createComponents: Func = () => ({
 
   MuiInputLabel: {
     styleOverrides: {
-      outlined: {
+      outlined: ({ theme }) => ({
         position: 'relative',
-        color: 'white',
         transform: 'none',
-        marginBottom: '8px'
-      },
-      root: {
-        '&.Mui-focused': {
-          color: 'white'
-        }
-      }
+        marginBottom: theme.spacing(0.75)
+      })
     }
   },
 
   MuiOutlinedInput: {
     styleOverrides: {
       root: {
-        background: 'rgba(255, 255, 255, 0.5)',
-        borderRadius: '10px',
-        '&.Mui-focused': {}
-      },
-      notchedOutline: {
-        border: '1px solid rgba(255, 255, 255, 0.6)',
-        ':hover': {}
+        borderRadius: '10px'
       }
     }
   },
@@ -241,34 +229,22 @@ const createComponents: Func = () => ({
       root: {
         borderRadius: 10,
         textTransform: 'initial',
-        transition:
-          'background-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,box-shadow 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms,border-color 250ms cubic-bezier(0.4, 0, 0.2, 1) 0ms'
+        minWidth: '140px'
       },
-      outlined: {
-        borderRadius: 10,
-        border: '1px solid #ba60f2',
-        boxShadow: '0px 3px 6px rgba(102, 102, 102, 0.4)',
-        background: 'rgba(255, 255, 255, 0.3)',
-        color: '#BA60F2',
-        ':hover': {
-          background: 'rgba(255, 255, 255, 0.7)'
-        }
-      },
-      contained: ({ theme }) => ({
-        color: '#fff',
-        ':hover': {
-          background: `${theme.palette.primary.main}`
-        }
+      outlined: ({ theme }) => ({
+        borderColor: theme.palette.primary.main
       }),
       sizeSmall: {
-        padding: '4px 10px'
+        padding: '4px 10px',
+        fontSize: '0.9375rem'
       },
       sizeMedium: {
-        padding: '6px 16px'
+        padding: '6px 16px',
+        fontSize: '0.9375rem'
       },
       sizeLarge: {
         padding: '8px 22px',
-        fontSize: '0.9375rem'
+        fontSize: '1rem'
       }
     }
   },
@@ -277,32 +253,6 @@ const createComponents: Func = () => ({
     styleOverrides: {
       root: {
         boxShadow: 'none'
-      }
-    }
-  },
-
-  MuiStepConnector: {
-    styleOverrides: {
-      root: {
-        top: 16
-      }
-    }
-  },
-  MuiStepIcon: {
-    styleOverrides: {
-      root: {
-        width: 32,
-        height: 32,
-        color: 'rgba(255,255,255,0.26)',
-        '&.Mui-active, &.Mui-completed': {
-          color: '#fff',
-          '.MuiStepIcon-text': {
-            fill: '#000'
-          }
-        }
-      },
-      text: {
-        fontWeight: 500
       }
     }
   },
