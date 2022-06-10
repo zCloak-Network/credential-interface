@@ -13,13 +13,20 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     main: '#6768ac'
   },
   success: {
-    main: '#76AF92'
+    main: '#00B69B'
   },
   error: {
-    main: '#D30009'
+    main: '#EF3826'
+  },
+  warning: {
+    main: '#FFA756'
   },
   background: {
     default: mode === 'light' ? 'rgba(255, 255, 255 ,1)' : '#121212'
+  },
+  grey: {
+    50: '#F5F6FA',
+    100: '#F1F2F5'
   }
 });
 
