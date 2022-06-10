@@ -8,7 +8,7 @@ import PageCreateAccount from '@credential/page-account/Create';
 import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
-import { DidsProvider } from '@credential/react-components';
+import { CredentialProvider, DidsProvider } from '@credential/react-components';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -18,17 +18,25 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
   return <Navigate replace to={to} />;
 };
 
+const ClaimerProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+  return (
+    <AccountAuth accountType="claimer">
+      <DidsProvider DidsConstructor={ClaimerConstructor}>
+        <CredentialProvider>{children}</CredentialProvider>
+      </DidsProvider>
+    </AccountAuth>
+  );
+};
+
 const App: React.FC = () => {
   return (
     <HashRouter>
       <Routes>
         <Route
           element={
-            <AccountAuth accountType="claimer">
-              <DidsProvider DidsConstructor={ClaimerConstructor}>
-                <Claimer />
-              </DidsProvider>
-            </AccountAuth>
+            <ClaimerProvider>
+              <Claimer />
+            </ClaimerProvider>
           }
           path="/claimer"
         >

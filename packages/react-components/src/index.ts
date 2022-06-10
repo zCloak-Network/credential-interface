@@ -1,6 +1,7 @@
 export * from './theme';
 export * from './CTypeProvider';
 export * from './DidsProvider';
+export * from './CredentialProvider';
 export { default as NotificationProvider, NotificationContext } from './Notification';
 export { default as Address } from './Address';
 export { default as Ellipsis } from './Ellipsis';

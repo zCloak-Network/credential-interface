@@ -9,17 +9,17 @@ import { NotificationContext, useClaimer } from '@credential/react-components';
 
 import CTypeItem from './CTypeItem';
 
-const CTypeForm: React.FC<{ cType: CType; onGenerateClaim?: (claim: IClaim) => void }> = ({
-  cType,
-  onGenerateClaim
-}) => {
+const CTypeForm: React.FC<{
+  cType: CType;
+  onGenerateClaim?: (claim: IClaim, attester: string) => void;
+}> = ({ cType, onGenerateClaim }) => {
   const [data, setData] = useState<Record<string, unknown>>({});
   const { notifyError } = useContext(NotificationContext);
   const { claimer } = useClaimer();
 
   const onSubmit = useCallback(() => {
     try {
-      onGenerateClaim?.(claimer.generateClaim(cType, data as any));
+      cType.owner && onGenerateClaim?.(claimer.generateClaim(cType, data as any), cType.owner);
     } catch (error) {
       notifyError(error);
     }
