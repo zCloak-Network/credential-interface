@@ -2,13 +2,23 @@ import type { ICTypeMetadata } from '@credential/react-components/CTypeProvider/
 
 import Circle from '@mui/icons-material/Circle';
 import { Box, Button, Paper, Stack, Tooltip, Typography } from '@mui/material';
-import React from 'react';
+import React, { useCallback } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { Ellipsis } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
 
 const CTypeCell: React.FC<{ cType: ICTypeMetadata }> = ({ cType }) => {
   const [enter, toggleEnter] = useToggle(false);
+  const navigate = useNavigate();
+
+  const submitClaim = useCallback(() => {
+    navigate('/claimer/claims', {
+      state: {
+        cType
+      }
+    });
+  }, [cType, navigate]);
 
   return (
     <Paper
@@ -74,7 +84,7 @@ const CTypeCell: React.FC<{ cType: ICTypeMetadata }> = ({ cType }) => {
         <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
           Attested by
         </Typography>
-        <Tooltip title={cType.owner}>
+        <Tooltip placement="top" title={cType.owner}>
           <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
             {cType.owner}
           </Ellipsis>
@@ -92,7 +102,9 @@ const CTypeCell: React.FC<{ cType: ICTypeMetadata }> = ({ cType }) => {
         })}
         textAlign="center"
       >
-        <Button variant="contained">Create Claim</Button>
+        <Button onClick={submitClaim} variant="contained">
+          Create Claim
+        </Button>
       </Box>
     </Paper>
   );

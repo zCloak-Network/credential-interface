@@ -200,9 +200,15 @@ const createComponents: Func = () => ({
 
   MuiOutlinedInput: {
     styleOverrides: {
-      root: {
-        borderRadius: '10px'
-      }
+      root: ({ theme: { palette } }) => ({
+        borderRadius: '10px',
+        '&.Mui-disabled': {
+          backgroundColor: palette.grey[50],
+          '.MuiOutlinedInput-notchedOutline': {
+            border: 'none'
+          }
+        }
+      })
     }
   },
 

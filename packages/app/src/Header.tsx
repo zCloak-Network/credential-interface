@@ -42,7 +42,7 @@ const Header: React.FC<{ open: boolean; toggleOpen: () => void }> = ({ open, tog
       position="fixed"
       px={5}
       width="100%"
-      zIndex={9999}
+      zIndex={999}
     >
       <Stack alignItems="center" direction="row" spacing={2}>
         <IconButton color="inherit" edge="start" onClick={toggleOpen}>

@@ -50,18 +50,17 @@ const closedMixin = (theme: Theme): CSSObject => ({
 
 const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
   ({ open, theme }) => ({
-    zIndex: 999,
     width: drawerWidth,
     flexShrink: 0,
     whiteSpace: 'nowrap',
     boxSizing: 'border-box',
     ...(open && {
       ...openedMixin(theme),
-      '& .MuiDrawer-paper': { padding: '100px 16px 0 16px', ...openedMixin(theme) }
+      '& .MuiDrawer-paper': { zIndex: 99, padding: '100px 16px 0 16px', ...openedMixin(theme) }
     }),
     ...(!open && {
       ...closedMixin(theme),
-      '& .MuiDrawer-paper': { padding: '100px 16px 0 16px', ...closedMixin(theme) }
+      '& .MuiDrawer-paper': { zIndex: 99, padding: '100px 16px 0 16px', ...closedMixin(theme) }
     })
   })
 );

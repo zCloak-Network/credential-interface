@@ -1523,6 +1523,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@credential/page-claims@workspace:packages/page-claims":
+  version: 0.0.0-use.local
+  resolution: "@credential/page-claims@workspace:packages/page-claims"
+  dependencies:
+    "@credential/react-keystore": 0.0.0
+  languageName: unknown
+  linkType: soft
+
 "@credential/page-ctype@workspace:packages/page-ctype":
   version: 0.0.0-use.local
   resolution: "@credential/page-ctype@workspace:packages/page-ctype"
@@ -1531,7 +1539,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/react-components@workspace:packages/react-components":
+"@credential/react-components@0.0.0, @credential/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@credential/react-components@workspace:packages/react-components"
   dependencies:
@@ -1545,6 +1553,16 @@ __metadata:
     "@mui/material": ^5.8.1
     "@mui/x-date-pickers": ^5.0.0-alpha.4
     "@zcloak/credential-core": ^0.0.2-6
+  languageName: unknown
+  linkType: soft
+
+"@credential/react-ctype@workspace:packages/react-ctype":
+  version: 0.0.0-use.local
+  resolution: "@credential/react-ctype@workspace:packages/react-ctype"
+  dependencies:
+    "@credential/react-components": 0.0.0
+    "@mui/lab": ^5.0.0-alpha.83
+    "@mui/material": ^5.8.1
   languageName: unknown
   linkType: soft
 

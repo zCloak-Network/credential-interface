@@ -20,6 +20,10 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
   },
   background: {
     default: mode === 'light' ? 'rgba(255, 255, 255 ,1)' : '#121212'
+  },
+  grey: {
+    50: '#F5F6FA',
+    100: '#F1F2F5'
   }
 });
 
