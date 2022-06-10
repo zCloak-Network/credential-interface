@@ -1,11 +1,12 @@
-import React, { createContext, useEffect } from 'react';
+import { CType } from '@kiltprotocol/sdk-js';
+import React, { createContext, useEffect, useMemo } from 'react';
 
 import { useLocalStorage } from '@credential/react-hooks';
 
 import { ICTypeMetadata } from './types';
 
 interface State {
-  cTypeList: ICTypeMetadata[];
+  cTypeList: CType[];
 }
 
 export const CTypeContext = createContext<State>({} as State);
@@ -23,7 +24,11 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       });
   }, [setCTypeList]);
 
-  return <CTypeContext.Provider value={{ cTypeList }}>{children}</CTypeContext.Provider>;
+  const value = useMemo(() => {
+    return { cTypeList: cTypeList.map((cType) => CType.fromSchema(cType.schema, cType.owner)) };
+  }, [cTypeList]);
+
+  return <CTypeContext.Provider value={value}>{children}</CTypeContext.Provider>;
 };
 
 export default React.memo<typeof CTypeProvider>(CTypeProvider);

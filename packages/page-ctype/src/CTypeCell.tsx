@@ -1,4 +1,4 @@
-import type { ICTypeMetadata } from '@credential/react-components/CTypeProvider/types';
+import type { CType } from '@kiltprotocol/sdk-js';
 
 import Circle from '@mui/icons-material/Circle';
 import { Box, Button, Paper, Stack, Tooltip, Typography } from '@mui/material';
@@ -8,7 +8,7 @@ import { useNavigate } from 'react-router-dom';
 import { Ellipsis } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
 
-const CTypeCell: React.FC<{ cType: ICTypeMetadata }> = ({ cType }) => {
+const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
   const [enter, toggleEnter] = useToggle(false);
   const navigate = useNavigate();
 
@@ -84,9 +84,9 @@ const CTypeCell: React.FC<{ cType: ICTypeMetadata }> = ({ cType }) => {
         <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
           Attested by
         </Typography>
-        <Tooltip placement="top" title={cType.owner}>
+        <Tooltip placement="top" title={cType.owner ?? ''}>
           <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
-            {cType.owner}
+            {cType.owner ?? '--'}
           </Ellipsis>
         </Tooltip>
       </Box>

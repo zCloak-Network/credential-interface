@@ -1,21 +1,28 @@
-import { Box, BoxProps } from '@mui/material';
+import { Box, BoxTypeMap } from '@mui/material';
+import { OverridableComponent, OverrideProps } from '@mui/material/OverridableComponent';
 import React from 'react';
 
-const Ellipsis: React.FC<React.PropsWithChildren<BoxProps>> = React.forwardRef(
-  ({ children, ...props }, ref) => {
-    return (
-      <Box
-        {...props}
-        className="CredentialEllipsis"
-        overflow="hidden"
-        ref={ref}
-        textOverflow="ellipsis"
-        whiteSpace="nowrap"
-      >
-        {children}
-      </Box>
-    );
-  }
-);
+type Props<D extends React.ElementType = BoxTypeMap['defaultComponent'], P = {}> = OverrideProps<
+  BoxTypeMap<P, D>,
+  D
+>;
 
-export default React.memo<typeof Ellipsis>(Ellipsis);
+const Ellipsis: OverridableComponent<BoxTypeMap> = React.forwardRef(function (
+  { children, ...props }: Props,
+  ref: any
+) {
+  return (
+    <Box
+      {...props}
+      className="CredentialEllipsis"
+      overflow="hidden"
+      ref={ref}
+      textOverflow="ellipsis"
+      whiteSpace="nowrap"
+    >
+      {children}
+    </Box>
+  );
+}) as OverridableComponent<BoxTypeMap>;
+
+export default Ellipsis;
