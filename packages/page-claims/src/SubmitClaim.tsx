@@ -15,7 +15,8 @@ const SubmitClaim: React.FC<{
   contents: Record<string, unknown>;
   attester: Did.FullDidDetails | null;
   cType?: CType;
-}> = ({ attester, cType, contents }) => {
+  onDone?: () => void;
+}> = ({ attester, cType, contents, onDone }) => {
   const { claimer } = useClaimer();
   const { notifyError } = useContext(NotificationContext);
   const { addCredential } = useContext(CredentialContenxt);
@@ -50,12 +51,13 @@ const SubmitClaim: React.FC<{
       credentialApi.addMessage(
         await claimer.encryptMessage(message, attester.assembleKeyId(attester.encryptionKey.id))
       );
+      onDone?.();
     } catch (error) {
       notifyError(error);
     } finally {
       setLoading(false);
     }
-  }, [addCredential, attester, cType, claimer, contents, notifyError]);
+  }, [addCredential, attester, cType, claimer, contents, notifyError, onDone]);
 
   return (
     <ButtonUnlock loading={loading} onClick={onSubmit} variant="contained">

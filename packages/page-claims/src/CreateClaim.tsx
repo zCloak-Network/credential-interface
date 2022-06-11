@@ -59,7 +59,7 @@ const CreateClaim: React.FC = () => {
           onChange={setContents}
         />
         <Box mt={4} textAlign="center">
-          <SubmitClaim attester={attester} cType={cType} contents={contents} />
+          <SubmitClaim attester={attester} cType={cType} contents={contents} onDone={onClose} />
         </Box>
       </FullScreenDialogContent>
     </FullScreenDialog>

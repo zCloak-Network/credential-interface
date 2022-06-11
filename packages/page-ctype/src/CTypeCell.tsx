@@ -123,7 +123,7 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
             </Typography>
           </Tooltip>
         </Box>
-        <Box className="CTypeCell_actions" textAlign="center">
+        <Box className="CTypeCell_actions">
           <Button onClick={submitClaim} variant="contained">
             Create Claim
           </Button>

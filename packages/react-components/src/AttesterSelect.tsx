@@ -46,7 +46,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
   useEffect(() => {
     if (attester && validateDid(attester)) {
       setError(null);
-      const { identifier } = Did.DidUtils.parseDidUri(attester);
+      const identifier = Did.DidUtils.getIdentifierFromKiltDid(attester);
 
       setFetching(true);
       Did.FullDidDetails.fromChainInfo(identifier)

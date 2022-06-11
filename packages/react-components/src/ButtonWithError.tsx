@@ -15,7 +15,6 @@ const ButtonEnable: React.FC<Props> = ({ children, errorsPromise, ...props }) =>
       Promise.all(errorsPromise)
         .then(() => setErrors([]))
         .catch((error) => {
-          console.log(error);
           setErrors([error]);
         })
         .finally(() => setLoading(false));

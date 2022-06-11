@@ -26,7 +26,10 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
   },
   grey: {
     50: '#F5F6FA',
-    100: '#F1F2F5'
+    100: '#F1F2F5',
+    200: '#E5E6FA',
+    300: '#D5D6DEA',
+    400: '#C5C5DE'
   }
 });
 
