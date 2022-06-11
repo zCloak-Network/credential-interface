@@ -3,7 +3,9 @@ import Circle from '@mui/icons-material/Circle';
 import { Box, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useContext, useEffect, useMemo, useState } from 'react';
 
-import { CTypeContext, Ellipsis } from '@credential/react-components';
+import { IconDownload, IconForward } from '@credential/app-config/icons';
+import { CTypeContext } from '@credential/react-components';
+import { ellipsisMixin } from '@credential/react-components/utils';
 import { useToggle } from '@credential/react-hooks';
 
 const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
@@ -88,12 +90,12 @@ const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
           </Typography>
         </Stack>
         <Tooltip title={cType?.schema.title ?? ''}>
-          <Ellipsis
-            component={Typography}
+          <Typography
             sx={({ transitions }) => ({
               lineHeight: enter ? 0 : 1,
               opacity: enter ? 0 : 1,
               marginTop: enter ? '0 !important' : undefined,
+              ...ellipsisMixin(),
 
               transition: transitions.create(['line-height', 'margin-top'], {
                 easing: transitions.easing.sharp,
@@ -103,7 +105,7 @@ const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
             variant="h3"
           >
             {cType?.schema.title ?? '--'}
-          </Ellipsis>
+          </Typography>
         </Tooltip>
         <Stack direction="row" lineHeight={1} spacing={1}>
           <Box width="50%">
@@ -111,9 +113,14 @@ const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
               Attested by
             </Typography>
             <Tooltip placement="top" title={credential.attestation.owner}>
-              <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  ...ellipsisMixin()
+                }}
+              >
                 {credential.attestation.owner}
-              </Ellipsis>
+              </Typography>
             </Tooltip>
           </Box>
           <Box width="50%">
@@ -121,9 +128,14 @@ const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
               Claim hash
             </Typography>
             <Tooltip placement="top" title={credential.attestation.claimHash}>
-              <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
+              <Typography
+                sx={{
+                  fontWeight: 500,
+                  ...ellipsisMixin()
+                }}
+              >
                 {credential.attestation.claimHash}
-              </Ellipsis>
+              </Typography>
             </Tooltip>
           </Box>
         </Stack>
@@ -152,10 +164,10 @@ const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
         textAlign="center"
       >
         <IconButton>
-          <Box component="img" src={require('./icon_download.svg')} />
+          <IconDownload />
         </IconButton>
         <IconButton>
-          <Box component="img" src={require('./icon_forward.svg')} />
+          <IconForward />
         </IconButton>
       </Stack>
       <Box

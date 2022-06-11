@@ -4,7 +4,6 @@ export * from './DidsProvider';
 export * from './CredentialProvider';
 export { default as NotificationProvider, NotificationContext } from './Notification';
 export { default as Address } from './Address';
-export { default as Ellipsis } from './Ellipsis';
 export { default as FullScreenDialog } from './FullScreenDialog';
 export { default as FullScreenDialogContent } from './FullScreenDialogContent';
 export { default as FullScreenDialogHeader } from './FullScreenDialogHeader';

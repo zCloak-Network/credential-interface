@@ -78,7 +78,11 @@ function createWebpack(context, mode = 'production') {
           use: [require.resolve('html-loader'), require.resolve('markdown-loader')]
         },
         {
-          test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.svg$/, /\.webp$/],
+          test: /\.svg$/,
+          use: ['@svgr/webpack']
+        },
+        {
+          test: [/\.bmp$/, /\.gif$/, /\.jpe?g$/, /\.png$/, /\.webp$/],
           use: [
             {
               loader: require.resolve('url-loader'),

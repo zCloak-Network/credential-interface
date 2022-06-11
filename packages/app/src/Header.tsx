@@ -3,6 +3,7 @@ import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
 import { Box, IconButton, Link, Stack } from '@mui/material';
 import React from 'react';
 
+import { LogoBlackIcon } from '@credential/app-config/icons';
 import { useClaimer } from '@credential/react-components';
 
 import AccountInfo from './AccountInfo';
@@ -19,7 +20,7 @@ const Logo: React.FC = () => {
         cursor: 'pointer'
       }}
     >
-      <Box component="img" mr={1.5} src={require('@credential/app-config/assets/logo_black.svg')} />
+      <Box component={LogoBlackIcon} mr={1.5} />
       Credential&nbsp;
       <Box color="black" component="span">
         Platform

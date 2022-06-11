@@ -1,15 +1,97 @@
 import type { CType } from '@kiltprotocol/sdk-js';
 
-import Circle from '@mui/icons-material/Circle';
-import { Box, Button, Paper, Stack, Tooltip, Typography } from '@mui/material';
+import {
+  alpha,
+  Box,
+  Button,
+  Paper,
+  Stack,
+  styled,
+  SvgIcon,
+  Tooltip,
+  Typography
+} from '@mui/material';
 import React, { useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { Ellipsis } from '@credential/react-components';
-import { useToggle } from '@credential/react-hooks';
+import { LogoCircleIcon } from '@credential/app-config/icons';
+import { ellipsisMixin } from '@credential/react-components/utils';
+
+const Wrapper = styled(Paper)(({ theme }) => ({
+  position: 'relative',
+  padding: theme.spacing(4),
+  height: 240,
+  borderRadius: theme.spacing(2.5),
+  ':hover': {
+    boxShadow: theme.shadows[3],
+
+    '.CTypeCell_logo': {
+      transform: 'scale(0.8)'
+    },
+
+    '.CTypeCell_title': {
+      transform: 'translate(60px, -62px) scale(0.8)'
+    },
+    '.CTypeCell_attester': {
+      transform: 'translate(0, -50px)'
+    },
+    '.CTypeCell_actions': {
+      opacity: 1,
+      transform: 'translateY(0)'
+    }
+  },
+  '.CTypeCell_logo': {
+    width: 60,
+    height: 60,
+    border: `1px solid ${alpha(theme.palette.primary.main, 0.2)}`,
+    borderRadius: 30,
+    padding: theme.spacing(0.6),
+    transformOrigin: 'top left',
+
+    transition: theme.transitions.create(['transform'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    }),
+
+    '>svg': {
+      width: '100%',
+      height: '100%'
+    }
+  },
+  '.CTypeCell_title': {
+    transformOrigin: 'top left',
+    ...ellipsisMixin(),
+
+    transition: theme.transitions.create(['transform'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  '.CTypeCell_attester': {
+    transformOrigin: 'top left',
+
+    transition: theme.transitions.create(['transform'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  '.CTypeCell_actions': {
+    left: theme.spacing(4),
+    right: theme.spacing(4),
+    bottom: theme.spacing(4),
+    opacity: 0,
+    position: 'absolute',
+    transform: 'translateY(20px)',
+    textAlign: 'center',
+
+    transition: theme.transitions.create(['transform', 'opacity'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  }
+}));
 
 const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
-  const [enter, toggleEnter] = useToggle(false);
   const navigate = useNavigate();
 
   const submitClaim = useCallback(() => {
@@ -21,92 +103,33 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
   }, [cType, navigate]);
 
   return (
-    <Paper
-      border="1px solid transparent"
-      borderColor={enter ? '#C5C5DE' : 'transparent'}
-      component={Stack}
-      elevation={enter ? 3 : 1}
-      onMouseEnter={toggleEnter}
-      onMouseLeave={toggleEnter}
-      spacing={1.5}
-      sx={{
-        padding: 4,
-        height: 240,
-        borderRadius: 5
-      }}
-    >
-      <Stack alignItems="center" direction="row">
-        <Circle
-          sx={({ transitions }) => ({
-            width: enter ? 60 : 70,
-            height: enter ? 60 : 70,
-            mr: 1.5,
-
-            transition: transitions.create(['width', 'height'], {
-              easing: transitions.easing.sharp,
-              duration: transitions.duration.enteringScreen
-            })
-          })}
-        />
-        <Typography
-          sx={({ transitions }) => ({
-            opacity: enter ? 1 : 0,
-
-            transition: transitions.create('opacity', {
-              easing: transitions.easing.sharp,
-              duration: transitions.duration.enteringScreen
-            })
-          })}
-          variant="h4"
-        >
-          {cType.schema.title}
-        </Typography>
-      </Stack>
-      <Tooltip title={cType.schema.title}>
-        <Ellipsis>
-          <Typography
-            sx={({ transitions }) => ({
-              lineHeight: enter ? 0 : 1,
-              opacity: enter ? 0 : 1,
-
-              transition: transitions.create(['line-height'], {
-                easing: transitions.easing.sharp,
-                duration: transitions.duration.enteringScreen
-              })
-            })}
-            variant="h3"
-          >
+    <Wrapper>
+      <Stack spacing={1.5}>
+        <Box className="CTypeCell_logo">
+          <SvgIcon component={LogoCircleIcon} viewBox="0 0 60 60" />
+        </Box>
+        <Tooltip title={cType.schema.title}>
+          <Typography className="CTypeCell_title" variant="h3">
             {cType.schema.title}
           </Typography>
-        </Ellipsis>
-      </Tooltip>
-      <Box lineHeight={1}>
-        <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-          Attested by
-        </Typography>
-        <Tooltip placement="top" title={cType.owner ?? ''}>
-          <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
-            {cType.owner ?? '--'}
-          </Ellipsis>
         </Tooltip>
-      </Box>
-      <Box
-        sx={({ transitions }) => ({
-          height: enter ? 40 : 0,
-          opacity: enter ? 1 : 0,
-
-          transition: transitions.create(['height', 'opacity'], {
-            easing: transitions.easing.sharp,
-            duration: transitions.duration.enteringScreen
-          })
-        })}
-        textAlign="center"
-      >
-        <Button onClick={submitClaim} variant="contained">
-          Create Claim
-        </Button>
-      </Box>
-    </Paper>
+        <Box className="CTypeCell_attester">
+          <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+            Attested by
+          </Typography>
+          <Tooltip placement="top" title={cType.owner ?? ''}>
+            <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
+              {cType.owner ?? '--'}
+            </Typography>
+          </Tooltip>
+        </Box>
+        <Box className="CTypeCell_actions" textAlign="center">
+          <Button onClick={submitClaim} variant="contained">
+            Create Claim
+          </Button>
+        </Box>
+      </Stack>
+    </Wrapper>
   );
 };
 
