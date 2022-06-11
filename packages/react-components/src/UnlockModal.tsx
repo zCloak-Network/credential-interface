@@ -1,5 +1,5 @@
+import { LoadingButton } from '@mui/lab';
 import {
-  Button,
   Dialog,
   DialogActions,
   DialogContent,
@@ -13,20 +13,28 @@ import DialogHeader from './DialogHeader';
 import { useDids } from './DidsProvider';
 import PasswordInput from './PasswordInput';
 
-const UnlockModal: React.FC<{ open: boolean; onClose?: () => void }> = ({ onClose, open }) => {
+const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () => void }> = ({
+  onClose,
+  onUnlock,
+  open
+}) => {
   const { account, dids } = useDids();
   const [password, setPassword] = useState<string>();
 
   const unlock = useCallback(() => {
     dids.unlock(password);
-  }, [dids, password]);
+    onUnlock();
+  }, [dids, onUnlock, password]);
 
   return (
-    <Dialog maxWidth="md" onClose={onClose} open={open}>
+    <Dialog maxWidth="lg" onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Unlock account</DialogHeader>
-      <DialogContent sx={{ width: '424px', maxWidth: '100%' }}>
-        <Typography mb={4} variant="h3">
-          Please input password unlock {account}
+      <DialogContent sx={{ width: 600, maxWidth: '100%' }}>
+        <Typography mb={2} variant="h4">
+          Please input password unlock
+        </Typography>
+        <Typography mb={4} variant="inherit">
+          Account: {account}
         </Typography>
         <FormControl fullWidth variant="outlined">
           <InputLabel shrink>Please input password</InputLabel>
@@ -34,9 +42,9 @@ const UnlockModal: React.FC<{ open: boolean; onClose?: () => void }> = ({ onClos
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <Button onClick={unlock} variant="contained">
+        <LoadingButton onClick={unlock} variant="contained">
           Unlock
-        </Button>
+        </LoadingButton>
       </DialogActions>
     </Dialog>
   );

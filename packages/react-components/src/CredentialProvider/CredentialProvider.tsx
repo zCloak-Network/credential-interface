@@ -1,11 +1,13 @@
 import type { ICredential } from '@kiltprotocol/sdk-js';
 
-import React, { createContext, useCallback, useMemo } from 'react';
+import { Credential } from '@kiltprotocol/sdk-js';
+import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { useLocalStorage } from '@credential/react-hooks';
 
 interface State {
   credentials: ICredential[];
+  verifiedCredentials: ICredential[];
   addCredential: (credential: ICredential) => void;
 }
 
@@ -15,6 +17,7 @@ const CREDENTIAL_STORATE_KEY = 'credential:credentials';
 
 const CredentialProvider: React.FC<React.PropsWithChildren> = ({ children }) => {
   const [credentials, setCredentials] = useLocalStorage<ICredential[]>(CREDENTIAL_STORATE_KEY, []);
+  const [verifiedCredentials, setVerifiedCredentials] = useState<ICredential[]>([]);
 
   const addCredential = useCallback(
     (credential: ICredential) => {
@@ -33,7 +36,18 @@ const CredentialProvider: React.FC<React.PropsWithChildren> = ({ children }) => 
     [setCredentials]
   );
 
-  const value = useMemo(() => ({ credentials, addCredential }), [addCredential, credentials]);
+  useEffect(() => {
+    Promise.all(
+      credentials.map((credential) => Credential.fromCredential(credential).verify())
+    ).then((verifiedData) => {
+      setVerifiedCredentials(credentials.filter((_, index) => verifiedData[index]) || []);
+    });
+  }, [credentials]);
+
+  const value = useMemo(
+    () => ({ credentials, verifiedCredentials, addCredential }),
+    [addCredential, credentials, verifiedCredentials]
+  );
 
   return <CredentialContenxt.Provider value={value}>{children}</CredentialContenxt.Provider>;
 };

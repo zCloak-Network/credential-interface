@@ -4,6 +4,7 @@ export * from './DidsProvider';
 export * from './CredentialProvider';
 export { default as NotificationProvider, NotificationContext } from './Notification';
 export { default as Address } from './Address';
+export { default as AttesterSelect } from './AttesterSelect';
 export { default as ButtonUnlock } from './ButtonUnlock';
 export { default as ButtonWithError } from './ButtonWithError';
 export { default as DialogHeader } from './DialogHeader';

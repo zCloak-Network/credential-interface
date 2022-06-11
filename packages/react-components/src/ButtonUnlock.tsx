@@ -16,14 +16,10 @@ const ButtonUnlock: React.FC<Props> = ({ children, unlockText, ...props }) => {
 
   return (
     <>
-      {!dids.isLocked ? (
-        <ButtonWithError {...props}>{children}</ButtonWithError>
-      ) : (
-        <ButtonWithError {...props} onClick={toggle} variant="contained">
-          {unlockText ?? 'Unlock wallet'}
-        </ButtonWithError>
-      )}
-      <UnlockModal onClose={toggle} open={open} />
+      <ButtonWithError {...props} onClick={dids.isLocked ? toggle : props.onClick}>
+        {dids.isLocked ? unlockText ?? 'Unlock Account' : children}
+      </ButtonWithError>
+      <UnlockModal onClose={toggle} onUnlock={toggle} open={open} />
     </>
   );
 };
