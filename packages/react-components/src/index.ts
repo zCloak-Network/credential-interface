@@ -13,6 +13,6 @@ export { default as FullScreenDialog } from './FullScreenDialog';
 export { default as FullScreenDialogContent } from './FullScreenDialogContent';
 export { default as FullScreenDialogHeader } from './FullScreenDialogHeader';
 export { default as MnemonicCell } from './MnemonicCell';
-export { default as PasswordInput } from './PasswordInput';
+export { default as InputPassword } from './InputPassword';
 export { default as StepIcon } from './StepIcon';
 export { default as UnlockModal } from './UnlockModal';

@@ -1,16 +1,16 @@
 import type { CredentialType } from '@credential/react-components/CredentialProvider/types';
 
 import { Credential, CType } from '@kiltprotocol/sdk-js';
-import { Box, IconButton, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
+import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import { IconForward } from '@credential/app-config/icons';
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
-import DownloadButton from './DownloadButton';
-import ImportButton from './ImportButton';
+import DownloadButton from './button/DownloadButton';
+import ImportButton from './button/ImportButton';
+import ShareButton from './button/ShareButton';
 import Status from './Status';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
@@ -158,11 +158,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
         </Stack>
         <Stack className="CredentialCell_actions" direction="row-reverse" mt={2} spacing={1}>
           <ImportButton />
-          <Tooltip title="Share to other">
-            <IconButton>
-              <IconForward />
-            </IconButton>
-          </Tooltip>
+          <ShareButton credential={credential} />
           <DownloadButton credential={credential} />
         </Stack>
       </Wrapper>

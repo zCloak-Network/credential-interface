@@ -48,7 +48,7 @@ const SubmitClaim: React.FC<{
         attester.did
       );
 
-      credentialApi.addMessage(
+      await credentialApi.addMessage(
         await claimer.encryptMessage(message, attester.assembleKeyId(attester.encryptionKey.id))
       );
       onDone?.();

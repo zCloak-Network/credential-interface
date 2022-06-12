@@ -1555,6 +1555,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/react-components@workspace:packages/react-components"
   dependencies:
+    "@credential/react-hooks": 0.0.0
     "@date-io/date-fns": ^2.14.0
     "@date-io/moment": ^2.14.0
     "@emotion/react": ^11.9.0
@@ -1579,7 +1580,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/react-hooks@workspace:packages/react-hooks":
+"@credential/react-hooks@0.0.0, @credential/react-hooks@workspace:packages/react-hooks":
   version: 0.0.0-use.local
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:

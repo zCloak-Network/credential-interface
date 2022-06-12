@@ -16,6 +16,7 @@
   "type": "module",
   "version": "0.0.0",
   "dependencies": {
+    "@credential/react-hooks": "0.0.0",
     "@date-io/date-fns": "^2.14.0",
     "@date-io/moment": "^2.14.0",
     "@emotion/react": "^11.9.0",

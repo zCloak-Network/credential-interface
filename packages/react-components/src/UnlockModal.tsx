@@ -11,7 +11,7 @@ import React, { useCallback, useState } from 'react';
 
 import DialogHeader from './DialogHeader';
 import { useDids } from './DidsProvider';
-import PasswordInput from './PasswordInput';
+import InputPassword from './InputPassword';
 
 const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () => void }> = ({
   onClose,
@@ -38,7 +38,7 @@ const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () 
         </Typography>
         <FormControl fullWidth variant="outlined">
           <InputLabel shrink>Please input password</InputLabel>
-          <PasswordInput onChange={(e) => setPassword(e.target.value)} />
+          <InputPassword onChange={(e) => setPassword(e.target.value)} />
         </FormControl>
       </DialogContent>
       <DialogActions>

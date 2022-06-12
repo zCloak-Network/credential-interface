@@ -5,7 +5,7 @@ import React from 'react';
 
 import { useToggle } from '@credential/react-hooks';
 
-const PasswordInput: React.FC<OutlinedInputProps> = (props) => {
+const InputPassword: React.FC<OutlinedInputProps> = (props) => {
   const [showPassword, toggle] = useToggle(false);
 
   return (
@@ -23,4 +23,4 @@ const PasswordInput: React.FC<OutlinedInputProps> = (props) => {
   );
 };
 
-export default React.memo(PasswordInput);
+export default React.memo(InputPassword);

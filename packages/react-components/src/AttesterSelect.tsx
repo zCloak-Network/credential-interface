@@ -11,6 +11,8 @@ import {
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 
+import { getIdentifier } from './InputDid';
+
 const DEFAULT_ATTESTERS = [
   'did:kilt:4rdUX21mgJYGPpU3PmmjSMDkthg9yD2eFeRXyh84tD6ssvS4',
   'did:kilt:4oNbdGidxdwg4t2vQNM3EaDqdZuksnr5ekEHLUXcQn1S83EL'
@@ -21,14 +23,6 @@ const filter = createFilterOptions<{ title: string; inputValue?: string }>();
 interface Props {
   defaultValue?: string;
   onChange?: (value: Did.FullDidDetails | null) => void;
-}
-
-function validateDid(did: string): boolean {
-  try {
-    return Did.DidUtils.validateKiltDid(did);
-  } catch {
-    return false;
-  }
 }
 
 const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
@@ -44,9 +38,12 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
   }, [didDetails, onChange]);
 
   useEffect(() => {
-    if (attester && validateDid(attester)) {
+    if (!attester) return;
+
+    const identifier = getIdentifier(attester);
+
+    if (identifier) {
       setError(null);
-      const identifier = Did.DidUtils.getIdentifierFromKiltDid(attester);
 
       setFetching(true);
       Did.FullDidDetails.fromChainInfo(identifier)
@@ -67,7 +64,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
         })
         .finally(() => setFetching(false));
     } else {
-      setError(new Error('Input is not a validate did'));
+      setError(new Error('Input is not a validate did or identifier'));
     }
   }, [attester]);
 
@@ -121,6 +118,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
       renderInput={(params) => (
         <FormControl
           color={error ? 'error' : warn ? 'warning' : undefined}
+          error={!!error}
           focused={!!error || !!warn}
           fullWidth={params.fullWidth}
         >
