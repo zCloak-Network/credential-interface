@@ -3,7 +3,12 @@ import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import React from 'react';
 
-import { CTypeProvider, NotificationProvider, ThemeProvider } from '@credential/react-components';
+import {
+  CTypeProvider,
+  NotificationProvider,
+  ThemeProvider,
+  ZkidExtensionProvider
+} from '@credential/react-components';
 import { KeystoreProvider } from '@credential/react-keystore';
 
 import App from './App';
@@ -14,12 +19,14 @@ const Root: React.FC = () => {
       <ThemeProvider>
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <NotificationProvider>
-            <KeystoreProvider>
-              <CTypeProvider>
-                <CssBaseline />
-                <App />
-              </CTypeProvider>
-            </KeystoreProvider>
+            <ZkidExtensionProvider>
+              <KeystoreProvider>
+                <CTypeProvider>
+                  <CssBaseline />
+                  <App />
+                </CTypeProvider>
+              </KeystoreProvider>
+            </ZkidExtensionProvider>
           </NotificationProvider>
         </LocalizationProvider>
       </ThemeProvider>

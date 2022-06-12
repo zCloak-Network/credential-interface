@@ -5,10 +5,12 @@ import { Box, IconButton, Paper, Stack, styled, Tooltip, Typography } from '@mui
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import { IconDownload, IconForward, IconImport } from '@credential/app-config/icons';
+import { IconForward } from '@credential/app-config/icons';
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
+import DownloadButton from './DownloadButton';
+import ImportButton from './ImportButton';
 import Status from './Status';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
@@ -16,6 +18,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   height: 211,
   borderRadius: theme.spacing(2.5),
+  overflow: 'hidden',
   ':hover': {
     boxShadow: theme.shadows[3],
 
@@ -87,7 +90,6 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
 }) => {
   const { cTypeList } = useContext(CTypeContext);
   const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
-
   const cType = useMemo(() => {
     return cTypeList.find(
       (cType) =>
@@ -117,54 +119,51 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
         })}
       />
       <Wrapper>
-        <Stack spacing={2}>
-          <Box className="CredentialCell_Status">
-            <Status revoked={revoked} verified={verified} />
-            <Typography className="CredentialCell_Time" variant="inherit">
-              {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
+        <Box className="CredentialCell_Status">
+          <Status revoked={revoked} verified={verified} />
+          <Typography className="CredentialCell_Time" variant="inherit">
+            {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
+          </Typography>
+        </Box>
+        <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
+          <Typography className="CredentialCell_title" mt={2} variant="h3">
+            {cType?.schema.title || credential.attestation.cTypeHash}
+          </Typography>
+        </Tooltip>
+        <Stack
+          className="CredentialCell_attester"
+          direction="row"
+          justifyContent="space-between"
+          mt={2}
+          spacing={1}
+        >
+          <Box width="50%">
+            <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+              Attested by
             </Typography>
+            <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
+              <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
+                {cType?.owner ?? '--'}
+              </Typography>
+            </Tooltip>
           </Box>
-          <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
-            <Typography className="CredentialCell_title" variant="h3">
-              {cType?.schema.title || credential.attestation.cTypeHash}
+          <Box width="50%">
+            <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+              Claim hash
             </Typography>
-          </Tooltip>
-          <Stack
-            className="CredentialCell_attester"
-            direction="row"
-            justifyContent="space-between"
-            spacing={1}
-          >
-            <Box width="50%">
-              <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-                Attested by
-              </Typography>
-              <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
-                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  {cType?.owner ?? '--'}
-                </Typography>
-              </Tooltip>
-            </Box>
-            <Box width="50%">
-              <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-                Claim hash
-              </Typography>
-              <Tooltip placement="top" title={hash}>
-                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{hash}</Typography>
-              </Tooltip>
-            </Box>
-          </Stack>
-          <Stack className="CredentialCell_actions" direction="row-reverse" spacing={1}>
-            <IconButton>
-              <IconImport />
-            </IconButton>
+            <Tooltip placement="top" title={hash}>
+              <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{hash}</Typography>
+            </Tooltip>
+          </Box>
+        </Stack>
+        <Stack className="CredentialCell_actions" direction="row-reverse" mt={2} spacing={1}>
+          <ImportButton />
+          <Tooltip title="Share to other">
             <IconButton>
               <IconForward />
             </IconButton>
-            <IconButton>
-              <IconDownload />
-            </IconButton>
-          </Stack>
+          </Tooltip>
+          <DownloadButton credential={credential} />
         </Stack>
       </Wrapper>
     </Box>

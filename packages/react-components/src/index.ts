@@ -3,6 +3,7 @@ export * from './CTypeProvider';
 export * from './DidsProvider';
 export * from './CredentialProvider';
 export { default as NotificationProvider, NotificationContext } from './Notification';
+export { default as ZkidExtensionProvider, ZkidExtensionContext } from './ZkidExtension';
 export { default as Address } from './Address';
 export { default as AttesterSelect } from './AttesterSelect';
 export { default as ButtonUnlock } from './ButtonUnlock';
