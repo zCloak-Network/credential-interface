@@ -3,10 +3,11 @@ import type { Did } from '@kiltprotocol/sdk-js';
 import type { ICTypeMetadata } from '@credential/react-components/CTypeProvider/types';
 
 import { CType } from '@kiltprotocol/sdk-js';
-import { Box, Typography } from '@mui/material';
+import { Box, Stack, SvgIcon, Typography } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { LogoCircleIcon } from '@credential/app-config/icons';
 import {
   FullScreenDialog,
   FullScreenDialogContent,
@@ -47,7 +48,15 @@ const CreateClaim: React.FC = () => {
 
   return (
     <FullScreenDialog onClose={onClose} open={open}>
-      <FullScreenDialogHeader>{cType.hash}</FullScreenDialogHeader>
+      <FullScreenDialogHeader>
+        <Stack alignItems="center" direction="row" spacing={3}>
+          <SvgIcon component={LogoCircleIcon} sx={{ fontSize: 50 }} viewBox="0 0 60 60" />
+          <Box sx={{ color: '#fff' }}>
+            <Typography variant="h4">{cType.schema.title}</Typography>
+            <Typography variant="inherit">{cType.owner}</Typography>
+          </Box>
+        </Stack>
+      </FullScreenDialogHeader>
       <FullScreenDialogContent>
         <Typography mb={4} textAlign="center" variant="h2">
           Create Claim
