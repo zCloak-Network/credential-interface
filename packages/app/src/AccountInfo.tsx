@@ -1,5 +1,5 @@
 import Circle from '@mui/icons-material/Circle';
-import { Button } from '@mui/material';
+import { alpha, Button } from '@mui/material';
 import React from 'react';
 
 import { Address } from '@credential/react-components';
@@ -13,13 +13,14 @@ const AccountInfo: React.FC<Props> = ({ account }) => {
     <Button
       endIcon={<Circle />}
       sx={({ palette }) => ({
-        border: '1px solid #ECECF2',
-        background: '#fff',
+        border: '1px solid',
+        borderColor: alpha(palette.primary.main, 0.12),
+        background: palette.common.white,
         borderRadius: 50,
         boxShadow: 'none',
         color: palette.text.primary,
         ':hover': {
-          background: '#fff'
+          background: palette.common.white
         }
       })}
       variant="contained"

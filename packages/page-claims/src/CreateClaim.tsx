@@ -51,7 +51,7 @@ const CreateClaim: React.FC = () => {
       <FullScreenDialogHeader>
         <Stack alignItems="center" direction="row" spacing={3}>
           <SvgIcon component={LogoCircleIcon} sx={{ fontSize: 50 }} viewBox="0 0 60 60" />
-          <Box sx={{ color: '#fff' }}>
+          <Box sx={({ palette }) => ({ color: palette.common.white })}>
             <Typography variant="h4">{cType.schema.title}</Typography>
             <Typography variant="inherit">{cType.owner}</Typography>
           </Box>

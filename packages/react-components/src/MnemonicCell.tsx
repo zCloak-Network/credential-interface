@@ -1,11 +1,14 @@
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { alpha, Box, Grid, Stack, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 
 const Mnemonic: React.FC<{ mnemonic: string }> = ({ mnemonic }) => {
   const items = useMemo(() => mnemonic.split(' '), [mnemonic]);
 
   return (
-    <Box bgcolor="#EAECF2" borderRadius={2.5}>
+    <Box
+      borderRadius={2.5}
+      sx={({ palette }) => ({ background: alpha(palette.primary.main, 0.12) })}
+    >
       <Grid
         columnSpacing={{
           xs: 3,

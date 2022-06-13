@@ -30,7 +30,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
             <IconForward />
           </IconButton>
           {withText && (
-            <Typography sx={{ color: '#fff' }} variant="inherit">
+            <Typography sx={({ palette }) => ({ color: palette.common.white })} variant="inherit">
               Share
             </Typography>
           )}

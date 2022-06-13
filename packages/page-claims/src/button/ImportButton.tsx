@@ -28,7 +28,7 @@ const ImportButton: React.FC<{ withText?: boolean }> = ({ withText = false }) =>
           <IconImport />
         </IconButton>
         {withText && (
-          <Typography sx={{ color: '#fff' }} variant="inherit">
+          <Typography sx={({ palette }) => ({ color: palette.common.white })} variant="inherit">
             Import
           </Typography>
         )}

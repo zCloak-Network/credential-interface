@@ -203,7 +203,7 @@ const createComponents: Func = () => ({
       root: ({ theme: { palette } }) => ({
         borderRadius: '10px',
         '&.Mui-disabled': {
-          backgroundColor: palette.grey[50],
+          backgroundColor: palette.background.default,
           '.MuiOutlinedInput-notchedOutline': {
             border: 'none'
           }

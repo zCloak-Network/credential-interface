@@ -1,6 +1,6 @@
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
-import { Box, IconButton, Link, Stack } from '@mui/material';
+import { alpha, Box, IconButton, Link, Stack, useTheme } from '@mui/material';
 import React from 'react';
 
 import { LogoBlackIcon } from '@credential/app-config/icons';
@@ -32,16 +32,21 @@ const Logo: React.FC = () => {
 const Header: React.FC<{ open: boolean; toggleOpen: () => void }> = ({ open, toggleOpen }) => {
   const { account } = useClaimer();
 
+  console.log(useTheme().palette);
+
   return (
     <Stack
       alignItems="center"
-      bgcolor="white"
-      borderBottom="1px solid #F0F0F3"
       direction="row"
       height={70}
       justifyContent="space-between"
       position="fixed"
       px={5}
+      sx={({ palette }) => ({
+        background: palette.common.white,
+        borderBottom: '1px solid',
+        borderBottomColor: alpha(palette.primary.main, 0.1)
+      })}
       width="100%"
       zIndex={999}
     >
