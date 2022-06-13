@@ -7,10 +7,10 @@ import React, { useCallback, useContext, useState } from 'react';
 import {
   ButtonUnlock,
   DialogHeader,
+  InputDid,
   NotificationContext,
   useClaimer
 } from '@credential/react-components';
-import InputDid from '@credential/react-components/InputDid';
 import { credentialApi } from '@credential/react-hooks/api';
 
 const ShareCredential: React.FC<{

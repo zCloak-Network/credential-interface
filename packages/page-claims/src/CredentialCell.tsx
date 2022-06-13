@@ -7,10 +7,12 @@ import React, { useContext, useMemo } from 'react';
 
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { useToggle } from '@credential/react-hooks';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
 import ShareButton from './button/ShareButton';
+import CredentialModal from './modals/CredentialModal';
 import Status from './Status';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
@@ -19,6 +21,8 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   height: 211,
   borderRadius: theme.spacing(2.5),
   overflow: 'hidden',
+  cursor: 'pointer',
+
   ':hover': {
     boxShadow: theme.shadows[3],
 
@@ -88,6 +92,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 const CredentialCell: React.FC<{ item: CredentialType }> = ({
   item: { credential: iCredential, hash, revoked, timestamp, verified }
 }) => {
+  const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
   const cType = useMemo(() => {
@@ -98,71 +103,74 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
   }, [cTypeList, credential.attestation.cTypeHash]);
 
   return (
-    <Box position="relative">
-      <Box
-        sx={({ palette }) => ({
-          zIndex: 1,
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: 4,
-          height: '60%',
-          margin: 'auto',
-          borderTopRightRadius: 4,
-          borderBottomRightRadius: 4,
-          background: verified
-            ? palette.success.main
-            : revoked
-            ? palette.error.main
-            : palette.warning.main
-        })}
-      />
-      <Wrapper>
-        <Box className="CredentialCell_Status">
-          <Status revoked={revoked} verified={verified} />
-          <Typography className="CredentialCell_Time" variant="inherit">
-            {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
-          </Typography>
-        </Box>
-        <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
-          <Typography className="CredentialCell_title" mt={2} variant="h3">
-            {cType?.schema.title || credential.attestation.cTypeHash}
-          </Typography>
-        </Tooltip>
-        <Stack
-          className="CredentialCell_attester"
-          direction="row"
-          justifyContent="space-between"
-          mt={2}
-          spacing={1}
-        >
-          <Box width="50%">
-            <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-              Attested by
+    <>
+      <Box position="relative">
+        <Box
+          sx={({ palette }) => ({
+            zIndex: 1,
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 4,
+            height: '60%',
+            margin: 'auto',
+            borderTopRightRadius: 4,
+            borderBottomRightRadius: 4,
+            background: verified
+              ? palette.success.main
+              : revoked
+              ? palette.error.main
+              : palette.warning.main
+          })}
+        />
+        <Wrapper onClick={toggleOpen}>
+          <Box className="CredentialCell_Status">
+            <Status revoked={revoked} verified={verified} />
+            <Typography className="CredentialCell_Time" variant="inherit">
+              {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
             </Typography>
-            <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
-              <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                {cType?.owner ?? '--'}
+          </Box>
+          <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
+            <Typography className="CredentialCell_title" mt={2} variant="h3">
+              {cType?.schema.title || credential.attestation.cTypeHash}
+            </Typography>
+          </Tooltip>
+          <Stack
+            className="CredentialCell_attester"
+            direction="row"
+            justifyContent="space-between"
+            mt={2}
+            spacing={1}
+          >
+            <Box width="50%">
+              <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+                Attested by
               </Typography>
-            </Tooltip>
-          </Box>
-          <Box width="50%">
-            <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-              Claim hash
-            </Typography>
-            <Tooltip placement="top" title={hash}>
-              <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{hash}</Typography>
-            </Tooltip>
-          </Box>
-        </Stack>
-        <Stack className="CredentialCell_actions" direction="row-reverse" mt={2} spacing={1}>
-          <ImportButton />
-          <ShareButton credential={credential} />
-          <DownloadButton credential={credential} />
-        </Stack>
-      </Wrapper>
-    </Box>
+              <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
+                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
+                  {cType?.owner ?? '--'}
+                </Typography>
+              </Tooltip>
+            </Box>
+            <Box width="50%">
+              <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+                Claim hash
+              </Typography>
+              <Tooltip placement="top" title={hash}>
+                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{hash}</Typography>
+              </Tooltip>
+            </Box>
+          </Stack>
+          <Stack className="CredentialCell_actions" direction="row-reverse" mt={2} spacing={1}>
+            <ImportButton />
+            <ShareButton credential={credential} />
+            <DownloadButton credential={credential} />
+          </Stack>
+        </Wrapper>
+      </Box>
+      <CredentialModal credential={credential} onClose={toggleOpen} open={open} />
+    </>
   );
 };
 
