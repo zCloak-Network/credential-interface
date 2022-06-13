@@ -1,36 +1,33 @@
-import type { CType } from '@kiltprotocol/sdk-js';
+import type { CType, Did } from '@kiltprotocol/sdk-js';
 
-import { IClaim } from '@kiltprotocol/sdk-js';
-import { LoadingButton } from '@mui/lab';
 import { Box, FormControl, InputLabel, OutlinedInput, Stack } from '@mui/material';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { NotificationContext, useClaimer } from '@credential/react-components';
+import { AttesterSelect } from '@credential/react-components';
 
 import CTypeItem from './CTypeItem';
 
-const CTypeForm: React.FC<{
-  cType: CType;
-  onGenerateClaim?: (claim: IClaim, attester: string) => void;
-}> = ({ cType, onGenerateClaim }) => {
-  const [data, setData] = useState<Record<string, unknown>>({});
-  const { notifyError } = useContext(NotificationContext);
-  const { claimer } = useClaimer();
+const CTypeForm: React.FC<
+  React.PropsWithChildren<{
+    cType: CType;
+    defaultData?: Record<string, unknown>;
+    onChange?: (data: Record<string, unknown>) => void;
+    defaultAttester?: string;
+    handleAttester?: (value: Did.FullDidDetails | null) => void;
+  }>
+> = ({ cType, onChange, handleAttester, defaultAttester, defaultData = {}, children }) => {
+  const [data, setData] = useState<Record<string, unknown>>(defaultData);
 
-  const onSubmit = useCallback(() => {
-    try {
-      cType.owner && onGenerateClaim?.(claimer.generateClaim(cType, data as any), cType.owner);
-    } catch (error) {
-      notifyError(error);
-    }
-  }, [cType, claimer, data, notifyError, onGenerateClaim]);
-
-  const onChange = useCallback((key: string, value: unknown) => {
+  const _onChange = useCallback((key: string, value: unknown) => {
     setData((data) => ({
       ...data,
       [key]: value
     }));
   }, []);
+
+  useEffect(() => {
+    onChange?.(data);
+  }, [data, onChange]);
 
   return (
     <Stack spacing={3}>
@@ -38,22 +35,17 @@ const CTypeForm: React.FC<{
         <InputLabel shrink>Credential type</InputLabel>
         <OutlinedInput disabled value={cType.schema.title} />
       </FormControl>
-      <FormControl fullWidth>
-        <InputLabel shrink>Attester</InputLabel>
-        <OutlinedInput disabled value={cType.owner || 'Unknown attester'} />
-      </FormControl>
+      <AttesterSelect defaultValue={defaultAttester} onChange={handleAttester} />
       <Box />
       {Object.keys(cType.schema.properties).map((key) => (
         <CTypeItem
           key={key}
           name={key}
-          onChange={onChange}
+          onChange={_onChange}
           type={cType.schema.properties[key].type}
         />
       ))}
-      <LoadingButton fullWidth onClick={onSubmit} size="large" variant="contained">
-        Submit
-      </LoadingButton>
+      {children}
     </Stack>
   );
 };

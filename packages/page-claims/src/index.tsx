@@ -1,3 +1,4 @@
+import { Did } from '@kiltprotocol/sdk-js';
 import { Box, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
@@ -7,15 +8,15 @@ import CreateClaim from './CreateClaim';
 import CredentialCell from './CredentialCell';
 
 const Claims: React.FC = () => {
-  const { credentials } = useContext(CredentialContenxt);
+  const { credentials, verifiedCredentials } = useContext(CredentialContenxt);
   const [type, setType] = useState(0);
   const { claimer } = useClaimer();
 
   const myCredentials = useMemo(() => {
-    return credentials.filter(
-      (credential) => credential.request.claim.owner === claimer.didDetails.did
+    return (type === 0 ? credentials : verifiedCredentials).filter((credential) =>
+      Did.DidUtils.isSameSubject(credential.credential.request.claim.owner, claimer.didDetails.did)
     );
-  }, [claimer.didDetails.did, credentials]);
+  }, [claimer.didDetails.did, credentials, type, verifiedCredentials]);
 
   return (
     <>

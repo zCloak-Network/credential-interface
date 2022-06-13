@@ -1,19 +1,100 @@
-import { type ICredential, Credential, CType } from '@kiltprotocol/sdk-js';
-import Circle from '@mui/icons-material/Circle';
-import { Box, IconButton, Paper, Skeleton, Stack, Tooltip, Typography } from '@mui/material';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import type { CredentialType } from '@credential/react-components/CredentialProvider/types';
 
-import { CTypeContext, Ellipsis } from '@credential/react-components';
+import { Credential, CType } from '@kiltprotocol/sdk-js';
+import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
+import moment from 'moment';
+import React, { useContext, useMemo } from 'react';
+
+import { CTypeContext } from '@credential/react-components';
+import { ellipsisMixin } from '@credential/react-components/utils';
 import { useToggle } from '@credential/react-hooks';
 
-const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
-  const [enter, toggleEnter] = useToggle(false);
-  const [verified, setVerified] = useState(false);
-  const [fetching, setFetching] = useState(true);
+import DownloadButton from './button/DownloadButton';
+import ImportButton from './button/ImportButton';
+import ShareButton from './button/ShareButton';
+import CredentialModal from './modals/CredentialModal';
+import Status from './Status';
 
+const Wrapper = styled(Paper)(({ theme }) => ({
+  position: 'relative',
+  padding: theme.spacing(4),
+  height: 211,
+  borderRadius: theme.spacing(2.5),
+  overflow: 'hidden',
+  cursor: 'pointer',
+
+  ':hover': {
+    boxShadow: theme.shadows[3],
+
+    '.CredentialCell_Status': {},
+
+    '.CredentialCell_title': {
+      transform: 'translate(90px, -40px)',
+      fontSize: 18
+    },
+    '.CredentialCell_attester': {
+      transform: 'translate(0, -30px)'
+    },
+    '.CredentialCell_actions': {
+      opacity: 1,
+      transform: 'translateY(0)'
+    },
+    '.CredentialCell_Time': {
+      opacity: 0
+    }
+  },
+  '.CredentialCell_Status': {
+    display: 'flex',
+    justifyContent: 'space-between',
+    alignItems: 'center'
+  },
+  '.CredentialCell_Time': {
+    color: theme.palette.grey[500]
+  },
+  '.CredentialCell_title': {
+    transformOrigin: 'top left',
+    ...ellipsisMixin(),
+
+    transition: theme.transitions.create(['transform', 'font-size'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  '.CredentialCell_attester': {
+    transformOrigin: 'top left',
+
+    transition: theme.transitions.create(['transform'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  },
+  '.CredentialCell_actions': {
+    left: theme.spacing(4),
+    right: theme.spacing(4),
+    bottom: theme.spacing(4),
+    opacity: 0,
+    position: 'absolute',
+    transform: 'translateY(20px)',
+    textAlign: 'right',
+
+    '.MuiButtonBase-root': {
+      border: `1px solid ${theme.palette.grey[400]}`,
+      borderRadius: `${theme.spacing(1.25)}`
+    },
+
+    transition: theme.transitions.create(['transform', 'opacity'], {
+      easing: theme.transitions.easing.sharp,
+      duration: theme.transitions.duration.enteringScreen
+    })
+  }
+}));
+
+const CredentialCell: React.FC<{ item: CredentialType }> = ({
+  item: { credential: iCredential, hash, revoked, timestamp, verified }
+}) => {
+  const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
-  const credential = useMemo(() => Credential.fromCredential(item), [item]);
-
+  const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
   const cType = useMemo(() => {
     return cTypeList.find(
       (cType) =>
@@ -21,162 +102,75 @@ const CredentialCell: React.FC<{ item: ICredential }> = ({ item }) => {
     );
   }, [cTypeList, credential.attestation.cTypeHash]);
 
-  useEffect(() => {
-    credential
-      .verify()
-      .then(setVerified)
-      .finally(() => setFetching(false));
-  }, [credential]);
-
-  if (fetching) {
-    return (
-      <Stack spacing={1}>
-        <Skeleton height={40} variant="circular" width={40} />
-        <Skeleton height={118} variant="rectangular" width={210} />
-        <Skeleton variant="text" />
-      </Stack>
-    );
-  }
-
   return (
-    <Box onMouseEnter={toggleEnter} onMouseLeave={toggleEnter} position="relative">
-      <Paper
-        component={Stack}
-        elevation={enter ? 3 : 1}
-        spacing={3}
-        sx={{
-          cursor: 'pointer',
-          position: 'relative',
-          padding: 4,
-          height: 211,
-          borderRadius: 5,
-          background: enter
-            ? 'linear-gradient(180deg, rgba(255, 255, 255, 0) 0%, rgba(174, 192, 249, 0.05) 67%, rgba(94, 129, 244, 0.1) 100%)'
-            : undefined
-        }}
-      >
-        <Stack alignItems="center" direction="row" justifyContent="space-between">
+    <>
+      <Box position="relative">
+        <Box
+          sx={({ palette }) => ({
+            zIndex: 1,
+            position: 'absolute',
+            left: 0,
+            top: 0,
+            bottom: 0,
+            width: 4,
+            height: '60%',
+            margin: 'auto',
+            borderTopRightRadius: 4,
+            borderBottomRightRadius: 4,
+            background: verified
+              ? palette.success.main
+              : revoked
+              ? palette.error.main
+              : palette.warning.main
+          })}
+        />
+        <Wrapper onClick={toggleOpen}>
+          <Box className="CredentialCell_Status">
+            <Status revoked={revoked} verified={verified} />
+            <Typography className="CredentialCell_Time" variant="inherit">
+              {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
+            </Typography>
+          </Box>
+          <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
+            <Typography className="CredentialCell_title" mt={2} variant="h3">
+              {cType?.schema.title || credential.attestation.cTypeHash}
+            </Typography>
+          </Tooltip>
           <Stack
-            alignItems="center"
+            className="CredentialCell_attester"
             direction="row"
+            justifyContent="space-between"
+            mt={2}
             spacing={1}
-            sx={({ palette }) => ({
-              color: verified
-                ? palette.success.main
-                : credential.attestation.revoked
-                ? palette.error.main
-                : palette.warning.main
-            })}
           >
-            <Circle sx={{ width: 10, height: 10 }} />
-            <Typography variant="inherit">
-              {verified ? 'Passed' : credential.attestation.revoked ? 'Revoked' : 'Verifying'}
-            </Typography>
+            <Box width="50%">
+              <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+                Attested by
+              </Typography>
+              <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
+                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
+                  {cType?.owner ?? '--'}
+                </Typography>
+              </Tooltip>
+            </Box>
+            <Box width="50%">
+              <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
+                Claim hash
+              </Typography>
+              <Tooltip placement="top" title={hash}>
+                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{hash}</Typography>
+              </Tooltip>
+            </Box>
           </Stack>
-          <Typography
-            sx={({ transitions }) => ({
-              opacity: enter ? 1 : 0,
-
-              transition: transitions.create('opacity', {
-                easing: transitions.easing.sharp,
-                duration: transitions.duration.enteringScreen
-              })
-            })}
-            variant="h4"
-          >
-            {cType?.schema.title}
-          </Typography>
-        </Stack>
-        <Tooltip title={cType?.schema.title ?? ''}>
-          <Ellipsis
-            component={Typography}
-            sx={({ transitions }) => ({
-              lineHeight: enter ? 0 : 1,
-              opacity: enter ? 0 : 1,
-              marginTop: enter ? '0 !important' : undefined,
-
-              transition: transitions.create(['line-height', 'margin-top'], {
-                easing: transitions.easing.sharp,
-                duration: transitions.duration.enteringScreen
-              })
-            })}
-            variant="h3"
-          >
-            {cType?.schema.title ?? '--'}
-          </Ellipsis>
-        </Tooltip>
-        <Stack direction="row" lineHeight={1} spacing={1}>
-          <Box width="50%">
-            <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-              Attested by
-            </Typography>
-            <Tooltip placement="top" title={credential.attestation.owner}>
-              <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
-                {credential.attestation.owner}
-              </Ellipsis>
-            </Tooltip>
-          </Box>
-          <Box width="50%">
-            <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-              Claim hash
-            </Typography>
-            <Tooltip placement="top" title={credential.attestation.claimHash}>
-              <Ellipsis component={Typography} sx={{ fontWeight: 500 }}>
-                {credential.attestation.claimHash}
-              </Ellipsis>
-            </Tooltip>
-          </Box>
-        </Stack>
-      </Paper>
-
-      <Stack
-        direction="row"
-        spacing={1}
-        sx={({ transitions }) => ({
-          position: 'absolute',
-          bottom: 32,
-          right: 32,
-          opacity: enter ? 1 : 0,
-
-          transition: transitions.create(['opacity'], {
-            easing: transitions.easing.sharp,
-            duration: transitions.duration.enteringScreen
-          }),
-
-          '.MuiButtonBase-root': {
-            background: '#fff',
-            border: '1px solid #C5C5DE',
-            borderRadius: '10px'
-          }
-        })}
-        textAlign="center"
-      >
-        <IconButton>
-          <Box component="img" src={require('./icon_download.svg')} />
-        </IconButton>
-        <IconButton>
-          <Box component="img" src={require('./icon_forward.svg')} />
-        </IconButton>
-      </Stack>
-      <Box
-        sx={({ palette, spacing }) => ({
-          position: 'absolute',
-          left: 0,
-          top: 0,
-          bottom: 0,
-          width: 4,
-          height: '60%',
-          margin: 'auto',
-          borderTopRightRadius: spacing(1),
-          borderBottomRightRadius: spacing(1),
-          background: verified
-            ? palette.success.main
-            : credential.attestation.revoked
-            ? palette.error.main
-            : palette.warning.main
-        })}
-      />
-    </Box>
+          <Stack className="CredentialCell_actions" direction="row-reverse" mt={2} spacing={1}>
+            <ImportButton />
+            <ShareButton credential={credential} />
+            <DownloadButton credential={credential} />
+          </Stack>
+        </Wrapper>
+      </Box>
+      <CredentialModal credential={credential} onClose={toggleOpen} open={open} />
+    </>
   );
 };
 

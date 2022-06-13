@@ -2,6 +2,8 @@ import { Box, Stack, styled } from '@mui/material';
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
+import { LogoIcon } from '@credential/app-config/icons';
+
 const Wrapper = styled(Box)(() => ({
   minHeight: '100vh',
   background: 'linear-gradient(180deg, #F4F5FC 0%, #F6F7FD 82%, #FFFFFF 100%)'
@@ -28,7 +30,7 @@ const AccountFrame: React.FC = () => {
     <Wrapper>
       <Stack alignItems="center" justifyContent="center" mb={2} py={2.5}>
         <Logo>
-          <Box component="img" src={require('@credential/app-config/assets/logo.svg')} />
+          <Box component={LogoIcon} mr={2} />
           zCloak Network
         </Logo>
       </Stack>
