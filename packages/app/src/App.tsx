@@ -15,18 +15,11 @@ import { CredentialProvider, DidsProvider } from '@credential/react-components';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
+import Attester from './Attester';
 import Claimer from './Claimer';
 
 const NoMatch: React.FC<{ to: string }> = ({ to }) => {
   return <Navigate replace to={to} />;
-};
-
-const AttesterProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  return (
-    <AccountAuth accountType="attester">
-      <DidsProvider DidsConstructor={AttesterConstructor}>{children}</DidsProvider>
-    </AccountAuth>
-  );
 };
 
 const createAppClaimer = () => (
@@ -57,20 +50,27 @@ const createAppClaimer = () => (
 );
 
 const createAppAttester = () => (
-  <Route
-    element={
-      <AttesterProvider>
-        <Claimer />
-      </AttesterProvider>
-    }
-    path="/attester"
-  >
+  <Route path="/attester">
+    <Route
+      element={
+        <AccountAuth accountType="attester">
+          <DidsProvider DidsConstructor={AttesterConstructor}>
+            <Attester />
+          </DidsProvider>
+        </AccountAuth>
+      }
+    >
+      <Route element={<div>my-ctype</div>} path="my-ctype" />
+      <Route element={<div>tasks</div>} path="tasks" />
+      <Route element={<div>message</div>} path="message" />
+    </Route>
     <Route element={<Account />} path="account">
       <Route element={<PageCreateAccount accountType="attester" />} path="create" />
       <Route element={<PageRestoreAccount accountType="attester" />} path="restore" />
       <Route element={<PageAccount accountType="attester" />} index />
     </Route>
-    <Route element={<NoMatch to="/attester/ctype" />} path="*" />
+    <Route element={<NoMatch to="/attester/my-ctype" />} path="*" />
+    <Route element={<NoMatch to="/attester/my-ctype" />} index />
   </Route>
 );
 

@@ -8,7 +8,7 @@ import Header from '../Header';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
 import Sidebar from '../Sidebar';
 
-const Claimer: React.FC = () => {
+const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
@@ -16,43 +16,43 @@ const Claimer: React.FC = () => {
   const items = useMemo(
     () => [
       {
-        to: '/claimer/ctype',
-        active: pathname.startsWith('/claimer/ctype'),
+        to: '/attester/my-ctype',
+        active: pathname.startsWith('/attester/my-ctype'),
         svgIcon: (
           <CTypeIcon
-            color={pathname.startsWith('/claimer/ctype') ? palette.primary.main : undefined}
+            color={pathname.startsWith('/attester/my-ctype') ? palette.common.white : undefined}
           />
         ),
-        text: 'Credential type'
+        text: 'My ctypes'
       },
       {
-        to: '/claimer/claims',
-        active: pathname.startsWith('/claimer/claims'),
+        to: '/attester/tasks',
+        active: pathname.startsWith('/attester/tasks'),
         svgIcon: (
           <ClaimsIcon
-            color={pathname.startsWith('/claimer/claims') ? palette.primary.main : undefined}
+            color={pathname.startsWith('/attester/tasks') ? palette.common.white : undefined}
           />
         ),
-        text: 'Claims'
+        text: 'Tasks'
       },
       {
-        to: '/claimer/message',
-        active: pathname.startsWith('/claimer/message'),
+        to: '/attester/message',
+        active: pathname.startsWith('/attester/message'),
         svgIcon: (
           <MessageIcon
-            color={pathname.startsWith('/claimer/message') ? palette.primary.main : undefined}
+            color={pathname.startsWith('/attester/message') ? palette.common.white : undefined}
           />
         ),
         text: 'Message'
       }
     ],
-    [palette.primary.main, pathname]
+    [palette.common.white, pathname]
   );
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
       <Header open={open} toggleOpen={toggleOpen} />
-      <Sidebar accountType="claimer" items={items} open={open} />
+      <Sidebar accountType="attester" items={items} open={open} />
       <Box
         minHeight="100vh"
         pl={open ? '274px' : '120px'}
@@ -78,4 +78,4 @@ const Claimer: React.FC = () => {
   );
 };
 
-export default Claimer;
+export default Attester;

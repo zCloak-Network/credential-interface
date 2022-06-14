@@ -9,9 +9,13 @@ const AccountAuth: React.FC<React.PropsWithChildren<{ accountType: ACCOUNT_TYPE 
   accountType,
   children
 }) => {
-  const { claimerKeystore } = useKeystore();
+  const { attesterKeystore, claimerKeystore } = useKeystore();
 
-  return claimerKeystore ? <>{children}</> : <Navigate to={`/${accountType}/account`} />;
+  if (accountType === 'attester') {
+    return attesterKeystore ? <>{children}</> : <Navigate to={`/${accountType}/account`} />;
+  } else {
+    return claimerKeystore ? <>{children}</> : <Navigate to={`/${accountType}/account`} />;
+  }
 };
 
 export default React.memo(AccountAuth);
