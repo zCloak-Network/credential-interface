@@ -78,7 +78,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     textAlign: 'right',
 
     '.MuiButtonBase-root': {
-      border: `1px solid ${theme.palette.grey[400]}`,
+      border: `1px solid ${theme.palette.grey[300]}`,
       borderRadius: `${theme.spacing(1.25)}`
     },
 

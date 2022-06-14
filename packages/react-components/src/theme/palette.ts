@@ -10,30 +10,67 @@ import { type PaletteOptions } from '@mui/material/styles';
 const createPalette = (mode: PaletteMode): PaletteOptions => ({
   mode,
   primary: {
-    main: '#6768ac'
+    main: '#6768ac',
+    light: '#6768ac',
+    dark: '#6768ac',
+    contrastText: '#fff'
   },
   success: {
-    main: '#00B69B'
+    main: '#00B69B',
+    light: '#00B69B',
+    dark: '#00B69B',
+    contrastText: 'rgba(0, 0, 0, 0.87)'
   },
   error: {
-    main: '#EF3826'
+    main: '#EF3826',
+    light: '#EF3826',
+    dark: '#EF3826',
+    contrastText: '#fff'
   },
   warning: {
-    main: '#FFA756'
+    main: '#FFA756',
+    light: '#FFA756',
+    dark: '#FFA756',
+    contrastText: 'rgba(0, 0, 0, 0.87)'
   },
-  background: {
-    default: mode === 'light' ? 'rgba(255, 255, 255 ,1)' : '#121212'
-  },
+  background: { default: '#F5F6FA', paper: '#fff' },
   grey: {
-    50: '#F5F6FA',
-<<<<<<< HEAD
-    100: '#F1F2F5',
-    200: '#E5E6FA',
-    300: '#D5D6DEA',
-    400: '#C5C5DE'
-=======
-    100: '#F1F2F5'
->>>>>>> dev
+    50: '#fafafa',
+    100: '#f5f5f5',
+    200: '#eeeeee',
+    300: '#e0e0e0',
+    400: '#bdbdbd',
+    500: '#9e9e9e',
+    600: '#757575',
+    700: '#616161',
+    800: '#424242',
+    900: '#212121',
+    A100: '#f5f5f5',
+    A200: '#eeeeee',
+    A400: '#bdbdbd',
+    A700: '#616161'
+  },
+  common: { black: '#000', white: '#fff' },
+  secondary: { main: '#9c27b0', light: '#ba68c8', dark: '#7b1fa2', contrastText: '#fff' },
+  info: { main: '#0288d1', light: '#03a9f4', dark: '#01579b', contrastText: '#fff' },
+  text: {
+    primary: 'rgba(0, 0, 0, 0.87)',
+    secondary: 'rgba(0, 0, 0, 0.6)',
+    disabled: 'rgba(0, 0, 0, 0.38)'
+  },
+  divider: 'rgba(0, 0, 0, 0.12)',
+  action: {
+    active: 'rgba(0, 0, 0, 0.54)',
+    hover: 'rgba(0, 0, 0, 0.04)',
+    hoverOpacity: 0.04,
+    selected: 'rgba(0, 0, 0, 0.08)',
+    selectedOpacity: 0.08,
+    disabled: 'rgba(0, 0, 0, 0.26)',
+    disabledBackground: 'rgba(0, 0, 0, 0.12)',
+    disabledOpacity: 0.38,
+    focus: 'rgba(0, 0, 0, 0.12)',
+    focusOpacity: 0.12,
+    activatedOpacity: 0.12
   }
 });
 

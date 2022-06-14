@@ -1,4 +1,4 @@
-import { Button, CircularProgress } from '@mui/material';
+import { alpha, Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
 import { useClaimer } from '@credential/react-components';
@@ -17,12 +17,12 @@ const Network: React.FC = () => {
     <Button
       startIcon={!isReady && <CircularProgress size={20} />}
       sx={({ palette }) => ({
-        background: '#E0E1EE',
+        background: alpha(palette.primary.main, 0.2),
         borderRadius: 50,
         boxShadow: 'none',
         color: palette.primary.main,
         ':hover': {
-          background: '#E0E1EE'
+          background: alpha(palette.primary.main, 0.2)
         }
       })}
       variant="contained"

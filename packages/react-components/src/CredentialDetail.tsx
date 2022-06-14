@@ -36,12 +36,16 @@ const CredentialDetail: React.FC<Props> = ({ credential }) => {
             key={key}
             sx={({ palette }) => ({
               background: 'transparent',
-              color: 'white',
+              color: palette.common.white,
               border: '1px solid',
               borderColor: palette.grey[700]
             })}
           >
-            <AccordionSummary expandIcon={<ExpandMoreIcon sx={{ color: 'white' }} />}>
+            <AccordionSummary
+              expandIcon={
+                <ExpandMoreIcon sx={({ palette }) => ({ color: palette.common.white })} />
+              }
+            >
               <Typography sx={{ opacity: 0.8 }}>{key}</Typography>
             </AccordionSummary>
             <AccordionDetails>

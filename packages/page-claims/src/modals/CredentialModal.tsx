@@ -1,6 +1,6 @@
 import type { ICredential } from '@kiltprotocol/sdk-js';
 
-import { Stack, Typography } from '@mui/material';
+import { alpha, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 import {
@@ -28,7 +28,7 @@ const CredentialModal: React.FC<Props> = ({ credential, onClose, open }) => {
         <Stack
           alignItems="center"
           spacing={2}
-          sx={{
+          sx={({ palette }) => ({
             position: 'absolute',
             left: 'calc(100% + 32px)',
             top: 0,
@@ -36,11 +36,12 @@ const CredentialModal: React.FC<Props> = ({ credential, onClose, open }) => {
             '.MuiButtonBase-root': {
               width: 44,
               height: 44,
-              background: '#fff',
-              border: '1px solid #C5C5DE',
+              background: palette.common.white,
+              border: '1px solid',
+              borderColor: alpha(palette.primary.main, 0.38),
               borderRadius: 2.5
             }
-          }}
+          })}
         >
           <ShareButton credential={credential} withText />
           <ImportButton withText />

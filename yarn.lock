@@ -1480,6 +1480,22 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@credential/app-db@0.0.0, @credential/app-db@workspace:packages/app-db":
+  version: 0.0.0-use.local
+  resolution: "@credential/app-db@workspace:packages/app-db"
+  dependencies:
+    dexie: ^3.2.2
+  languageName: unknown
+  linkType: soft
+
+"@credential/app-sync@workspace:packages/app-sync":
+  version: 0.0.0-use.local
+  resolution: "@credential/app-sync@workspace:packages/app-sync"
+  dependencies:
+    "@credential/app-db": 0.0.0
+  languageName: unknown
+  linkType: soft
+
 "@credential/app@workspace:packages/app":
   version: 0.0.0-use.local
   resolution: "@credential/app@workspace:packages/app"
@@ -6888,6 +6904,13 @@ __metadata:
     highlight.js: ^9.3.0
     humanize-plus: ^1.8.1
   checksum: b18bdaaebb92d758a547793a4341be5ea56f36ad2ea925f0617fa9b582c511bda7573351644a397236d5fa607f9ccca97118837c766647cfa277b2ea2aec431d
+  languageName: node
+  linkType: hard
+
+"dexie@npm:^3.2.2":
+  version: 3.2.2
+  resolution: "dexie@npm:3.2.2"
+  checksum: 7a21079f7ab139ebd724a009917f9293f2b01c341e2a3cd51d2455dda4d4e78b9ca7de0373e963108395cf1921ce7f6556cac967c1e957005a3c7c11794ceccf
   languageName: node
   linkType: hard
 
@@ -13562,7 +13585,7 @@ __metadata:
     source-map-explorer: ^2.5.2
     stylelint: ^14.8.3
     stylelint-config-recommended: ^7.0.0
-    typescript: ^4.6.4
+    typescript: ^4.7.3
     webpack: ^5.72.1
     webpack-cli: ^4.9.2
   languageName: unknown
@@ -15056,7 +15079,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@npm:^4.6.4":
+"typescript@npm:^4.7.3":
   version: 4.7.3
   resolution: "typescript@npm:4.7.3"
   bin:
@@ -15066,7 +15089,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"typescript@patch:typescript@npm%3A^4.6.4#~builtin<compat/typescript>":
+"typescript@patch:typescript@npm%3A^4.7.3#~builtin<compat/typescript>":
   version: 4.7.3
   resolution: "typescript@patch:typescript@npm%3A4.7.3#~builtin<compat/typescript>::version=4.7.3&hash=7ad353"
   bin:
