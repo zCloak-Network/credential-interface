@@ -1,3 +1,5 @@
+import type { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
+
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
@@ -17,7 +19,7 @@ import { useKeystore } from '@credential/react-keystore';
 
 import Success from './Success';
 
-const Restore: React.FC = () => {
+const Restore: React.FC<{ accountType: ACCOUNT_TYPE }> = ({ accountType }) => {
   const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -32,7 +34,7 @@ const Restore: React.FC = () => {
       file
         .text()
         .then((text) => {
-          restoreKeystore(text, 'claimer', password);
+          restoreKeystore(text, accountType, password);
         })
         .then(() => setSuccess(true))
         .catch((error) => {
@@ -40,7 +42,7 @@ const Restore: React.FC = () => {
         })
         .finally(() => setLoading(false));
     }
-  }, [file, notifyError, password, restoreKeystore]);
+  }, [accountType, file, notifyError, password, restoreKeystore]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -48,7 +50,7 @@ const Restore: React.FC = () => {
         <Success
           desc="Remember to keep your secret recovery phrase safe, it’s your responsibility."
           title="Your account has been restored account!"
-          toggleStart={() => navigate('/')}
+          toggleStart={() => navigate(`/${accountType}`)}
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>

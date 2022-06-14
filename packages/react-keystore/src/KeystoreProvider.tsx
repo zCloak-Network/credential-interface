@@ -10,21 +10,21 @@ import { createAccount, createFromJson } from './createKeyring';
 interface KeystoreState {
   claimerKeystore: DidKeystore | null;
   attesterKeystore: DidKeystore | null;
-  addKeystore: (mnemonic: string, type: TYPE, passphrase?: string) => KeyringPair$Json;
-  restoreKeystore: (text: string, type: TYPE, passphrase?: string) => void;
+  addKeystore: (mnemonic: string, type: ACCOUNT_TYPE, passphrase?: string) => KeyringPair$Json;
+  restoreKeystore: (text: string, type: ACCOUNT_TYPE, passphrase?: string) => void;
 }
 
 export const KeystoreContext = createContext<KeystoreState>({
   claimerKeystore: null
 } as KeystoreState);
 
-type TYPE = 'attester' | 'claimer';
+export type ACCOUNT_TYPE = 'attester' | 'claimer';
 
 const PREFIX = 'credential:account';
 
-const ATTESTER: TYPE = 'attester';
+const ATTESTER: ACCOUNT_TYPE = 'attester';
 
-const CLAIMER: TYPE = 'claimer';
+const CLAIMER: ACCOUNT_TYPE = 'claimer';
 
 function getAccountKeys(): string[] {
   const keys: string[] = [];
@@ -89,7 +89,7 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
     return null;
   }, [attesterKeys]);
 
-  const addKeystore = useCallback((mnemonic: string, type: TYPE, passphrase?: string) => {
+  const addKeystore = useCallback((mnemonic: string, type: ACCOUNT_TYPE, passphrase?: string) => {
     const pair = createAccount(mnemonic, {
       type
     });
@@ -108,7 +108,7 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
     return json;
   }, []);
 
-  const restoreKeystore = useCallback((text: string, type: TYPE, passphrase?: string) => {
+  const restoreKeystore = useCallback((text: string, type: ACCOUNT_TYPE, passphrase?: string) => {
     const pair = createFromJson(JSON.parse(text));
 
     // try unlock

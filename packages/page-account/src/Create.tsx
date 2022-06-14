@@ -1,3 +1,5 @@
+import type { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
+
 import {
   Container,
   Stack,
@@ -18,7 +20,7 @@ import Step2 from './create/Step2';
 import Step3 from './create/Step3';
 import Success from './Success';
 
-const Create: React.FC = () => {
+const Create: React.FC<{ accountType: ACCOUNT_TYPE }> = ({ accountType }) => {
   const [step, setStep] = useState(0);
   const [password, setPassword] = useState<string>();
   const mnemonic = useMemo(() => generateMnemonic(), []);
@@ -37,7 +39,7 @@ const Create: React.FC = () => {
         <Success
           desc="Remember to keep your secret recovery phrase safe, it’s your responsibility."
           title="Your account has been restored account!"
-          toggleStart={() => navigate('/')}
+          toggleStart={() => navigate(`/${accountType}`)}
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>
@@ -78,6 +80,7 @@ const Create: React.FC = () => {
           {step === 1 && <Step2 mnemonic={mnemonic} nextStep={nextStep} prevStep={prevStep} />}
           {step === 2 && (
             <Step3
+              accountType={accountType}
               mnemonic={mnemonic}
               nextStep={nextStep}
               password={password}

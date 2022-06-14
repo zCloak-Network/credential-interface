@@ -57,6 +57,8 @@ const DidsProvider: React.FC<
     [account, didIsReady, isReady]
   );
 
+  console.log(didIsReady);
+
   return <DidsContext.Provider value={value}>{didIsReady ? children : null}</DidsContext.Provider>;
 };
 

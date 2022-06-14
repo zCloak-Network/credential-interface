@@ -1,3 +1,5 @@
+import type { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
+
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Box, Button, FormControl, Grid, InputLabel, OutlinedInput } from '@mui/material';
 import FileSaver from 'file-saver';
@@ -10,6 +12,7 @@ function random(min = 0, max = 11): number {
 }
 
 const Step3: React.FC<{
+  accountType: ACCOUNT_TYPE;
   prevStep: () => void;
   nextStep: () => void;
   mnemonic: string;
