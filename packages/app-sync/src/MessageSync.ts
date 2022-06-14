@@ -1,5 +1,4 @@
 import { CredentialData } from '@credential/app-db';
-import { Message } from '@credential/app-db/Message';
 
 import { IDataSource, ParserFunc } from './type';
 
@@ -29,7 +28,7 @@ export class MessageSync {
 
     let originId: number;
 
-    if (lastOne) {
+    if (lastOne && lastOne.syncId) {
       originId = lastOne.syncId + 1;
     } else {
       originId = 0;
@@ -43,38 +42,16 @@ export class MessageSync {
     );
 
     if (data.length > 0) {
+      const iMessages = await Promise.all(data.map((d) => this.parse(d)));
+
       await this.db.message.bulkAdd(
-        data.map(({ ciphertext, id, nonce, receiverKeyId, senderKeyId }) => ({
-          ciphertext,
-          nonce,
-          senderKeyId,
-          receiverKeyId,
-          syncId: id
+        iMessages.map((iMessage, index) => ({
+          ...iMessage,
+          syncId: data[index].id
         }))
       );
+
       await this.sync();
     }
-  }
-
-  public async parseMessage(): Promise<void> {
-    const lastOne = await this.db.messageBody.orderBy('messageId').first();
-
-    let messages: Message[];
-
-    if (lastOne) {
-      messages = await this.db.message.where('id').above(lastOne.messageId).toArray();
-    } else {
-      messages = await this.db.message.toArray();
-    }
-
-    const bodys = await Promise.all(messages.map((message) => this.parse(message)));
-
-    await this.db.messageBody.bulkAdd(
-      messages.map((message, index) => ({
-        // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-        messageId: message.id!,
-        body: bodys[index]
-      }))
-    );
   }
 }

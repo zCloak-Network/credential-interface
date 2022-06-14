@@ -1,4 +1,4 @@
-import { IMessageBody } from '@credential/app-db/MessageBody';
+import { IMessage } from '@credential/app-db/Message';
 
 interface MessageType {
   id: number;
@@ -22,4 +22,4 @@ export type ParserFunc = (encoded: {
   nonce: string;
   senderKeyId: string;
   receiverKeyId: string;
-}) => Promise<IMessageBody>;
+}) => Promise<IMessage>;

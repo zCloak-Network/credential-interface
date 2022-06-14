@@ -1,8 +1,8 @@
-export interface Message {
+import type { IMessage } from '@kiltprotocol/types';
+
+export { IMessage };
+
+export interface Message extends IMessage {
   id?: number;
-  ciphertext: string;
-  nonce: string;
-  senderKeyId: string;
-  receiverKeyId: string;
-  syncId: number;
+  syncId?: number;
 }
