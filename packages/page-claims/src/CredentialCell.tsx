@@ -169,7 +169,9 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
           </Stack>
         </Wrapper>
       </Box>
-      <CredentialModal credential={credential} onClose={toggleOpen} open={open} />
+      {cType && (
+        <CredentialModal cType={cType} credential={credential} onClose={toggleOpen} open={open} />
+      )}
     </>
   );
 };

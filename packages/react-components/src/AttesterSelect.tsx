@@ -22,10 +22,11 @@ const filter = createFilterOptions<{ title: string; inputValue?: string }>();
 
 interface Props {
   defaultValue?: string;
+  disabled?: boolean;
   onChange?: (value: Did.FullDidDetails | null) => void;
 }
 
-const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
+const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onChange }) => {
   const [attester, setAttester] = useState(defaultValue);
   const options = useMemo(() => DEFAULT_ATTESTERS.map((v) => ({ title: v })), []);
   const [didDetails, setDidDetails] = useState<Did.FullDidDetails | null>(null);
@@ -72,6 +73,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
     <Autocomplete<{ title: string; inputValue?: string }, undefined, undefined, true>
       clearOnBlur
       defaultValue={defaultValue}
+      disabled={disabled}
       filterOptions={(options, params) => {
         const filtered = filter(options, params);
 
@@ -111,7 +113,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
           // Create a new value from the user input
           setAttester(newValue.inputValue);
         } else {
-          setAttester(newValue.title);
+          setAttester(newValue?.title ?? null);
         }
       }}
       options={options}
@@ -127,6 +129,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, onChange }) => {
           </InputLabel>
           <OutlinedInput
             {...params.InputProps}
+            disabled={params.disabled}
             endAdornment={
               fetching ? (
                 <InputAdornment position="end">

@@ -4,6 +4,7 @@ import type { InstanceType } from '@credential/react-components/CTypeProvider/ty
 
 export interface ItemProps {
   name: string;
+  disabled?: boolean;
   type?: InstanceType;
   defaultValue?: unknown;
   onChange?: (key: string, value: unknown) => void;
