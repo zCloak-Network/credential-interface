@@ -16,7 +16,7 @@
   "type": "module",
   "version": "0.0.0",
   "dependencies": {
-    "@zcloak/service": "^0.0.2-10",
+    "@zcloak/service": "^0.0.2-14",
     "copy-to-clipboard": "^3.3.1"
   }
 }

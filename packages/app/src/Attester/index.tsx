@@ -50,13 +50,12 @@ const Attester: React.FC = () => {
   );
 
   return (
-    <Box bgcolor="#F5F6FA" minHeight="100vh">
+    <Box bgcolor="#fff" minHeight="100vh">
       <Header open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="attester" items={items} open={open} />
       <Box
         minHeight="100vh"
-        pl={open ? '274px' : '120px'}
-        pr="32px"
+        pl={open ? '220px' : '93px'}
         pt="100px"
         sx={{
           boxSizing: 'border-box',

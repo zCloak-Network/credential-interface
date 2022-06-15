@@ -149,7 +149,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  {cType?.owner ?? '--'}
+                  {credential.attestation.owner}
                 </Typography>
               </Tooltip>
             </Box>

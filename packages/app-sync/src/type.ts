@@ -1,4 +1,4 @@
-import { IMessage } from '@credential/app-db/Message';
+import { IMessage } from '@credential/app-db/message';
 
 interface MessageType {
   id: number;

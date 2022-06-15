@@ -1,6 +1,6 @@
 import Dexie, { Table } from 'dexie';
 
-import { Message } from './Message';
+import { Message } from './message';
 
 export class CredentialData extends Dexie {
   message!: Table<Message>;

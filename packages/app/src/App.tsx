@@ -11,6 +11,7 @@ import PageCreateAccount from '@credential/page-account/Create';
 import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
+import PageOwnerCType from '@credential/page-ctype/OwnerCType';
 import { CredentialProvider, DidsProvider } from '@credential/react-components';
 
 import AccountAuth from './Account/AccountAuth';
@@ -60,7 +61,7 @@ const createAppAttester = () => (
         </AccountAuth>
       }
     >
-      <Route element={<div>my-ctype</div>} path="my-ctype" />
+      <Route element={<PageOwnerCType />} path="my-ctype" />
       <Route element={<div>tasks</div>} path="tasks" />
       <Route element={<div>message</div>} path="message" />
     </Route>

@@ -44,7 +44,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     600: '#757575',
     700: '#616161',
     800: '#424242',
-    900: '#212121',
+    900: '#3a3a3a',
     A100: '#f5f5f5',
     A200: '#eeeeee',
     A400: '#bdbdbd',

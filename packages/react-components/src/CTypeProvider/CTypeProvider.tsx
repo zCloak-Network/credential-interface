@@ -2,8 +2,9 @@ import { CType } from '@kiltprotocol/sdk-js';
 import React, { createContext, useEffect, useMemo } from 'react';
 
 import { useLocalStorage } from '@credential/react-hooks';
+import { credentialApi } from '@credential/react-hooks/api';
 
-import { ICTypeMetadata } from './types';
+import { ICTypeMetadata, ICTypeSchema } from './types';
 
 interface State {
   cTypeList: CType[];
@@ -17,11 +18,15 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [cTypeList, setCTypeList] = useLocalStorage<ICTypeMetadata[]>(STORAGE_KEY, []);
 
   useEffect(() => {
-    fetch('/ctypes.json')
-      .then((data) => data.json())
-      .then((data) => {
-        setCTypeList(data.list);
-      });
+    credentialApi.allCTypes({}).then((res) =>
+      setCTypeList(
+        res.data.map(({ ctypeHash, metadata, owner }) => ({
+          owner,
+          ctypeHash,
+          schema: metadata as ICTypeSchema
+        }))
+      )
+    );
   }, [setCTypeList]);
 
   const value = useMemo(() => {

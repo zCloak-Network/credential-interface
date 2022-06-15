@@ -1508,7 +1508,7 @@ __metadata:
     "@mui/material": ^5.8.1
     "@svgr/webpack": ^6.2.1
     "@types/punycode": ^2.1.0
-    "@zcloak/credential-core": ^0.0.2-10
+    "@zcloak/credential-core": ^0.0.2-14
     "@zcloak/dev": ^0.1.1
     assert: ^2.0.0
     babel-loader: ^8.2.5
@@ -1581,8 +1581,8 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.83
     "@mui/material": ^5.8.1
     "@mui/x-date-pickers": ^5.0.0-alpha.4
-    "@zcloak/credential-core": ^0.0.2-10
-    "@zcloak/extension-core": ^0.0.2-10
+    "@zcloak/credential-core": ^0.0.2-14
+    "@zcloak/extension-core": ^0.0.2-14
   languageName: unknown
   linkType: soft
 
@@ -1600,7 +1600,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
-    "@zcloak/service": ^0.0.2-10
+    "@zcloak/service": ^0.0.2-14
     copy-to-clipboard: ^3.3.1
   languageName: unknown
   linkType: soft
@@ -1610,7 +1610,7 @@ __metadata:
   resolution: "@credential/react-keystore@workspace:packages/react-keystore"
   dependencies:
     "@polkadot/ui-keyring": ^2.4.1
-    "@zcloak/credential-core": ^0.0.2-10
+    "@zcloak/credential-core": ^0.0.2-14
   languageName: unknown
   linkType: soft
 
@@ -4445,12 +4445,12 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/credential-core@npm:^0.0.2-10":
-  version: 0.0.2-10
-  resolution: "@zcloak/credential-core@npm:0.0.2-10"
+"@zcloak/credential-core@npm:^0.0.2-14":
+  version: 0.0.2-14
+  resolution: "@zcloak/credential-core@npm:0.0.2-14"
   dependencies:
     "@kiltprotocol/sdk-js": ^0.26.0
-  checksum: baf6b0f669907f3a101d03adb43b97690b679defb26fdfc4795d53ae25cf8302ccc8886c0a6d682db5d7db89350a7aa1ac969827db8e9b614ac196b90e3fd93b
+  checksum: e418155bb5496adabde84c6cb76bf42ee832c8b5179ad56d4db456e30fb86f44603647a6cdfee1bc009d2a22dd7fb3e063be2bab7b27c6e6d4e360da27504349
   languageName: node
   linkType: hard
 
@@ -4542,19 +4542,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/extension-core@npm:^0.0.2-10":
-  version: 0.0.2-10
-  resolution: "@zcloak/extension-core@npm:0.0.2-10"
+"@zcloak/extension-core@npm:^0.0.2-14":
+  version: 0.0.2-14
+  resolution: "@zcloak/extension-core@npm:0.0.2-14"
   dependencies:
     eventemitter3: ^4.0.7
-  checksum: 3494e5289d61bdff4c028c8123ee69428f4d92cd59535ccfa2f8a1e419d9bbff509c9eb21a9d9734f534ffa08f9b4e0bf58e912f8450250860c9a349f90bf40f
+  checksum: ebdd57ce000c98e01b193adf138c3b734e3a3ca614a21e5eff350ba4fd6b529a727eb4cee97e4eaad5a3926ea53d6b1d294fc1ec729ad2dde376c91c609dcd69
   languageName: node
   linkType: hard
 
-"@zcloak/service@npm:^0.0.2-10":
-  version: 0.0.2-10
-  resolution: "@zcloak/service@npm:0.0.2-10"
-  checksum: 392f157a4dea7bb6f2f6d9c14e5c2bb670554467da81d29c7e284e961731ef6fbe87977fd1dffb94efad6039cd988bf267b180647ff264df43fc8cf7f9f8b81d
+"@zcloak/service@npm:^0.0.2-14":
+  version: 0.0.2-14
+  resolution: "@zcloak/service@npm:0.0.2-14"
+  checksum: 3969b9538dc8c51b2072e963495b42ea2d7caf3b1f2770b8020531fa2f5abed83d6412e86826834c5f1cd77fc20dd54b0702552a48955ca1f2a989ca0c47ad94
   languageName: node
   linkType: hard
 
@@ -13572,9 +13572,9 @@ __metadata:
     "@types/react": ^18.0.9
     "@types/react-dom": ^18.0.5
     "@types/react-slick": ^0.23.8
-    "@zcloak/credential-core": ^0.0.2-10
+    "@zcloak/credential-core": ^0.0.2-14
     "@zcloak/dev": ^0.1.1
-    "@zcloak/service": ^0.0.2-10
+    "@zcloak/service": ^0.0.2-14
     babel-plugin-import: ^1.13.5
     concurrently: ^7.2.1
     devtron: ^1.4.0

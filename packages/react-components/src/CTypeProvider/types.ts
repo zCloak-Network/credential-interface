@@ -23,5 +23,6 @@ export interface ICTypeSchema {
 
 export interface ICTypeMetadata {
   owner: string;
+  ctypeHash: string;
   schema: ICTypeSchema;
 }
