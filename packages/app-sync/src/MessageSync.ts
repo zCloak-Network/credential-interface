@@ -10,7 +10,7 @@ export class MessageSync {
   public dataSource: IDataSource;
   public db: CredentialData;
   public keyId: string;
-  public batch?: number;
+  public batch: number;
   public parse: ParserFunc;
 
   constructor(
@@ -62,7 +62,9 @@ export class MessageSync {
 
       await this.db.message.bulkAdd(messages);
 
-      await this.sync();
+      if (messageData.length >= this.batch) {
+        await this.sync();
+      }
     }
   }
 

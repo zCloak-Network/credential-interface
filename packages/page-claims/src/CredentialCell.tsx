@@ -3,7 +3,7 @@ import type { CredentialType } from '@credential/react-components/CredentialProv
 import { Credential, CType } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
@@ -95,6 +95,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
+  const containerRef = useRef();
   const cType = useMemo(() => {
     return cTypeList.find(
       (cType) =>
@@ -104,7 +105,15 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
 
   return (
     <>
-      <Box position="relative">
+      <Box
+        onClick={(e) => {
+          if (e.target === containerRef.current) {
+            toggleOpen();
+          }
+        }}
+        position="relative"
+        ref={containerRef}
+      >
         <Box
           sx={({ palette }) => ({
             zIndex: 1,
@@ -124,7 +133,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               : palette.warning.main
           })}
         />
-        <Wrapper onClick={toggleOpen}>
+        <Wrapper>
           <Box className="CredentialCell_Status">
             <Status revoked={revoked} verified={verified} />
             <Typography className="CredentialCell_Time" variant="inherit">
