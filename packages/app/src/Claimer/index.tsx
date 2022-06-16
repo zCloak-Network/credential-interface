@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/materia
 import React, { useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { useClaimer } from '@credential/react-components';
+import { UnlockModal, useClaimer } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
@@ -11,9 +11,10 @@ import Sidebar from '../Sidebar';
 
 const Claimer: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
+  const [unlockOpen, toggleUnlockOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { isReady } = useClaimer();
+  const { claimer, isReady } = useClaimer();
 
   const items = useMemo(
     () => [
@@ -75,9 +76,9 @@ const Claimer: React.FC = () => {
               })
         }}
       >
-        {isReady ? (
-          <Outlet />
-        ) : (
+        {claimer.isLocked ? (
+          <UnlockModal onUnlock={toggleUnlockOpen} open={unlockOpen} />
+        ) : !isReady ? (
           <Stack
             sx={{
               position: 'absolute',
@@ -93,6 +94,8 @@ const Claimer: React.FC = () => {
             <CircularProgress />
             <Typography variant="h6">Connecting to kilt network, please wait 30s.</Typography>
           </Stack>
+        ) : (
+          <Outlet />
         )}
       </Box>
     </Box>

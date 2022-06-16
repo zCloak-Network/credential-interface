@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/materia
 import React, { useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { useAttester } from '@credential/react-components';
+import { UnlockModal, useAttester } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
@@ -11,9 +11,10 @@ import Sidebar from '../Sidebar';
 
 const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
+  const [unlockOpen, toggleUnlockOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { isReady } = useAttester();
+  const { attester, isReady } = useAttester();
 
   const items = useMemo(
     () => [
@@ -73,9 +74,9 @@ const Attester: React.FC = () => {
               })
         }}
       >
-        {isReady ? (
-          <Outlet />
-        ) : (
+        {attester.isLocked ? (
+          <UnlockModal onUnlock={toggleUnlockOpen} open={unlockOpen} />
+        ) : !isReady ? (
           <Stack
             sx={{
               position: 'absolute',
@@ -91,6 +92,8 @@ const Attester: React.FC = () => {
             <CircularProgress />
             <Typography variant="h6">Connecting to kilt network, please wait 30s.</Typography>
           </Stack>
+        ) : (
+          <Outlet />
         )}
       </Box>
     </Box>
