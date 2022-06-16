@@ -12,6 +12,7 @@ import { createDidsFactory } from './utils';
 
 let dids: Dids;
 let api: ApiPromise;
+let account: string;
 
 export const DidsContext = createContext({} as DidsState);
 
@@ -22,15 +23,14 @@ const DidsProvider: React.FC<
 > = ({ DidsConstructor, children }) => {
   const [didIsReady, setDidIsReady] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const [account, setAccount] = useState<string>();
   const { attesterKeystore, claimerKeystore } = useKeystore();
 
   useEffect(() => {
     if (DidsConstructor === Claimer && claimerKeystore) {
-      setAccount(claimerKeystore.address);
+      account = claimerKeystore.address;
       dids = createDidsFactory(DidsConstructor)(claimerKeystore, KILT_PEREGRINE_ENDPOINT);
     } else if (DidsConstructor === Attester && attesterKeystore) {
-      setAccount(attesterKeystore.address);
+      account = attesterKeystore.address;
       dids = createDidsFactory(DidsConstructor)(attesterKeystore, KILT_PEREGRINE_ENDPOINT);
     }
 
@@ -54,7 +54,7 @@ const DidsProvider: React.FC<
       isReady,
       didIsReady
     }),
-    [account, didIsReady, isReady]
+    [didIsReady, isReady]
   );
 
   return <DidsContext.Provider value={value}>{didIsReady ? children : null}</DidsContext.Provider>;

@@ -31,7 +31,9 @@ const createAppClaimer = () => (
         <AccountAuth accountType="claimer">
           <DidsProvider DidsConstructor={ClaimerConstructor}>
             <CredentialProvider>
-              <Claimer />
+              <AppProvider>
+                <Claimer />
+              </AppProvider>
             </CredentialProvider>
           </DidsProvider>
         </AccountAuth>
