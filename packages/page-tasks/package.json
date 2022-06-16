@@ -2,13 +2,13 @@
   "author": "zCloak",
   "bugs": "https://github.com/zCloak-Network/credential-interface/issues",
   "contributors": [],
-  "description": "credential react-hooks",
-  "homepage": "https://github.com/zCloak-Network/credential-interface/tree/master/packages/react-hooks#readme",
+  "description": "credential page-tasks",
+  "homepage": "https://github.com/zCloak-Network/credential-interface/tree/master/packages/page-tasks#readme",
   "license": "Apache-2.0",
   "maintainers": [],
-  "name": "@credential/react-hooks",
+  "name": "@credential/page-tasks",
   "repository": {
-    "directory": "packages/react-hooks",
+    "directory": "packages/page-tasks",
     "type": "git",
     "url": "https://github.com/zCloak-Network/credential-interface.git"
   },
@@ -16,9 +16,6 @@
   "type": "module",
   "version": "0.0.0",
   "dependencies": {
-    "@credential/app-db": "0.0.0",
-    "@zcloak/service": "^0.0.2-16",
-    "copy-to-clipboard": "^3.3.1",
-    "dexie-react-hooks": "^1.1.1"
+    "@credential/react-keystore": "0.0.0"
   }
 }

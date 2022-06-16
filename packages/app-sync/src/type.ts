@@ -9,12 +9,7 @@ interface MessageType {
 }
 
 export interface IDataSource {
-  getMessage(
-    id: number,
-    senderKeyId?: string,
-    receiverKeyId?: string,
-    length?: number
-  ): Promise<MessageType[]>;
+  getMessage(id: number, keyId?: string, length?: number): Promise<MessageType[]>;
 }
 
 export type ParserFunc = (encoded: {

@@ -48,7 +48,7 @@ const CreateCType: React.FC = () => {
 
   const createCType = useCallback(async () => {
     try {
-      const fullDid = await attester.getFullDidDetails();
+      const fullDid = attester.fullDidDetails;
 
       if (!fullDid) throw new Error('The DID with the given identifier is not on chain.');
 
@@ -89,7 +89,7 @@ const CreateCType: React.FC = () => {
     } finally {
       setLoading(false);
     }
-  }, [cTypeContent, attester, notifyError, clear, toggleOpen]);
+  }, [cTypeContent, attester, clear, toggleOpen, notifyError]);
 
   return (
     <>

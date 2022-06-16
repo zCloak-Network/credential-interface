@@ -1,7 +1,8 @@
-import { Box, useTheme } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/material';
 import React, { useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import { useAttester } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
@@ -12,6 +13,7 @@ const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
+  const { isReady } = useAttester();
 
   const items = useMemo(
     () => [
@@ -71,7 +73,25 @@ const Attester: React.FC = () => {
               })
         }}
       >
-        <Outlet />
+        {isReady ? (
+          <Outlet />
+        ) : (
+          <Stack
+            sx={{
+              position: 'absolute',
+              bottom: 0,
+              right: 0,
+              top: '100px',
+              left: open ? '274px' : '120px',
+              display: 'flex',
+              alignItems: 'center',
+              justifyContent: 'center'
+            }}
+          >
+            <CircularProgress />
+            <Typography variant="h6">Connecting to kilt network, please wait 30s.</Typography>
+          </Stack>
+        )}
       </Box>
     </Box>
   );

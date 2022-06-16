@@ -12,7 +12,8 @@ import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
-import { CredentialProvider, DidsProvider } from '@credential/react-components';
+import PageTasks from '@credential/page-tasks';
+import { AppProvider, CredentialProvider, DidsProvider } from '@credential/react-components';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -56,13 +57,15 @@ const createAppAttester = () => (
       element={
         <AccountAuth accountType="attester">
           <DidsProvider DidsConstructor={AttesterConstructor}>
-            <Attester />
+            <AppProvider>
+              <Attester />
+            </AppProvider>
           </DidsProvider>
         </AccountAuth>
       }
     >
       <Route element={<PageOwnerCType />} path="my-ctype" />
-      <Route element={<div>tasks</div>} path="tasks" />
+      <Route element={<PageTasks />} path="tasks" />
       <Route element={<div>message</div>} path="message" />
     </Route>
     <Route element={<Account />} path="account">

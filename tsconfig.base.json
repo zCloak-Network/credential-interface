@@ -20,6 +20,8 @@
       "@credential/page-claims/*": ["page-claims/src/*"],
       "@credential/page-ctype": ["page-ctype/src"],
       "@credential/page-ctype/*": ["page-ctype/src/*"],
+      "@credential/page-tasks": ["page-tasks/src"],
+      "@credential/page-tasks/*": ["page-tasks/src/*"],
       "@credential/react-components": ["react-components/src"],
       "@credential/react-components/*": ["react-components/src/*"],
       "@credential/react-ctype": ["react-ctype/src"],
