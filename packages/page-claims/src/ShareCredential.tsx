@@ -1,7 +1,7 @@
 import type { ICredential } from '@kiltprotocol/sdk-js';
 
 import { Did, Message } from '@kiltprotocol/sdk-js';
-import { Dialog, DialogContent, Stack } from '@mui/material';
+import { Dialog, DialogContent, Portal, Stack } from '@mui/material';
 import React, { useCallback, useContext, useState } from 'react';
 
 import {

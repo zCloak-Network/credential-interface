@@ -3,7 +3,7 @@ import type { CredentialType } from '@credential/react-components/CredentialProv
 import { Credential, CType } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useMemo, useRef } from 'react';
+import React, { useContext, useMemo } from 'react';
 
 import { CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
@@ -69,7 +69,6 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     })
   },
   '.CredentialCell_actions': {
-    left: theme.spacing(4),
     right: theme.spacing(4),
     bottom: theme.spacing(4),
     opacity: 0,
@@ -95,7 +94,6 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
-  const containerRef = useRef();
   const cType = useMemo(() => {
     return cTypeList.find(
       (cType) =>
@@ -105,15 +103,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
 
   return (
     <>
-      <Box
-        onClick={(e) => {
-          if (e.target === containerRef.current) {
-            toggleOpen();
-          }
-        }}
-        position="relative"
-        ref={containerRef}
-      >
+      <Box position="relative">
         <Box
           sx={({ palette }) => ({
             zIndex: 1,
@@ -133,7 +123,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               : palette.warning.main
           })}
         />
-        <Wrapper>
+        <Wrapper onClick={toggleOpen}>
           <Box className="CredentialCell_Status">
             <Status revoked={revoked} verified={verified} />
             <Typography className="CredentialCell_Time" variant="inherit">
@@ -169,7 +159,14 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               </Tooltip>
             </Box>
           </Stack>
-          <Stack className="CredentialCell_actions" direction="row-reverse" mt={2} spacing={1}>
+          <Stack
+            className="CredentialCell_actions"
+            direction="row-reverse"
+            display="inline-flex"
+            mt={2}
+            onClick={(e) => e.stopPropagation()}
+            spacing={1}
+          >
             <ImportButton />
             <ShareButton credential={credential} />
             <DownloadButton credential={credential} />
