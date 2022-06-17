@@ -16,6 +16,7 @@ export { default as DidName } from './DidName';
 export { default as FullScreenDialog } from './FullScreenDialog';
 export { default as FullScreenDialogContent } from './FullScreenDialogContent';
 export { default as FullScreenDialogHeader } from './FullScreenDialogHeader';
+export { default as ImportCTypeModal } from './ImportCTypeModal';
 export { default as MnemonicCell } from './MnemonicCell';
 export { default as InputPassword } from './InputPassword';
 export { default as InputDid } from './InputDid';

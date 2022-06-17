@@ -5,7 +5,7 @@ import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo, useRef } from 'react';
 
-import { CTypeContext } from '@credential/react-components';
+import { CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { useToggle } from '@credential/react-hooks';
 
@@ -140,11 +140,9 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
             </Typography>
           </Box>
-          <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
-            <Typography className="CredentialCell_title" mt={2} variant="h3">
-              {cType?.schema.title || credential.attestation.cTypeHash}
-            </Typography>
-          </Tooltip>
+          <Typography className="CredentialCell_title" mt={2} variant="h3">
+            <CTypeName cTypeHash={credential.attestation.cTypeHash} />
+          </Typography>
           <Stack
             className="CredentialCell_attester"
             direction="row"
