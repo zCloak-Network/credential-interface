@@ -51,7 +51,7 @@ const AttestationTable: React.FC = () => {
               </TableCell>
               <TableCell>{moment(item.messageCreateAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
               <TableCell>
-                <AttestationStatus messageId={item.status} />{' '}
+                <AttestationStatus status={item.status} />{' '}
               </TableCell>
               <TableCell>
                 <IconButton>

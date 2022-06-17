@@ -1,43 +1,32 @@
 import Circle from '@mui/icons-material/Circle';
-import { Stack, SvgIcon } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import { Stack, SvgIcon, Typography } from '@mui/material';
+import React from 'react';
 
-import {
-  IMessage,
-  IRejectAttestation,
-  ISubmitAttestation,
-  MessageBodyType
-} from '@credential/app-db/message';
+import { RequestForAttestationStatus } from '@credential/app-db/requestForAttestation';
 
-type MessageType =
-  | (Omit<IMessage, 'body'> & { body: ISubmitAttestation })
-  | (Omit<IMessage, 'body'> & { body: IRejectAttestation });
-
-const AttestationStatus: React.FC<{ messageId?: string }> = ({ messageId }) => {
-  const [message, setMessage] = useState<MessageType>();
-
-  // useEffect(() => {
-  //   if (messageId) {
-  //     getAttestationReply(credentialDb, messageId).then(setMessage);
-  //   }
-  // }, [messageId]);
-
+const AttestationStatus: React.FC<{ status: RequestForAttestationStatus }> = ({ status }) => {
   return (
     <Stack alignItems="center" direction="row" spacing={1}>
       <SvgIcon
         component={Circle}
         sx={({ palette }) => ({
           width: 8,
-
           height: 8,
-          color: palette.grey[500]
+          color:
+            status === RequestForAttestationStatus.INIT
+              ? palette.grey[500]
+              : status === RequestForAttestationStatus.SUBMIT
+              ? palette.success.main
+              : palette.error.main
         })}
       />
-      {message
-        ? message.body.type === MessageBodyType.SUBMIT_ATTESTATION
-          ? 'Submited'
-          : 'Rejected'
-        : 'Invalid'}
+      <Typography variant="inherit">
+        {status === RequestForAttestationStatus.INIT
+          ? 'Invalid'
+          : status === RequestForAttestationStatus.SUBMIT
+          ? 'Submit'
+          : 'Reject'}
+      </Typography>
     </Stack>
   );
 };
