@@ -9,6 +9,6 @@ export enum RequestForAttestationStatus {
 export interface RequestForAttestation extends IRequestForAttestation {
   id?: number;
   messageCreateAt: number;
-  messageId: number;
+  messageId: string;
   status: RequestForAttestationStatus;
 }

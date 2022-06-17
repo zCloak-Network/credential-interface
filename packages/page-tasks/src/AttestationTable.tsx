@@ -1,7 +1,5 @@
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import {
   Box,
-  IconButton,
   Table,
   TableBody,
   TableCell,
@@ -16,6 +14,7 @@ import { AppContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { useRequestForAttestation } from '@credential/react-hooks';
 
+import ActionButton from './ActionButton';
 import AttestationStatus from './AttestationStatus';
 
 const AttestationTable: React.FC = () => {
@@ -54,9 +53,7 @@ const AttestationTable: React.FC = () => {
                 <AttestationStatus status={item.status} />{' '}
               </TableCell>
               <TableCell>
-                <IconButton>
-                  <MoreHorizIcon />
-                </IconButton>
+                <ActionButton request={item} />
               </TableCell>
             </TableRow>
           ))}

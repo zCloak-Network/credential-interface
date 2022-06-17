@@ -84,7 +84,7 @@ export class MessageSync {
             case MessageBodyType.REQUEST_ATTESTATION:
               await this.db.requestForAttestation.add({
                 messageCreateAt: message.createdAt,
-                messageId: message.id!,
+                messageId: message.messageId!,
                 status: RequestForAttestationStatus.INIT,
                 ...message.body.content.requestForAttestation
               });
@@ -95,7 +95,7 @@ export class MessageSync {
             case MessageBodyType.SUBMIT_ATTESTATION:
               await this.db.attestation.add({
                 messageCreateAt: message.createdAt,
-                messageId: message.id!,
+                messageId: message.messageId!,
                 ...message.body.content.attestation
               });
               await this.db.requestForAttestation
