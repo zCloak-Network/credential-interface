@@ -1,30 +1,22 @@
-import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
-import { Box, IconButton, Paper, Stack, SvgIcon, Typography } from '@mui/material';
-import React, { useContext, useMemo } from 'react';
+import { Box, Paper, Stack, SvgIcon, Typography } from '@mui/material';
+import React from 'react';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
-import { CTypeContext, useDids } from '@credential/react-components';
+import { ICTypeMetadata } from '@credential/react-components/CTypeProvider/types';
+import { ellipsisMixin } from '@credential/react-components/utils';
 
 import CreateCType from './CreateCType';
 
-const CTypes: React.FC = () => {
-  const { cTypeList } = useContext(CTypeContext);
-  const { account } = useDids();
-
-  const mineCTypeList = useMemo(
-    () => (account ? cTypeList.filter((cType) => cType.owner?.includes(account)) : []),
-    [account, cTypeList]
-  );
-
+const CTypes: React.FC<{ list: ICTypeMetadata[] }> = ({ list }) => {
   return (
     <Box>
       <Box sx={{ textAlign: 'right', mb: 3 }}>
         <CreateCType />
       </Box>
       <Stack spacing={3}>
-        {mineCTypeList.map((cType) => (
+        {list.map((cType) => (
           <Paper
-            key={cType.hash}
+            key={cType.ctypeHash}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -35,7 +27,7 @@ const CTypes: React.FC = () => {
             }}
             variant="outlined"
           >
-            <Stack alignItems="center" direction="row" spacing={2}>
+            <Stack alignItems="center" direction="row" spacing={2} width="20%">
               <SvgIcon
                 component={LogoCircleIcon}
                 sx={{ width: 35, height: 35 }}
@@ -43,7 +35,7 @@ const CTypes: React.FC = () => {
               />
               <Typography fontWeight={500}>{cType.schema.title}</Typography>
             </Stack>
-            <Stack spacing={0.5}>
+            <Stack spacing={0.5} width="40%">
               <Typography
                 fontWeight={300}
                 sx={({ palette }) => ({ color: palette.grey[500] })}
@@ -51,11 +43,22 @@ const CTypes: React.FC = () => {
               >
                 Attested by
               </Typography>
-              <Typography variant="inherit">{cType.owner}</Typography>
+              <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
+                {cType.owner}
+              </Typography>
             </Stack>
-            <IconButton>
-              <MoreHorizIcon />
-            </IconButton>
+            <Stack spacing={0.5} width="40%">
+              <Typography
+                fontWeight={300}
+                sx={({ palette }) => ({ color: palette.grey[500] })}
+                variant="inherit"
+              >
+                CType Hash
+              </Typography>
+              <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
+                {cType.ctypeHash}
+              </Typography>
+            </Stack>
           </Paper>
         ))}
       </Stack>

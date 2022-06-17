@@ -252,12 +252,15 @@ const createComponents: Func = () => ({
     styleOverrides: {
       root: {
         borderRadius: 5,
-        textTransform: 'initial',
-        minWidth: '140px'
+        textTransform: 'initial'
       },
       outlined: ({ theme }) => ({
-        borderColor: theme.palette.primary.main
+        borderColor: theme.palette.primary.main,
+        minWidth: '140px'
       }),
+      contained: {
+        minWidth: '140px'
+      },
       sizeSmall: {
         padding: '4px 10px',
         fontSize: '0.9375rem'

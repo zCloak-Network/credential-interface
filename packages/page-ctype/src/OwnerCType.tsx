@@ -1,9 +1,29 @@
 import { Box, Stack, Tab, Tabs } from '@mui/material';
-import React from 'react';
+import React, { useEffect, useState } from 'react';
+
+import { useAttester } from '@credential/react-components';
+import { ICTypeMetadata, ICTypeSchema } from '@credential/react-components/CTypeProvider/types';
+import { credentialApi } from '@credential/react-hooks/api';
 
 import CTypes from './CTypes';
 
 const OwnerCType: React.FC = () => {
+  const { attester } = useAttester();
+  const [ownCTypes, setOwnCTypes] = useState<ICTypeMetadata[]>([]);
+
+  useEffect(() => {
+    if (attester.fullDidDetails) {
+      credentialApi.getUserCType(attester.fullDidDetails.did).then((res) => {
+        setOwnCTypes(
+          res.data.map((d) => ({
+            ...d,
+            schema: d.metadata as ICTypeSchema
+          }))
+        );
+      });
+    }
+  }, [attester]);
+
   return (
     <Stack spacing={3}>
       <Tabs
@@ -16,7 +36,7 @@ const OwnerCType: React.FC = () => {
         <Tab label="My CTypes" />
       </Tabs>
       <Box px={4}>
-        <CTypes />
+        <CTypes list={ownCTypes} />
       </Box>
     </Stack>
   );
