@@ -9,7 +9,7 @@ export function useDids(): {
   dids: Dids;
   api: ApiPromise;
   isReady: boolean;
-  account?: string;
+  account: string;
 } {
   const { account, api, dids, isReady } = useContext(DidsContext);
 

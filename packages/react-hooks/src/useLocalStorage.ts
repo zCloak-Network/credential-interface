@@ -2,7 +2,9 @@ import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { deserializer, getCache, serializer } from './cache';
 
-export function useLocalStorage<T>(key: string): [T | undefined, (value: T) => void, () => void];
+export function useLocalStorage<T>(
+  key: string
+): [T | undefined, (value: T | ((value: T) => T)) => void, () => void];
 export function useLocalStorage<T>(
   key: string,
   initialvalue: T

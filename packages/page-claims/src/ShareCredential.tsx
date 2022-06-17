@@ -18,20 +18,20 @@ const ShareCredential: React.FC<{
   open: boolean;
   onClose?: () => void;
 }> = ({ credential, onClose, open }) => {
-  const [didDetails, setDidDetails] = useState<Did.FullDidDetails | null>(null);
+  const [fullDid, setFullDid] = useState<Did.FullDidDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const { claimer } = useClaimer();
   const { notifyError } = useContext(NotificationContext);
 
   const shareCredential = useCallback(async () => {
-    if (!didDetails) {
+    if (!fullDid) {
       return;
     }
 
     try {
       setLoading(true);
 
-      if (!didDetails.encryptionKey) {
+      if (!fullDid.encryptionKey) {
         throw new Error("Receipt don't has encryptionKey, you can't send to attester.");
       }
 
@@ -41,11 +41,11 @@ const ShareCredential: React.FC<{
           type: Message.BodyType.SUBMIT_CREDENTIAL
         },
         claimer.didDetails.did,
-        didDetails.did
+        fullDid.did
       );
 
       await credentialApi.addMessage(
-        await claimer.encryptMessage(message, didDetails.assembleKeyId(didDetails.encryptionKey.id))
+        await claimer.encryptMessage(message, fullDid.assembleKeyId(fullDid.encryptionKey.id))
       );
       onClose?.();
     } catch (error) {
@@ -53,16 +53,16 @@ const ShareCredential: React.FC<{
     } finally {
       setLoading(false);
     }
-  }, [claimer, credential, didDetails, notifyError, onClose]);
+  }, [claimer, credential, fullDid, notifyError, onClose]);
 
   return (
     <Dialog fullWidth onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Share this with others</DialogHeader>
       <DialogContent>
         <Stack spacing={3}>
-          <InputDid onChange={setDidDetails} />
+          <InputDid onChange={setFullDid} />
           <ButtonUnlock
-            disabled={!didDetails}
+            disabled={!fullDid}
             loading={loading}
             onClick={shareCredential}
             variant="contained"

@@ -3,9 +3,9 @@ import type { CredentialType } from '@credential/react-components/CredentialProv
 import { Credential, CType } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext, useMemo, useRef } from 'react';
 
-import { CTypeContext } from '@credential/react-components';
+import { CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { useToggle } from '@credential/react-hooks';
 
@@ -95,6 +95,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
+  const containerRef = useRef();
   const cType = useMemo(() => {
     return cTypeList.find(
       (cType) =>
@@ -104,7 +105,15 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
 
   return (
     <>
-      <Box position="relative">
+      <Box
+        onClick={(e) => {
+          if (e.target === containerRef.current) {
+            toggleOpen();
+          }
+        }}
+        position="relative"
+        ref={containerRef}
+      >
         <Box
           sx={({ palette }) => ({
             zIndex: 1,
@@ -124,18 +133,16 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               : palette.warning.main
           })}
         />
-        <Wrapper onClick={toggleOpen}>
+        <Wrapper>
           <Box className="CredentialCell_Status">
             <Status revoked={revoked} verified={verified} />
             <Typography className="CredentialCell_Time" variant="inherit">
               {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
             </Typography>
           </Box>
-          <Tooltip title={cType?.schema.title ?? 'Unknown CType'}>
-            <Typography className="CredentialCell_title" mt={2} variant="h3">
-              {cType?.schema.title || credential.attestation.cTypeHash}
-            </Typography>
-          </Tooltip>
+          <Typography className="CredentialCell_title" mt={2} variant="h3">
+            <CTypeName cTypeHash={credential.attestation.cTypeHash} />
+          </Typography>
           <Stack
             className="CredentialCell_attester"
             direction="row"
@@ -149,7 +156,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  {cType?.owner ?? '--'}
+                  {credential.attestation.owner}
                 </Typography>
               </Tooltip>
             </Box>
@@ -169,7 +176,9 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
           </Stack>
         </Wrapper>
       </Box>
-      <CredentialModal credential={credential} onClose={toggleOpen} open={open} />
+      {cType && (
+        <CredentialModal cType={cType} credential={credential} onClose={toggleOpen} open={open} />
+      )}
     </>
   );
 };

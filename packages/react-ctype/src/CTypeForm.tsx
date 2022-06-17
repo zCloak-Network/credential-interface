@@ -10,12 +10,21 @@ import CTypeItem from './CTypeItem';
 const CTypeForm: React.FC<
   React.PropsWithChildren<{
     cType: CType;
+    disabled?: boolean;
     defaultData?: Record<string, unknown>;
     onChange?: (data: Record<string, unknown>) => void;
     defaultAttester?: string;
     handleAttester?: (value: Did.FullDidDetails | null) => void;
   }>
-> = ({ cType, onChange, handleAttester, defaultAttester, defaultData = {}, children }) => {
+> = ({
+  cType,
+  onChange,
+  handleAttester,
+  disabled = false,
+  defaultAttester,
+  defaultData = {},
+  children
+}) => {
   const [data, setData] = useState<Record<string, unknown>>(defaultData);
 
   const _onChange = useCallback((key: string, value: unknown) => {
@@ -35,10 +44,16 @@ const CTypeForm: React.FC<
         <InputLabel shrink>Credential type</InputLabel>
         <OutlinedInput disabled value={cType.schema.title} />
       </FormControl>
-      <AttesterSelect defaultValue={defaultAttester} onChange={handleAttester} />
+      <AttesterSelect
+        defaultValue={defaultAttester}
+        disabled={disabled}
+        onChange={handleAttester}
+      />
       <Box />
       {Object.keys(cType.schema.properties).map((key) => (
         <CTypeItem
+          defaultValue={defaultData?.[key]}
+          disabled={disabled}
           key={key}
           name={key}
           onChange={_onChange}

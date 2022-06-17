@@ -13,6 +13,8 @@ import {
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
+
 interface Item {
   to: string;
   active: boolean;
@@ -21,11 +23,12 @@ interface Item {
 }
 
 interface Props {
+  accountType: ACCOUNT_TYPE;
   open: boolean;
   items: Item[];
 }
 
-const drawerWidth = '240px';
+const drawerWidth = '220px';
 
 const openedMixin = (theme: Theme): CSSObject => ({
   width: drawerWidth,
@@ -48,28 +51,35 @@ const closedMixin = (theme: Theme): CSSObject => ({
   }
 });
 
-const Drawer = styled(MuiDrawer, { shouldForwardProp: (prop) => prop !== 'open' })(
-  ({ open, theme }) => ({
-    width: drawerWidth,
-    flexShrink: 0,
-    whiteSpace: 'nowrap',
-    boxSizing: 'border-box',
-    ...(open && {
-      ...openedMixin(theme),
-      '& .MuiDrawer-paper': { zIndex: 99, padding: '100px 16px 0 16px', ...openedMixin(theme) }
-    }),
-    ...(!open && {
-      ...closedMixin(theme),
-      '& .MuiDrawer-paper': { zIndex: 99, padding: '100px 16px 0 16px', ...closedMixin(theme) }
-    })
+const Drawer = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => !['open', 'accountType'].includes(prop as string)
+})<{
+  accountType: ACCOUNT_TYPE;
+}>(({ accountType, open, theme }) => ({
+  width: drawerWidth,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  '& .MuiDrawer-paper': {
+    background:
+      accountType === 'attester' ? theme.palette.common.black : theme.palette.common.white,
+    zIndex: 99,
+    padding: '100px 16px 0 16px',
+    ...(open ? openedMixin(theme) : closedMixin(theme))
+  },
+  ...(open && {
+    ...openedMixin(theme)
+  }),
+  ...(!open && {
+    ...closedMixin(theme)
   })
-);
+}));
 
-const Sidebar: React.FC<Props> = ({ items, open }) => {
+const Sidebar: React.FC<Props> = ({ accountType, items, open }) => {
   const navigate = useNavigate();
 
   return (
-    <Drawer open={open} variant="permanent">
+    <Drawer accountType={accountType} open={open} variant="permanent">
       <List>
         {items.map(({ active, svgIcon, text, to }, index) => (
           <ListItem
@@ -78,7 +88,9 @@ const Sidebar: React.FC<Props> = ({ items, open }) => {
             sx={({ palette }) => ({
               display: 'block',
               mb: 2,
-              background: active ? alpha(palette.primary.main, 0.1) : undefined
+              background: active
+                ? alpha(palette.primary.main, accountType === 'attester' ? 1 : 0.1)
+                : undefined
             })}
           >
             <ListItemButton
@@ -102,7 +114,14 @@ const Sidebar: React.FC<Props> = ({ items, open }) => {
                 primary={text}
                 sx={({ palette }) => ({
                   opacity: open ? 1 : 0,
-                  color: active ? palette.primary.main : undefined
+                  color:
+                    accountType === 'attester'
+                      ? active
+                        ? palette.common.white
+                        : palette.grey[500]
+                      : active
+                      ? palette.primary.main
+                      : palette.common.black
                 })}
               />
             </ListItemButton>

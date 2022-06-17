@@ -29,7 +29,7 @@ const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () 
   return (
     <Dialog maxWidth="lg" onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Unlock account</DialogHeader>
-      <DialogContent sx={{ width: 600, maxWidth: '100%' }}>
+      <DialogContent>
         <Typography mb={2} variant="h4">
           Please input password unlock
         </Typography>

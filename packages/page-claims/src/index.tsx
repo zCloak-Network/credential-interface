@@ -16,7 +16,7 @@ const Claims: React.FC = () => {
     return (type === 0 ? credentials : verifiedCredentials).filter((credential) =>
       Did.DidUtils.isSameSubject(credential.credential.request.claim.owner, claimer.didDetails.did)
     );
-  }, [claimer.didDetails.did, credentials, type, verifiedCredentials]);
+  }, [claimer, credentials, type, verifiedCredentials]);
 
   return (
     <>

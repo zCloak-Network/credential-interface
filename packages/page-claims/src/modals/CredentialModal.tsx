@@ -1,26 +1,27 @@
-import type { ICredential } from '@kiltprotocol/sdk-js';
+import type { CType, ICredential } from '@kiltprotocol/sdk-js';
 
 import { alpha, Stack, Typography } from '@mui/material';
 import React from 'react';
 
 import {
-  CredentialDetail,
   FullScreenDialog,
   FullScreenDialogContent,
   FullScreenDialogHeader
 } from '@credential/react-components';
+import { CTypeForm } from '@credential/react-ctype';
 
 import DownloadButton from '../button/DownloadButton';
 import ImportButton from '../button/ImportButton';
 import ShareButton from '../button/ShareButton';
 
 interface Props {
+  cType: CType;
   credential: ICredential;
   open: boolean;
   onClose?: () => void;
 }
 
-const CredentialModal: React.FC<Props> = ({ credential, onClose, open }) => {
+const CredentialModal: React.FC<Props> = ({ cType, credential, onClose, open }) => {
   return (
     <FullScreenDialog onClose={onClose} open={open}>
       <FullScreenDialogHeader>{credential.attestation.claimHash}</FullScreenDialogHeader>
@@ -50,7 +51,12 @@ const CredentialModal: React.FC<Props> = ({ credential, onClose, open }) => {
         <Typography mb={5} textAlign="center" variant="h2">
           Credential detail
         </Typography>
-        <CredentialDetail credential={credential} />
+        <CTypeForm
+          cType={cType}
+          defaultAttester={credential.attestation.owner}
+          defaultData={credential.request.claim.contents}
+          disabled
+        />
       </FullScreenDialogContent>
     </FullScreenDialog>
   );

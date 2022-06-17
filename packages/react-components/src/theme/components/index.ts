@@ -251,13 +251,16 @@ const createComponents: Func = () => ({
   MuiButton: {
     styleOverrides: {
       root: {
-        borderRadius: 10,
-        textTransform: 'initial',
-        minWidth: '140px'
+        borderRadius: 5,
+        textTransform: 'initial'
       },
       outlined: ({ theme }) => ({
-        borderColor: theme.palette.primary.main
+        borderColor: theme.palette.primary.main,
+        minWidth: '140px'
       }),
+      contained: {
+        minWidth: '140px'
+      },
       sizeSmall: {
         padding: '4px 10px',
         fontSize: '0.9375rem'
@@ -292,6 +295,25 @@ const createComponents: Func = () => ({
           [breakpoints.down('md')]: {
             padding: spacing(2)
           }
+        }
+      }),
+      paperFullScreen: ({ theme: { palette, spacing } }) => ({
+        margin: 0,
+        background: palette.grey[100],
+        borderRadius: 0,
+        '& .MuiDialogTitle-root': {
+          background: palette.common.white
+        },
+        '& .MuiDialogContent-root': {
+          margin: spacing(3),
+          marginLeft: 'auto',
+          marginRight: 'auto',
+          background: palette.common.white
+        },
+        '& .MuiDialogActions-root': {
+          background: palette.common.white,
+          justifyContent: 'center',
+          padding: spacing(3)
         }
       }),
       paper: ({ theme: { breakpoints, spacing } }) => ({
@@ -335,31 +357,28 @@ const createComponents: Func = () => ({
 
   MuiTableRow: {
     styleOverrides: {
-      root: {
+      root: ({ theme }) => ({
+        borderBottom: '1px solid',
+        borderBottomColor: theme.palette.grey[300],
+        '&:nth-last-of-type(1)': {
+          borderBottom: 'none'
+        },
         '&.MuiTableRow-hover:hover': {
           backgroundColor: '#E5E7ED'
         }
-      }
+      })
     }
   },
   MuiTableCell: {
     styleOverrides: {
-      root: () => ({
-        '&:nth-of-type(1)': {
-          borderTopLeftRadius: '10px',
-          borderBottomLeftRadius: '10px'
-        },
-        '&:nth-last-of-type(1)': {
-          borderTopRightRadius: '10px',
-          borderBottomRightRadius: '10px'
-        },
-        borderBottom: 'none',
-        color: '#000',
-        fontWeight: 700
+      root: ({ theme }) => ({
+        color: theme.palette.grey[900],
+        fontWeight: 500
       }),
       head: ({ theme }) => ({
-        borderBottom: '1px solid #E5E7ED',
-        color: theme.palette.grey[700]
+        background: theme.palette.grey[100],
+        color: theme.palette.grey[500],
+        borderBottom: 'none'
       })
     }
   }

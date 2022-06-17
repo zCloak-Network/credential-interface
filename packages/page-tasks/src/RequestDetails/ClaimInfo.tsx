@@ -1,0 +1,94 @@
+import Circle from '@mui/icons-material/Circle';
+import { alpha, Box, Grid, Stack, Typography } from '@mui/material';
+import moment from 'moment';
+import React from 'react';
+
+import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
+import { ButtonUnlock, CTypeName, DidName } from '@credential/react-components';
+import { ellipsisMixin } from '@credential/react-components/utils';
+
+import AttestationStatus from '../AttestationStatus';
+
+const claimInfo: React.FC<{
+  request: RequestForAttestation;
+}> = ({ request }) => {
+  return (
+    <Box sx={({ palette }) => ({ background: palette.common.white, paddingX: 8, paddingY: 4 })}>
+      <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
+        <Stack alignItems="center" direction="row" spacing={3} sx={{ width: '60%' }}>
+          <Circle sx={{ width: 70, height: 70 }} />
+          <Box sx={{ width: 300 }}>
+            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claimer</Typography>
+            <Typography sx={{ ...ellipsisMixin() }} variant="h4">
+              <DidName value={request.claim.owner} />
+            </Typography>
+          </Box>
+        </Stack>
+        <Stack alignItems="center" direction="row" spacing={1.5}>
+          <ButtonUnlock
+            sx={({ palette }) => ({
+              background: alpha(palette.success.main, 0.1),
+              borderColor: palette.success.main,
+              color: palette.success.main,
+              ':hover': {
+                borderColor: palette.success.main
+              }
+            })}
+            variant="outlined"
+          >
+            Verify
+          </ButtonUnlock>
+          <ButtonUnlock
+            sx={({ palette }) => ({
+              background: alpha(palette.error.main, 0),
+              borderColor: palette.error.main,
+              color: palette.error.main,
+              ':hover': {
+                borderColor: palette.error.main
+              }
+            })}
+            variant="outlined"
+          >
+            Reject
+          </ButtonUnlock>
+        </Stack>
+      </Box>
+      <Box mt={5}>
+        <Grid
+          container
+          spacing={{
+            lg: 10,
+            xs: 5
+          }}
+        >
+          <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
+            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claim hash</Typography>
+            <Typography sx={{ ...ellipsisMixin() }}>
+              <DidName value={request.claim.owner} />
+            </Typography>
+          </Grid>
+          <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
+            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
+              Credential type
+            </Typography>
+            <Typography sx={{ ...ellipsisMixin() }}>
+              <CTypeName cTypeHash={request.claim.cTypeHash} />
+            </Typography>
+          </Grid>
+          <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
+            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Status</Typography>
+            <AttestationStatus status={request.status} />
+          </Grid>
+          <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
+            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
+              Approval initiation time
+            </Typography>
+            <Typography>{moment(request.messageCreateAt).format('YYYY-MM-DD HH:mm:ss')}</Typography>
+          </Grid>
+        </Grid>
+      </Box>
+    </Box>
+  );
+};
+
+export default claimInfo;

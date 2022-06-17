@@ -1,3 +1,4 @@
+import { cryptoWaitReady } from '@polkadot/util-crypto';
 import React from 'react';
 import { createRoot } from 'react-dom/client';
 
@@ -12,4 +13,4 @@ if (!rootElement) {
 
 const root = createRoot(rootElement);
 
-root.render(<Root />);
+cryptoWaitReady().then(() => root.render(<Root />));

@@ -1,4 +1,4 @@
-import { IMessageBody } from '@credential/app-db/MessageBody';
+import { IMessage } from '@credential/app-db/message';
 
 interface MessageType {
   id: number;
@@ -9,12 +9,7 @@ interface MessageType {
 }
 
 export interface IDataSource {
-  getMessage(
-    id: number,
-    senderKeyId?: string,
-    receiverKeyId?: string,
-    length?: number
-  ): Promise<MessageType[]>;
+  getMessage(id: number, keyId?: string, length?: number): Promise<MessageType[]>;
 }
 
 export type ParserFunc = (encoded: {
@@ -22,4 +17,4 @@ export type ParserFunc = (encoded: {
   nonce: string;
   senderKeyId: string;
   receiverKeyId: string;
-}) => Promise<IMessageBody>;
+}) => Promise<IMessage>;

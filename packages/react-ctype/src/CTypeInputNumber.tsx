@@ -3,7 +3,13 @@ import type { ItemProps } from './types';
 import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-const CTypeInputNumber: React.FC<ItemProps> = ({ defaultValue, name, onChange, type }) => {
+const CTypeInputNumber: React.FC<ItemProps> = ({
+  defaultValue,
+  disabled = false,
+  name,
+  onChange,
+  type
+}) => {
   const [_value, _setValue] = useState<number>();
   const error = useMemo(() => {
     if (!_value) {
@@ -38,6 +44,7 @@ const CTypeInputNumber: React.FC<ItemProps> = ({ defaultValue, name, onChange, t
       <InputLabel shrink>{name}</InputLabel>
       <OutlinedInput
         defaultValue={defaultValue}
+        disabled={disabled}
         onChange={_onChange}
         placeholder={`Please input ${type}`}
       />

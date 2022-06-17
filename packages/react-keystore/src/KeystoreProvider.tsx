@@ -1,30 +1,30 @@
 import type { DidKeystore } from '@zcloak/credential-core/types';
 
 import { KeyringPair$Json } from '@polkadot/keyring/types';
-import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
+import React, { createContext, useCallback, useContext, useState } from 'react';
 
 import { JsonKeystore } from '@zcloak/credential-core';
 
-import { createAccount, createFromJson } from './createKeyring';
+import { createAccount } from './createKeyring';
 
 interface KeystoreState {
   claimerKeystore: DidKeystore | null;
   attesterKeystore: DidKeystore | null;
-  addKeystore: (mnemonic: string, type: TYPE, passphrase?: string) => KeyringPair$Json;
-  restoreKeystore: (text: string, type: TYPE, passphrase?: string) => void;
+  addKeystore: (mnemonic: string, type: ACCOUNT_TYPE, passphrase?: string) => KeyringPair$Json;
+  restoreKeystore: (text: string, type: ACCOUNT_TYPE, passphrase?: string) => void;
 }
 
 export const KeystoreContext = createContext<KeystoreState>({
   claimerKeystore: null
 } as KeystoreState);
 
-type TYPE = 'attester' | 'claimer';
+export type ACCOUNT_TYPE = 'attester' | 'claimer';
 
 const PREFIX = 'credential:account';
 
-const ATTESTER: TYPE = 'attester';
+const ATTESTER: ACCOUNT_TYPE = 'attester';
 
-const CLAIMER: TYPE = 'claimer';
+const CLAIMER: ACCOUNT_TYPE = 'claimer';
 
 function getAccountKeys(): string[] {
   const keys: string[] = [];
@@ -57,39 +57,30 @@ function filterKeys(keys: string[]): { claimerKeys: string[]; attesterKeys: stri
   return { claimerKeys, attesterKeys };
 }
 
-const { attesterKeys: initAttesterKeys, claimerKeys: initClaimerKeys } = filterKeys(
-  getAccountKeys()
-);
+const { attesterKeys, claimerKeys } = filterKeys(getAccountKeys());
+
+let initClaimerKeystore: JsonKeystore | null = null;
+let initAttesterKeystore: JsonKeystore | null = null;
+
+if (claimerKeys.length > 0) {
+  const data = localStorage.getItem(claimerKeys[0]);
+
+  data && (initClaimerKeystore = new JsonKeystore(JSON.parse(data) as KeyringPair$Json));
+}
+
+if (attesterKeys.length > 0) {
+  const data = localStorage.getItem(attesterKeys[0]);
+
+  data && (initAttesterKeystore = new JsonKeystore(JSON.parse(data) as KeyringPair$Json));
+}
 
 const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [claimerKeys, setClaimerKeys] = useState<string[]>(initClaimerKeys);
-  const [attesterKeys, setAttesterKeys] = useState<string[]>(initAttesterKeys);
+  const [claimerKeystore, setClaimerKeystore] = useState<JsonKeystore | null>(initClaimerKeystore);
+  const [attesterKeystore, setAttesterKeystore] = useState<JsonKeystore | null>(
+    initAttesterKeystore
+  );
 
-  const claimerKeystore = useMemo(() => {
-    if (claimerKeys.length > 0) {
-      const data = localStorage.getItem(claimerKeys[0]);
-
-      if (data) {
-        return new JsonKeystore(JSON.parse(data) as KeyringPair$Json);
-      }
-    }
-
-    return null;
-  }, [claimerKeys]);
-
-  const attesterKeystore = useMemo(() => {
-    if (attesterKeys.length > 0) {
-      const data = localStorage.getItem(attesterKeys[0]);
-
-      if (data) {
-        return new JsonKeystore(JSON.parse(data) as KeyringPair$Json);
-      }
-    }
-
-    return null;
-  }, [attesterKeys]);
-
-  const addKeystore = useCallback((mnemonic: string, type: TYPE, passphrase?: string) => {
+  const addKeystore = useCallback((mnemonic: string, type: ACCOUNT_TYPE, passphrase?: string) => {
     const pair = createAccount(mnemonic, {
       type
     });
@@ -99,30 +90,34 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
 
     localStorage.setItem(key, JSON.stringify(json));
 
+    const keystore = new JsonKeystore(json);
+
+    keystore.unlock(passphrase);
+
     if (type === 'claimer') {
-      setClaimerKeys((keys) => [...keys, key]);
+      setClaimerKeystore(keystore);
     } else {
-      setAttesterKeys((keys) => [...keys, key]);
+      setAttesterKeystore(keystore);
     }
 
     return json;
   }, []);
 
-  const restoreKeystore = useCallback((text: string, type: TYPE, passphrase?: string) => {
-    const pair = createFromJson(JSON.parse(text));
+  const restoreKeystore = useCallback((text: string, type: ACCOUNT_TYPE, passphrase?: string) => {
+    const json = JSON.parse(text);
+    const keystore = new JsonKeystore(json);
 
     // try unlock
-    pair.unlock(passphrase);
-    pair.lock();
+    keystore.unlock(passphrase);
 
-    const key = `${PREFIX}:${type}:${pair.address}`;
+    const key = `${PREFIX}:${type}:${keystore.address}`;
 
     localStorage.setItem(key, text);
 
     if (type === 'claimer') {
-      setClaimerKeys((keys) => [...keys, key]);
+      setClaimerKeystore(keystore);
     } else {
-      setAttesterKeys((keys) => [...keys, key]);
+      setAttesterKeystore(keystore);
     }
   }, []);
 

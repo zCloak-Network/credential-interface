@@ -1,10 +1,10 @@
 import { alpha, Button, CircularProgress } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-import { useClaimer } from '@credential/react-components';
+import { useDids } from '@credential/react-components';
 
 const Network: React.FC = () => {
-  const { api, isReady } = useClaimer();
+  const { api, isReady } = useDids();
   const [runtimeChain, setRuntimeChain] = useState<string>();
 
   useEffect(() => {
