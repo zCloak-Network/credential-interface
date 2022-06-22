@@ -9,14 +9,9 @@ import {
   InputLabel,
   OutlinedInput
 } from '@mui/material';
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import { getDidUri } from './InputDid';
-
-const DEFAULT_ATTESTERS = [
-  'did:kilt:4rdUX21mgJYGPpU3PmmjSMDkthg9yD2eFeRXyh84tD6ssvS4',
-  'did:kilt:4oNbdGidxdwg4t2vQNM3EaDqdZuksnr5ekEHLUXcQn1S83EL'
-];
 
 const filter = createFilterOptions<{ title: string; inputValue?: string }>();
 
@@ -28,7 +23,9 @@ interface Props {
 
 const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onChange }) => {
   const [attester, setAttester] = useState(defaultValue);
-  const options = useMemo(() => DEFAULT_ATTESTERS.map((v) => ({ title: v })), []);
+  const options = useRef<{ title: string; inputValue?: string }[]>(
+    defaultValue ? [{ title: defaultValue }] : []
+  );
   const [didDetails, setDidDetails] = useState<Did.FullDidDetails | null>(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<Error | null>(null);
@@ -116,7 +113,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
           setAttester(newValue?.title ?? null);
         }
       }}
-      options={options}
+      options={options.current}
       renderInput={(params) => (
         <FormControl
           color={error ? 'error' : warn ? 'warning' : undefined}

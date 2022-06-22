@@ -1,13 +1,17 @@
-import type { CredentialType } from '@credential/react-components/CredentialProvider/types';
+import type { Attestation } from '@credential/app-db/attestation/Attestation';
 
-import { Credential, CType } from '@kiltprotocol/sdk-js';
+import { CType } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import { CTypeContext, CTypeName } from '@credential/react-components';
+import {
+  RequestForAttestation,
+  RequestForAttestationStatus
+} from '@credential/app-db/requestForAttestation';
+import { AppContext, CTypeContext, CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { useToggle } from '@credential/react-hooks';
+import { useMessage, useToggle } from '@credential/react-hooks';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -88,18 +92,19 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CredentialCell: React.FC<{ item: CredentialType }> = ({
-  item: { credential: iCredential, hash, revoked, timestamp, verified }
+const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: Attestation }> = ({
+  attestation,
+  request
 }) => {
+  const { db } = useContext(AppContext);
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
-  const credential = useMemo(() => Credential.fromCredential(iCredential), [iCredential]);
   const cType = useMemo(() => {
     return cTypeList.find(
-      (cType) =>
-        CType.fromSchema(cType.schema, cType.owner).hash === credential.attestation.cTypeHash
+      (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
     );
-  }, [cTypeList, credential.attestation.cTypeHash]);
+  }, [cTypeList, request.claim.cTypeHash]);
+  const relationMessage = useMessage(db, request.messageId);
 
   return (
     <>
@@ -116,22 +121,23 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
             margin: 'auto',
             borderTopRightRadius: 4,
             borderBottomRightRadius: 4,
-            background: verified
-              ? palette.success.main
-              : revoked
-              ? palette.error.main
-              : palette.warning.main
+            background:
+              request.status === RequestForAttestationStatus.SUBMIT
+                ? palette.success.main
+                : request.status === RequestForAttestationStatus.REJECT
+                ? palette.error.main
+                : palette.warning.main
           })}
         />
         <Wrapper onClick={toggleOpen}>
           <Box className="CredentialCell_Status">
-            <Status revoked={revoked} verified={verified} />
+            <Status status={request.status} />
             <Typography className="CredentialCell_Time" variant="inherit">
-              {moment(timestamp).format('YYYY:MM:DD HH:mm:ss')}
+              {moment(attestation?.createAt ?? request.createAt).format('YYYY:MM:DD HH:mm:ss')}
             </Typography>
           </Box>
           <Typography className="CredentialCell_title" mt={2} variant="h3">
-            <CTypeName cTypeHash={credential.attestation.cTypeHash} />
+            <CTypeName cTypeHash={request.claim.cTypeHash} />
           </Typography>
           <Stack
             className="CredentialCell_attester"
@@ -146,7 +152,7 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  {credential.attestation.owner}
+                  <DidName value={attestation?.owner ?? relationMessage?.receiver} />
                 </Typography>
               </Tooltip>
             </Box>
@@ -154,27 +160,36 @@ const CredentialCell: React.FC<{ item: CredentialType }> = ({
               <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
                 Claim hash
               </Typography>
-              <Tooltip placement="top" title={hash}>
-                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{hash}</Typography>
+              <Tooltip placement="top" title={request.rootHash}>
+                <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
+                  {request.rootHash}
+                </Typography>
               </Tooltip>
             </Box>
           </Stack>
-          <Stack
-            className="CredentialCell_actions"
-            direction="row-reverse"
-            display="inline-flex"
-            mt={2}
-            onClick={(e) => e.stopPropagation()}
-            spacing={1}
-          >
-            <ImportButton />
-            <ShareButton credential={credential} />
-            <DownloadButton credential={credential} />
-          </Stack>
+          {attestation && (
+            <Stack
+              className="CredentialCell_actions"
+              direction="row-reverse"
+              display="inline-flex"
+              mt={2}
+              onClick={(e) => e.stopPropagation()}
+              spacing={1}
+            >
+              <ImportButton />
+              <ShareButton credential={{ attestation, request }} />
+              <DownloadButton credential={{ attestation, request }} />
+            </Stack>
+          )}
         </Wrapper>
       </Box>
-      {cType && (
-        <CredentialModal cType={cType} credential={credential} onClose={toggleOpen} open={open} />
+      {cType && attestation && (
+        <CredentialModal
+          cType={cType}
+          credential={{ request, attestation }}
+          onClose={toggleOpen}
+          open={open}
+        />
       )}
     </>
   );

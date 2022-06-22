@@ -13,7 +13,7 @@ import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
 import PageTasks from '@credential/page-tasks';
-import { AppProvider, CredentialProvider, DidsProvider } from '@credential/react-components';
+import { AppProvider, DidsProvider } from '@credential/react-components';
 import { KeystoreProvider } from '@credential/react-keystore';
 
 import AccountAuth from './Account/AccountAuth';
@@ -33,11 +33,9 @@ const createAppClaimer = () => (
           element={
             <AccountAuth>
               <DidsProvider DidsConstructor={ClaimerConstructor}>
-                <CredentialProvider>
-                  <AppProvider>
-                    <Claimer />
-                  </AppProvider>
-                </CredentialProvider>
+                <AppProvider>
+                  <Claimer />
+                </AppProvider>
               </DidsProvider>
             </AccountAuth>
           }

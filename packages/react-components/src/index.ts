@@ -1,7 +1,6 @@
 export * from './theme';
 export * from './CTypeProvider';
 export * from './DidsProvider';
-export * from './CredentialProvider';
 export * from './AppProvider';
 export { default as NotificationProvider, NotificationContext } from './Notification';
 export { default as ZkidExtensionProvider, ZkidExtensionContext } from './ZkidExtension';

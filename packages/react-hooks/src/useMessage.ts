@@ -7,10 +7,12 @@ import { Message } from '@credential/app-db/message';
 import { useDebounce } from '.';
 
 export function useMessage(db: CredentialData, messageId: string) {
-  const data = useLiveQuery(() =>
-    db.message.get({
-      messageId
-    })
+  const data = useLiveQuery(
+    () =>
+      db.message.get({
+        messageId
+      }),
+    [messageId]
   );
 
   return useDebounce(data, 300);
@@ -30,7 +32,7 @@ export function useMessageLinked(db: CredentialData, messageId: string) {
     return messages;
   }, [db.message, messageId]);
 
-  const data = useLiveQuery(() => getMessageLinked());
+  const data = useLiveQuery(() => getMessageLinked(), [getMessageLinked]);
 
   return useDebounce(data, 300);
 }

@@ -4,8 +4,8 @@ import { Did, Message } from '@kiltprotocol/sdk-js';
 import React, { useCallback, useContext, useState } from 'react';
 
 import {
+  AppContext,
   ButtonUnlock,
-  CredentialContenxt,
   NotificationContext,
   useClaimer
 } from '@credential/react-components';
@@ -17,9 +17,9 @@ const SubmitClaim: React.FC<{
   cType?: CType;
   onDone?: () => void;
 }> = ({ attester, cType, contents, onDone }) => {
+  const { db } = useContext(AppContext);
   const { claimer } = useClaimer();
   const { notifyError } = useContext(NotificationContext);
-  const { addCredential } = useContext(CredentialContenxt);
   const [loading, setLoading] = useState(false);
 
   const onSubmit = useCallback(async () => {
@@ -49,16 +49,14 @@ const SubmitClaim: React.FC<{
         ciphertext: encrypted.ciphertext
       });
 
-      const credential = claimer.generateCredential(requestForAttestation, attester.uri);
-
-      addCredential(credential);
+      await db.message.add({ ...message, deal: 0 });
       onDone?.();
     } catch (error) {
       notifyError(error);
     } finally {
       setLoading(false);
     }
-  }, [addCredential, attester, cType, claimer, contents, notifyError, onDone]);
+  }, [attester, cType, claimer, contents, db.message, notifyError, onDone]);
 
   return (
     <ButtonUnlock loading={loading} onClick={onSubmit} variant="contained">

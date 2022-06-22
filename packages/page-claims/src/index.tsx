@@ -1,22 +1,23 @@
-import { Did } from '@kiltprotocol/sdk-js';
 import { Box, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
-import { CredentialContenxt, useClaimer } from '@credential/react-components';
+import { AppContext, useClaimer } from '@credential/react-components';
+import { useCredentials } from '@credential/react-hooks';
 
 import CreateClaim from './CreateClaim';
 import CredentialCell from './CredentialCell';
 
 const Claims: React.FC = () => {
-  const { credentials, verifiedCredentials } = useContext(CredentialContenxt);
+  const { db } = useContext(AppContext);
   const [type, setType] = useState(0);
   const { claimer } = useClaimer();
+  const credentials = useCredentials(db, claimer.didDetails.uri);
 
-  const myCredentials = useMemo(() => {
-    return (type === 0 ? credentials : verifiedCredentials).filter((credential) =>
-      Did.Utils.isSameSubject(credential.credential.request.claim.owner, claimer.didDetails.uri)
-    );
-  }, [claimer, credentials, type, verifiedCredentials]);
+  const list = useMemo(() => {
+    return type === 0
+      ? credentials ?? []
+      : credentials?.filter(({ attestation }) => !!attestation) ?? [];
+  }, [credentials, type]);
 
   return (
     <>
@@ -28,9 +29,9 @@ const Claims: React.FC = () => {
         </Tabs>
         <Box>
           <Grid container spacing={3}>
-            {myCredentials.map((credential, index) => (
+            {list.map(({ attestation, request }, index) => (
               <Grid item key={index} lg={4} md={6} sm={12} xl={3} xs={12}>
-                <CredentialCell item={credential} />
+                <CredentialCell attestation={attestation} request={request} />
               </Grid>
             ))}
           </Grid>

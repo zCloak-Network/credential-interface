@@ -53,7 +53,7 @@ const ClaimInfo: React.FC<{
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claim hash</Typography>
             <Typography sx={{ ...ellipsisMixin() }}>
-              <DidName type="light" value={request.claim.owner} />
+              <DidName type="light" value={request.rootHash} />
             </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>

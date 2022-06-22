@@ -7,7 +7,6 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useMemo, useState } from 'react';
 
-import { MessageBodyType } from '@credential/app-db/message';
 import { ClaimDisplay, DidName } from '@credential/react-components';
 
 interface Props {
@@ -17,9 +16,6 @@ interface Props {
 
 const Contents: React.FC<Props> = ({ contents, messageLinked }) => {
   const [active, setActive] = useState<number>(0);
-
-  console.log(messageLinked);
-
   const sortedMessageLinked = useMemo(
     () => messageLinked.sort((l, r) => (l.createdAt > r.createdAt ? 1 : -1)),
     [messageLinked]
