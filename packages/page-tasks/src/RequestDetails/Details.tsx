@@ -11,13 +11,13 @@ import { ClaimDisplay, DidName } from '@credential/react-components';
 
 interface Props {
   contents: IClaimContents;
-  messageLinked: Message[];
+  messageLinked?: Message[];
 }
 
 const Contents: React.FC<Props> = ({ contents, messageLinked }) => {
   const [active, setActive] = useState<number>(0);
   const sortedMessageLinked = useMemo(
-    () => messageLinked.sort((l, r) => (l.createdAt > r.createdAt ? 1 : -1)),
+    () => messageLinked?.sort((l, r) => (l.createdAt < r.createdAt ? 1 : -1)),
     [messageLinked]
   );
 
@@ -44,7 +44,7 @@ const Contents: React.FC<Props> = ({ contents, messageLinked }) => {
           </Container>
         )}
         {active === 1 &&
-          sortedMessageLinked.map((message) => (
+          sortedMessageLinked?.map((message) => (
             <Stack alignItems="center" direction="row" key={message.messageId} mt={3} spacing={2}>
               <Typography
                 sx={({ palette }) => ({

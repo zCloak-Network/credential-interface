@@ -42,7 +42,9 @@ const ActionButton: React.FC<{ request: RequestForAttestation }> = ({ request })
           Details
         </MenuItem>
       </Menu>
-      <RequestDetails onClose={toggleDetailsOpen} open={detailsOpen} request={request} />
+      {detailsOpen && (
+        <RequestDetails onClose={toggleDetailsOpen} open={detailsOpen} request={request} />
+      )}
     </>
   );
 };

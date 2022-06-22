@@ -2,7 +2,7 @@ import { useLiveQuery } from 'dexie-react-hooks';
 import { useCallback } from 'react';
 
 import { CredentialData } from '@credential/app-db';
-import { Message } from '@credential/app-db/message';
+import { MessageBodyType } from '@credential/app-db/message';
 
 import { useDebounce } from '.';
 
@@ -18,21 +18,32 @@ export function useMessage(db: CredentialData, messageId: string) {
   return useDebounce(data, 300);
 }
 
-export function useMessageLinked(db: CredentialData, messageId: string) {
-  const getMessageLinked = useCallback(async () => {
-    const messages: Message[] = [];
+export function useRequestMessages(db: CredentialData, rootHash: string) {
+  const getRequestMessages = useCallback(async () => {
+    const messages = db.message
+      .filter((message) => {
+        console.log(message, rootHash);
 
-    let message = await db.message.get({ messageId });
+        if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
+          return message.body.content.requestForAttestation.rootHash === rootHash;
+        }
 
-    while (message) {
-      messages.push(message);
-      message = await db.message.get({ inReplyTo: message.messageId });
-    }
+        if (message.body.type === MessageBodyType.SUBMIT_ATTESTATION) {
+          return message.body.content.attestation.claimHash === rootHash;
+        }
+
+        if (message.body.type === MessageBodyType.REJECT_ATTESTATION) {
+          return message.body.content === rootHash;
+        }
+
+        return false;
+      })
+      .toArray();
 
     return messages;
-  }, [db.message, messageId]);
+  }, [db.message, rootHash]);
 
-  const data = useLiveQuery(() => getMessageLinked(), [getMessageLinked]);
+  const data = useLiveQuery(() => getRequestMessages(), [getRequestMessages]);
 
   return useDebounce(data, 300);
 }

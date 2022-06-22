@@ -3,7 +3,7 @@ import React, { useContext } from 'react';
 
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
 import { AppContext, DialogHeader } from '@credential/react-components';
-import { useMessageLinked } from '@credential/react-hooks';
+import { useRequestMessages } from '@credential/react-hooks';
 
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
@@ -14,7 +14,7 @@ const RequestDetails: React.FC<{
   onClose?: () => void;
 }> = ({ onClose, open, request }) => {
   const { db } = useContext(AppContext);
-  const messageLinked = useMessageLinked(db, request.messageId);
+  const messageLinked = useRequestMessages(db, request.rootHash);
 
   return (
     <Dialog fullScreen open={open}>
@@ -25,7 +25,7 @@ const RequestDetails: React.FC<{
         sx={{ background: 'transparent !important' }}
       >
         <ClaimInfo request={request} />
-        <Details contents={request.claim.contents} messageLinked={messageLinked ?? []} />
+        <Details contents={request.claim.contents} messageLinked={messageLinked} />
       </Container>
       <DialogActions></DialogActions>
     </Dialog>
