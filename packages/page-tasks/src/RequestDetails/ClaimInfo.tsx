@@ -1,14 +1,15 @@
 import Circle from '@mui/icons-material/Circle';
-import { alpha, Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import { ButtonUnlock, CTypeName, DidName } from '@credential/react-components';
+import { CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
 import AttestationStatus from '../AttestationStatus';
 import Approve from './Approve';
+import Reject from './Reject';
 
 const ClaimInfo: React.FC<{
   request: RequestForAttestation;
@@ -27,19 +28,7 @@ const ClaimInfo: React.FC<{
         </Stack>
         <Stack alignItems="center" direction="row" spacing={1.5}>
           <Approve request={request} />
-          <ButtonUnlock
-            sx={({ palette }) => ({
-              background: alpha(palette.error.main, 0),
-              borderColor: palette.error.main,
-              color: palette.error.main,
-              ':hover': {
-                borderColor: palette.error.main
-              }
-            })}
-            variant="outlined"
-          >
-            Reject
-          </ButtonUnlock>
+          <Reject request={request} />
         </Stack>
       </Box>
       <Box mt={5}>
