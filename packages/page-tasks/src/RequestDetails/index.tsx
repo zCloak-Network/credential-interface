@@ -1,8 +1,9 @@
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import { DialogHeader } from '@credential/react-components';
+import { AppContext, DialogHeader } from '@credential/react-components';
+import { useMessageLinked } from '@credential/react-hooks';
 
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
@@ -12,6 +13,9 @@ const RequestDetails: React.FC<{
   open: boolean;
   onClose?: () => void;
 }> = ({ onClose, open, request }) => {
+  const { db } = useContext(AppContext);
+  const messageLinked = useMessageLinked(db, request.messageId);
+
   return (
     <Dialog fullScreen open={open}>
       <DialogHeader onClose={onClose}>{request.rootHash}</DialogHeader>
@@ -21,7 +25,7 @@ const RequestDetails: React.FC<{
         sx={{ background: 'transparent !important' }}
       >
         <ClaimInfo request={request} />
-        <Details contents={request.claim.contents} />
+        <Details contents={request.claim.contents} messageLinked={messageLinked ?? []} />
       </Container>
       <DialogActions></DialogActions>
     </Dialog>
