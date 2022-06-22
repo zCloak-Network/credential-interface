@@ -200,6 +200,9 @@ const createComponents: Func = () => ({
 
   MuiOutlinedInput: {
     styleOverrides: {
+      sizeSmall: {
+        borderRadius: '5px'
+      },
       root: ({ theme: { palette } }) => ({
         borderRadius: '10px',
         '&.Mui-disabled': {

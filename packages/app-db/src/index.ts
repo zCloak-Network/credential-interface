@@ -17,9 +17,8 @@ export class CredentialData extends Dexie {
       message:
         '++id, syncId, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references',
       requestForAttestation:
-        '++id, syncId, messageCreatedAt, messageId, *claim, *claimNonceMap, *claimHashes, *claimerSignature, delegationId, *legitimations, rootHash',
-      attestation:
-        '++id, syncId, messageCreatedAt, messageId, claimHash, cTypeHash, delegationId, revoked'
+        '++id, createAt, messageId, *claim, *claimNonceMap, *claimHashes, *claimerSignature, delegationId, *legitimations, &rootHash',
+      attestation: '++id, createAt, messageId, &claimHash, cTypeHash, delegationId, revoked'
     });
   }
 }

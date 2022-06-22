@@ -17,7 +17,7 @@ const Approve: React.FC<{
 }> = ({ request }) => {
   const { db } = useContext(AppContext);
   const { attester } = useAttester();
-  const parentMessage = useMessage(db, request.messageId);
+  const relationMessage = useMessage(db, request.messageId);
   const { notifyError } = useContext(NotificationContext);
   const [loading, setLoading] = useState(false);
 
@@ -29,11 +29,11 @@ const Approve: React.FC<{
         throw new Error("You don't has full did details.");
       }
 
-      if (!parentMessage) {
+      if (!relationMessage) {
         throw new Error('Can not found parent message.');
       }
 
-      const claimer = Did.LightDidDetails.fromUri(parentMessage.sender);
+      const claimer = Did.LightDidDetails.fromUri(relationMessage.sender);
 
       if (!claimer.encryptionKey?.id) {
         throw new Error("Claimer has't encryption key");
@@ -50,10 +50,13 @@ const Approve: React.FC<{
         claimer.uri
       );
 
-      message.inReplyTo = parentMessage.messageId;
+      message.inReplyTo = relationMessage.messageId;
       const encrypted = await attester.encryptMessage(message, claimer);
 
-      await attester.attestClaim(request);
+      if (!(await attestation.checkValidity())) {
+        await attester.attestClaim(request);
+      }
+
       await credentialApi.addMessage({
         receiverKeyId: encrypted.receiverKeyUri,
         senderKeyId: encrypted.senderKeyUri,
@@ -67,7 +70,7 @@ const Approve: React.FC<{
     } finally {
       setLoading(false);
     }
-  }, [attester, db.message, notifyError, parentMessage, request]);
+  }, [attester, db.message, notifyError, relationMessage, request]);
 
   return (
     <ButtonUnlock

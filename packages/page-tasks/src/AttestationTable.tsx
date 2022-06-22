@@ -35,8 +35,8 @@ const AttestationTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list?.map((item) => (
-            <TableRow key={item.messageId}>
+          {list?.map((item, index) => (
+            <TableRow key={index}>
               <TableCell>
                 <Box sx={{ width: 120, ...ellipsisMixin() }}>{item.claim.owner}</Box>
               </TableCell>
@@ -48,7 +48,7 @@ const AttestationTable: React.FC = () => {
                   <CTypeName cTypeHash={item.claim.cTypeHash} />
                 </Box>
               </TableCell>
-              <TableCell>{moment(item.messageCreateAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+              <TableCell>{moment(item.createAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
               <TableCell>
                 <AttestationStatus status={item.status} />{' '}
               </TableCell>

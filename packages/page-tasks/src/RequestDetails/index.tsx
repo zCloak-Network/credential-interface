@@ -5,6 +5,7 @@ import { RequestForAttestation } from '@credential/app-db/requestForAttestation'
 import { DialogHeader } from '@credential/react-components';
 
 import ClaimInfo from './ClaimInfo';
+import Details from './Details';
 
 const RequestDetails: React.FC<{
   request: RequestForAttestation;
@@ -20,6 +21,7 @@ const RequestDetails: React.FC<{
         sx={{ background: 'transparent !important' }}
       >
         <ClaimInfo request={request} />
+        <Details contents={request.claim.contents} />
       </Container>
       <DialogActions></DialogActions>
     </Dialog>

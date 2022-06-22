@@ -2,8 +2,10 @@
 
 import { CredentialData } from '@credential/app-db';
 import { Message, MessageBodyType } from '@credential/app-db/message';
-import { RequestForAttestationStatus } from '@credential/app-db/requestForAttestation';
 
+import { rejectAttestation } from './rejectAttestation';
+import { requestAttestation } from './requestAttestation';
+import { submitAttestation } from './submitAttestation';
 import { IDataSource, ParserFunc } from './type';
 
 export class MessageSync {
@@ -82,39 +84,19 @@ export class MessageSync {
 
           switch (message.body.type) {
             case MessageBodyType.REQUEST_ATTESTATION:
-              await this.db.requestForAttestation.add({
-                messageCreateAt: message.createdAt,
-                messageId: message.messageId!,
-                status: RequestForAttestationStatus.INIT,
-                ...message.body.content.requestForAttestation
-              });
+              await requestAttestation(this.db, message);
               deal = 1;
 
               break;
 
             case MessageBodyType.SUBMIT_ATTESTATION:
-              await this.db.attestation.add({
-                messageCreateAt: message.createdAt,
-                messageId: message.messageId!,
-                ...message.body.content.attestation
-              });
-              await this.db.requestForAttestation
-                .where('rootHash')
-                .equals(message.body.content.attestation.claimHash)
-                .modify({
-                  status: RequestForAttestationStatus.SUBMIT
-                });
+              submitAttestation(this.db, message);
               deal = 1;
 
               break;
 
             case MessageBodyType.REJECT_ATTESTATION:
-              await this.db.requestForAttestation
-                .where('rootHash')
-                .equals(message.body.content)
-                .modify({
-                  status: RequestForAttestationStatus.REJECT
-                });
+              await rejectAttestation(this.db, message);
               deal = 1;
 
               break;

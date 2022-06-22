@@ -9,7 +9,7 @@ export { default as Address } from './Address';
 export { default as AttesterSelect } from './AttesterSelect';
 export { default as ButtonUnlock } from './ButtonUnlock';
 export { default as ButtonWithError } from './ButtonWithError';
-export { default as CredentialDetail } from './CredentialDetail';
+export { default as ClaimDisplay } from './ClaimDisplay';
 export { default as CTypeName } from './CTypeName';
 export { default as DialogHeader } from './DialogHeader';
 export { default as DidName } from './DidName';

@@ -72,7 +72,7 @@ const ClaimInfo: React.FC<{
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
               Approval initiation time
             </Typography>
-            <Typography>{moment(request.messageCreateAt).format('YYYY-MM-DD HH:mm:ss')}</Typography>
+            <Typography>{moment(request.createAt).format('YYYY-MM-DD HH:mm:ss')}</Typography>
           </Grid>
         </Grid>
       </Box>
