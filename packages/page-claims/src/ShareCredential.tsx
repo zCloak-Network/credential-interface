@@ -1,7 +1,7 @@
 import type { ICredential } from '@kiltprotocol/sdk-js';
 
 import { Did, Message } from '@kiltprotocol/sdk-js';
-import { Dialog, DialogContent, Portal, Stack } from '@mui/material';
+import { Dialog, DialogContent, Stack } from '@mui/material';
 import React, { useCallback, useContext, useState } from 'react';
 
 import {
@@ -31,22 +31,23 @@ const ShareCredential: React.FC<{
     try {
       setLoading(true);
 
-      if (!fullDid.encryptionKey) {
-        throw new Error("Receipt don't has encryptionKey, you can't send to attester.");
-      }
-
       const message = new Message(
         {
           content: [credential],
           type: Message.BodyType.SUBMIT_CREDENTIAL
         },
-        claimer.didDetails.did,
-        fullDid.did
+        claimer.didDetails.uri,
+        fullDid.uri
       );
 
-      await credentialApi.addMessage(
-        await claimer.encryptMessage(message, fullDid.assembleKeyId(fullDid.encryptionKey.id))
-      );
+      const encrypted = await claimer.encryptMessage(message, fullDid);
+
+      await credentialApi.addMessage({
+        receiverKeyId: encrypted.receiverKeyUri,
+        senderKeyId: encrypted.senderKeyUri,
+        nonce: encrypted.nonce,
+        ciphertext: encrypted.ciphertext
+      });
       onClose?.();
     } catch (error) {
       notifyError(error);

@@ -11,7 +11,7 @@ import {
 } from '@mui/material';
 import React, { useEffect, useMemo, useState } from 'react';
 
-import { getIdentifier } from './InputDid';
+import { getDidUri } from './InputDid';
 
 const DEFAULT_ATTESTERS = [
   'did:kilt:4rdUX21mgJYGPpU3PmmjSMDkthg9yD2eFeRXyh84tD6ssvS4',
@@ -41,13 +41,13 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
   useEffect(() => {
     if (!attester) return;
 
-    const identifier = getIdentifier(attester);
+    const uri = getDidUri(attester, 'full');
 
-    if (identifier) {
+    if (uri) {
       setError(null);
 
       setFetching(true);
-      Did.FullDidDetails.fromChainInfo(identifier)
+      Did.FullDidDetails.fromChainInfo(uri)
         .then((didDetails) => {
           setDidDetails(didDetails);
 
@@ -65,7 +65,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
         })
         .finally(() => setFetching(false));
     } else {
-      setError(new Error('Input is not a validate did or identifier'));
+      setError(new Error('Input is not a validate didUri or address'));
     }
   }, [attester]);
 

@@ -1,3 +1,5 @@
+import type { DidUri } from '@kiltprotocol/types';
+
 import { CType } from '@kiltprotocol/sdk-js';
 import React, { createContext, useCallback, useEffect, useMemo } from 'react';
 
@@ -27,7 +29,7 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       credentialApi.getCType(hash).then((res) => {
         setCTypeList((value) => [
           {
-            owner: res.data.owner,
+            owner: res.data.owner as DidUri,
             ctypeHash: res.data.ctypeHash,
             schema: res.data.metadata as ICTypeSchema
           },
@@ -43,7 +45,7 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       credentialApi.getCTypes().then((res) =>
         setCTypeList(
           res.data.map(({ ctypeHash, metadata, owner }) => ({
-            owner,
+            owner: owner as DidUri,
             ctypeHash,
             schema: metadata as ICTypeSchema
           }))

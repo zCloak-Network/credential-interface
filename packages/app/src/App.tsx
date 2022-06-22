@@ -14,6 +14,7 @@ import PageCType from '@credential/page-ctype';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
 import PageTasks from '@credential/page-tasks';
 import { AppProvider, CredentialProvider, DidsProvider } from '@credential/react-components';
+import { KeystoreProvider } from '@credential/react-keystore';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -25,59 +26,67 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
 };
 
 const createAppClaimer = () => (
-  <Route path="/claimer">
-    <Route
-      element={
-        <AccountAuth accountType="claimer">
-          <DidsProvider DidsConstructor={ClaimerConstructor}>
-            <CredentialProvider>
-              <AppProvider>
-                <Claimer />
-              </AppProvider>
-            </CredentialProvider>
-          </DidsProvider>
-        </AccountAuth>
-      }
-    >
-      <Route element={<PageCType />} path="ctype" />
-      <Route element={<PageClaims />} path="claims" />
-      <Route element={<div>message</div>} path="message" />
-    </Route>
-    <Route element={<Account />} path="account">
-      <Route element={<PageCreateAccount accountType="claimer" />} path="create" />
-      <Route element={<PageRestoreAccount accountType="claimer" />} path="restore" />
-      <Route element={<PageAccount accountType="claimer" />} index />
-    </Route>
-    <Route element={<NoMatch to="/claimer/ctype" />} path="*" />
-    <Route element={<NoMatch to="/claimer/ctype" />} index />
-  </Route>
+  <KeystoreProvider type="claimer">
+    <HashRouter basename="/claimer">
+      <Routes>
+        <Route
+          element={
+            <AccountAuth>
+              <DidsProvider DidsConstructor={ClaimerConstructor}>
+                <CredentialProvider>
+                  <AppProvider>
+                    <Claimer />
+                  </AppProvider>
+                </CredentialProvider>
+              </DidsProvider>
+            </AccountAuth>
+          }
+        >
+          <Route element={<PageCType />} path="ctype" />
+          <Route element={<PageClaims />} path="claims" />
+          <Route element={<div>message</div>} path="message" />
+        </Route>
+        <Route element={<Account />} path="account">
+          <Route element={<PageCreateAccount />} path="create" />
+          <Route element={<PageRestoreAccount />} path="restore" />
+          <Route element={<PageAccount />} index />
+        </Route>
+        <Route element={<NoMatch to="/ctype" />} path="*" />
+        <Route element={<NoMatch to="/ctype" />} index />
+      </Routes>
+    </HashRouter>
+  </KeystoreProvider>
 );
 
 const createAppAttester = () => (
-  <Route path="/attester">
-    <Route
-      element={
-        <AccountAuth accountType="attester">
-          <DidsProvider DidsConstructor={AttesterConstructor}>
-            <AppProvider>
-              <Attester />
-            </AppProvider>
-          </DidsProvider>
-        </AccountAuth>
-      }
-    >
-      <Route element={<PageOwnerCType />} path="my-ctype" />
-      <Route element={<PageTasks />} path="tasks" />
-      <Route element={<div>message</div>} path="message" />
-    </Route>
-    <Route element={<Account />} path="account">
-      <Route element={<PageCreateAccount accountType="attester" />} path="create" />
-      <Route element={<PageRestoreAccount accountType="attester" />} path="restore" />
-      <Route element={<PageAccount accountType="attester" />} index />
-    </Route>
-    <Route element={<NoMatch to="/attester/my-ctype" />} path="*" />
-    <Route element={<NoMatch to="/attester/my-ctype" />} index />
-  </Route>
+  <KeystoreProvider type="attester">
+    <HashRouter basename="/attester">
+      <Routes>
+        <Route
+          element={
+            <AccountAuth>
+              <DidsProvider DidsConstructor={AttesterConstructor}>
+                <AppProvider>
+                  <Attester />
+                </AppProvider>
+              </DidsProvider>
+            </AccountAuth>
+          }
+        >
+          <Route element={<PageOwnerCType />} path="my-ctype" />
+          <Route element={<PageTasks />} path="tasks" />
+          <Route element={<div>message</div>} path="message" />
+        </Route>
+        <Route element={<Account />} path="account">
+          <Route element={<PageCreateAccount />} path="create" />
+          <Route element={<PageRestoreAccount />} path="restore" />
+          <Route element={<PageAccount />} index />
+        </Route>
+        <Route element={<NoMatch to="/my-ctype" />} path="*" />
+        <Route element={<NoMatch to="/my-ctype" />} index />
+      </Routes>
+    </HashRouter>
+  </KeystoreProvider>
 );
 
 const AppClaimer = createAppClaimer();
@@ -85,13 +94,10 @@ const AppAttester = createAppAttester();
 
 const App: React.FC = () => {
   return (
-    <HashRouter>
-      <Routes>
-        {AppClaimer}
-        {AppAttester}
-        <Route element={<NoMatch to="/claimer/ctype" />} path="*" />
-      </Routes>
-    </HashRouter>
+    <>
+      {AppClaimer}
+      {AppAttester}
+    </>
   );
 };
 

@@ -48,9 +48,11 @@ const CreateCType: React.FC = () => {
 
   const createCType = useCallback(async () => {
     try {
-      const fullDid = attester.fullDidDetails;
+      if (!attester.isFullDid) {
+        throw new Error('The DID with the given identifier is not on chain.');
+      }
 
-      if (!fullDid) throw new Error('The DID with the given identifier is not on chain.');
+      const fullDid = attester.didDetails;
 
       if (cTypeContent?.title && cTypeContent?.description && cTypeContent?.properties) {
         setLoading(true);
@@ -71,13 +73,13 @@ const CreateCType: React.FC = () => {
             type: 'object',
             properties
           },
-          fullDid.did
+          fullDid.uri
         );
 
         await attester.createCType(ctype);
 
         await credentialApi.addCType({
-          owner: fullDid.did,
+          owner: fullDid.uri,
           ctypeHash: ctype.hash,
           metadata: ctype.schema
         });

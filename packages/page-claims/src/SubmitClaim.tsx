@@ -31,24 +31,25 @@ const SubmitClaim: React.FC<{
       const claim = claimer.generateClaim(cType, contents as Record<string, any>);
       const requestForAttestation = await claimer.requestForAttestation(claim);
 
-      if (!attester.encryptionKey) {
-        throw new Error("Attester don't has encryptionKey, you can't send to attester.");
-      }
-
       const message = new Message(
         {
           content: { requestForAttestation },
           type: Message.BodyType.REQUEST_ATTESTATION
         },
-        claimer.didDetails.did,
-        attester.did
+        claimer.didDetails.uri,
+        attester.uri
       );
 
-      await credentialApi.addMessage(
-        await claimer.encryptMessage(message, attester.assembleKeyId(attester.encryptionKey.id))
-      );
+      const encrypted = await claimer.encryptMessage(message, attester);
 
-      const credential = claimer.generateCredential(requestForAttestation, attester.did);
+      await credentialApi.addMessage({
+        receiverKeyId: encrypted.receiverKeyUri,
+        senderKeyId: encrypted.senderKeyUri,
+        nonce: encrypted.nonce,
+        ciphertext: encrypted.ciphertext
+      });
+
+      const credential = claimer.generateCredential(requestForAttestation, attester.uri);
 
       addCredential(credential);
       onDone?.();

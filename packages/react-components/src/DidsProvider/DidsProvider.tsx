@@ -23,15 +23,17 @@ const DidsProvider: React.FC<
 > = ({ DidsConstructor, children }) => {
   const [didIsReady, setDidIsReady] = useState(false);
   const [isReady, setIsReady] = useState(false);
-  const { attesterKeystore, claimerKeystore } = useKeystore();
+  const { keystore } = useKeystore();
 
   useEffect(() => {
-    if (DidsConstructor === Claimer && claimerKeystore) {
-      account = claimerKeystore.address;
-      dids = createDidsFactory(DidsConstructor)(claimerKeystore, KILT_PEREGRINE_ENDPOINT);
-    } else if (DidsConstructor === Attester && attesterKeystore) {
-      account = attesterKeystore.address;
-      dids = createDidsFactory(DidsConstructor)(attesterKeystore, KILT_PEREGRINE_ENDPOINT);
+    if (keystore) {
+      account = keystore.siningPair.address;
+
+      if (DidsConstructor === Claimer) {
+        dids = createDidsFactory(DidsConstructor)(keystore, KILT_PEREGRINE_ENDPOINT);
+      } else if (DidsConstructor === Attester) {
+        dids = createDidsFactory(DidsConstructor)(keystore, KILT_PEREGRINE_ENDPOINT);
+      }
     }
 
     if (dids) {
@@ -44,7 +46,7 @@ const DidsProvider: React.FC<
           setIsReady(true);
         });
     }
-  }, [DidsConstructor, attesterKeystore, claimerKeystore]);
+  }, [DidsConstructor, keystore]);
 
   const value = useMemo(
     () => ({

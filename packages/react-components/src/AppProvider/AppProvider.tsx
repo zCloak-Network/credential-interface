@@ -1,7 +1,5 @@
 import React, { createContext, useCallback, useMemo } from 'react';
 
-import { Attester } from '@zcloak/credential-core';
-
 import { createCredentialDb, CredentialData } from '@credential/app-db';
 import { MessageSync } from '@credential/app-sync';
 import { useInterval } from '@credential/react-hooks';
@@ -24,16 +22,15 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [account]);
 
   const sync = useCallback(async () => {
-    const didDetails = dids instanceof Attester ? dids.fullDidDetails : dids.didDetails;
-
-    const encryptionKey = didDetails?.encryptionKey;
+    const didDetails = dids.didDetails;
+    const encryptionKey = didDetails.encryptionKey;
 
     if (!dids.isLocked && didDetails && encryptionKey) {
       const messageSync = new MessageSync(
         {
           getMessage: async (id: number, _, length?: number) => {
             const receiverRes = await credentialApi.getMessages({
-              receiverKeyId: didDetails.assembleKeyId(encryptionKey.id),
+              receiverKeyId: didDetails.assembleKeyUri(encryptionKey.id),
               size: length,
               start_id: String(id)
             });
@@ -44,10 +41,15 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           }
         },
         (data) => {
-          return dids.decryptMessage(data);
+          return dids.decryptMessage({
+            receiverKeyUri: data.receiverKeyId as any,
+            senderKeyUri: data.senderKeyId as any,
+            ciphertext: data.ciphertext,
+            nonce: data.nonce
+          });
         },
         db,
-        didDetails.did
+        didDetails.uri
       );
 
       await messageSync.sync();

@@ -19,32 +19,26 @@ const Attester: React.FC = () => {
   const items = useMemo(
     () => [
       {
-        to: '/attester/my-ctype',
-        active: pathname.startsWith('/attester/my-ctype'),
+        to: '/my-ctype',
+        active: pathname.startsWith('/my-ctype'),
         svgIcon: (
-          <CTypeIcon
-            color={pathname.startsWith('/attester/my-ctype') ? palette.common.white : undefined}
-          />
+          <CTypeIcon color={pathname.startsWith('/my-ctype') ? palette.common.white : undefined} />
         ),
         text: 'My ctypes'
       },
       {
-        to: '/attester/tasks',
-        active: pathname.startsWith('/attester/tasks'),
+        to: '/tasks',
+        active: pathname.startsWith('/tasks'),
         svgIcon: (
-          <ClaimsIcon
-            color={pathname.startsWith('/attester/tasks') ? palette.common.white : undefined}
-          />
+          <ClaimsIcon color={pathname.startsWith('/tasks') ? palette.common.white : undefined} />
         ),
         text: 'Tasks'
       },
       {
-        to: '/attester/message',
-        active: pathname.startsWith('/attester/message'),
+        to: '/message',
+        active: pathname.startsWith('/message'),
         svgIcon: (
-          <MessageIcon
-            color={pathname.startsWith('/attester/message') ? palette.common.white : undefined}
-          />
+          <MessageIcon color={pathname.startsWith('/message') ? palette.common.white : undefined} />
         ),
         text: 'Message'
       }

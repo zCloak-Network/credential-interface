@@ -9,7 +9,6 @@ import {
   ThemeProvider,
   ZkidExtensionProvider
 } from '@credential/react-components';
-import { KeystoreProvider } from '@credential/react-keystore';
 
 import App from './App';
 
@@ -20,12 +19,10 @@ const Root: React.FC = () => {
         <LocalizationProvider dateAdapter={AdapterDateFns}>
           <NotificationProvider>
             <ZkidExtensionProvider>
-              <KeystoreProvider>
-                <CTypeProvider>
-                  <CssBaseline />
-                  <App />
-                </CTypeProvider>
-              </KeystoreProvider>
+              <CTypeProvider>
+                <CssBaseline />
+                <App />
+              </CTypeProvider>
             </ZkidExtensionProvider>
           </NotificationProvider>
         </LocalizationProvider>

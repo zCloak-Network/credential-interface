@@ -6,3 +6,4 @@ export * from './useToggle';
 
 // db query
 export * from './useRequestForAttestation';
+export * from './useMessage';

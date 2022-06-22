@@ -1,3 +1,5 @@
+import type { DidUri } from '@kiltprotocol/types';
+
 import { Box, Stack, Tab, Tabs } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
@@ -12,16 +14,15 @@ const OwnerCType: React.FC = () => {
   const [ownCTypes, setOwnCTypes] = useState<ICTypeMetadata[]>([]);
 
   useEffect(() => {
-    if (attester.fullDidDetails) {
-      credentialApi.getUserCType(attester.fullDidDetails.did).then((res) => {
-        setOwnCTypes(
-          res.data.map((d) => ({
-            ...d,
-            schema: d.metadata as ICTypeSchema
-          }))
-        );
-      });
-    }
+    credentialApi.getUserCType(attester.didDetails.uri).then((res) => {
+      setOwnCTypes(
+        res.data.map((d) => ({
+          ...d,
+          owner: d.owner as DidUri,
+          schema: d.metadata as ICTypeSchema
+        }))
+      );
+    });
   }, [attester]);
 
   return (

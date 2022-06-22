@@ -8,8 +8,9 @@ import { ButtonUnlock, CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
 import AttestationStatus from '../AttestationStatus';
+import Approve from './Approve';
 
-const claimInfo: React.FC<{
+const ClaimInfo: React.FC<{
   request: RequestForAttestation;
 }> = ({ request }) => {
   return (
@@ -20,24 +21,12 @@ const claimInfo: React.FC<{
           <Box sx={{ width: 300 }}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claimer</Typography>
             <Typography sx={{ ...ellipsisMixin() }} variant="h4">
-              <DidName value={request.claim.owner} />
+              <DidName type="light" value={request.claim.owner} />
             </Typography>
           </Box>
         </Stack>
         <Stack alignItems="center" direction="row" spacing={1.5}>
-          <ButtonUnlock
-            sx={({ palette }) => ({
-              background: alpha(palette.success.main, 0.1),
-              borderColor: palette.success.main,
-              color: palette.success.main,
-              ':hover': {
-                borderColor: palette.success.main
-              }
-            })}
-            variant="outlined"
-          >
-            Verify
-          </ButtonUnlock>
+          <Approve request={request} />
           <ButtonUnlock
             sx={({ palette }) => ({
               background: alpha(palette.error.main, 0),
@@ -64,7 +53,7 @@ const claimInfo: React.FC<{
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claim hash</Typography>
             <Typography sx={{ ...ellipsisMixin() }}>
-              <DidName value={request.claim.owner} />
+              <DidName type="light" value={request.claim.owner} />
             </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
@@ -91,4 +80,4 @@ const claimInfo: React.FC<{
   );
 };
 
-export default claimInfo;
+export default ClaimInfo;

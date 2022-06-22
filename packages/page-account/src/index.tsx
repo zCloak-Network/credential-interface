@@ -1,10 +1,8 @@
-import type { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
-
 import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-const Account: React.FC<{ accountType: ACCOUNT_TYPE }> = ({ accountType }) => {
+const Account: React.FC = () => {
   const navigate = useNavigate();
 
   return (
@@ -17,18 +15,10 @@ const Account: React.FC<{ accountType: ACCOUNT_TYPE }> = ({ accountType }) => {
             zCloak Credential Center
           </Typography>
           <Typography>Create a New Credential account.</Typography>
-          <Button
-            onClick={() => navigate(`/${accountType}/account/create`)}
-            size="large"
-            variant="contained"
-          >
+          <Button onClick={() => navigate('/account/create')} size="large" variant="contained">
             Create account
           </Button>
-          <Button
-            onClick={() => navigate(`/${accountType}/account/restore`)}
-            size="large"
-            variant="outlined"
-          >
+          <Button onClick={() => navigate('/account/restore')} size="large" variant="outlined">
             Restore account
           </Button>
         </Stack>

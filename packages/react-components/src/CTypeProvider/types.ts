@@ -1,3 +1,5 @@
+import type { DidUri } from '@kiltprotocol/types';
+
 export type InstanceType =
   | 'array'
   | 'boolean'
@@ -22,7 +24,7 @@ export interface ICTypeSchema {
 }
 
 export interface ICTypeMetadata {
-  owner: string;
+  owner: DidUri;
   ctypeHash: string;
   schema: ICTypeSchema;
 }

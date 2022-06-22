@@ -95,7 +95,7 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
   const navigate = useNavigate();
 
   const submitClaim = useCallback(() => {
-    navigate('/claimer/claims', {
+    navigate('/claims', {
       state: {
         cType
       }

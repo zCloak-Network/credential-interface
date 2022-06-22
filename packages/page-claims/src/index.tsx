@@ -14,7 +14,7 @@ const Claims: React.FC = () => {
 
   const myCredentials = useMemo(() => {
     return (type === 0 ? credentials : verifiedCredentials).filter((credential) =>
-      Did.DidUtils.isSameSubject(credential.credential.request.claim.owner, claimer.didDetails.did)
+      Did.Utils.isSameSubject(credential.credential.request.claim.owner, claimer.didDetails.uri)
     );
   }, [claimer, credentials, type, verifiedCredentials]);
 

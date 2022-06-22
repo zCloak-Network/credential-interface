@@ -19,32 +19,26 @@ const Claimer: React.FC = () => {
   const items = useMemo(
     () => [
       {
-        to: '/claimer/ctype',
-        active: pathname.startsWith('/claimer/ctype'),
+        to: '/ctype',
+        active: pathname.startsWith('/ctype'),
         svgIcon: (
-          <CTypeIcon
-            color={pathname.startsWith('/claimer/ctype') ? palette.primary.main : undefined}
-          />
+          <CTypeIcon color={pathname.startsWith('/ctype') ? palette.primary.main : undefined} />
         ),
         text: 'Credential type'
       },
       {
-        to: '/claimer/claims',
-        active: pathname.startsWith('/claimer/claims'),
+        to: '/claims',
+        active: pathname.startsWith('/claims'),
         svgIcon: (
-          <ClaimsIcon
-            color={pathname.startsWith('/claimer/claims') ? palette.primary.main : undefined}
-          />
+          <ClaimsIcon color={pathname.startsWith('/claims') ? palette.primary.main : undefined} />
         ),
         text: 'Claims'
       },
       {
-        to: '/claimer/message',
-        active: pathname.startsWith('/claimer/message'),
+        to: '/message',
+        active: pathname.startsWith('/message'),
         svgIcon: (
-          <MessageIcon
-            color={pathname.startsWith('/claimer/message') ? palette.primary.main : undefined}
-          />
+          <MessageIcon color={pathname.startsWith('/message') ? palette.primary.main : undefined} />
         ),
         text: 'Message'
       }

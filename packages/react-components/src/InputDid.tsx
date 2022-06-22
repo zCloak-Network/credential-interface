@@ -1,3 +1,5 @@
+import type { DidUri } from '@kiltprotocol/types';
+
 import { Did, Utils } from '@kiltprotocol/sdk-js';
 import {
   CircularProgress,
@@ -9,9 +11,9 @@ import {
 } from '@mui/material';
 import React, { useEffect, useState } from 'react';
 
-function validateDid(did: string): boolean {
+function validateDidUri(uri: string): uri is DidUri {
   try {
-    return Did.DidUtils.validateKiltDid(did);
+    return Did.Utils.validateKiltDidUri(uri);
   } catch {
     return false;
   }
@@ -25,11 +27,11 @@ function validateAddress(address: string): boolean {
   }
 }
 
-export function getIdentifier(didOrAddress: string): string | null {
-  if (validateDid(didOrAddress)) {
-    return Did.DidUtils.getIdentifierFromKiltDid(didOrAddress);
-  } else if (validateAddress(didOrAddress)) {
-    return didOrAddress;
+export function getDidUri(uriOrAddress: string, didType: 'full' | 'light'): DidUri | null {
+  if (validateDidUri(uriOrAddress)) {
+    return uriOrAddress;
+  } else if (validateAddress(uriOrAddress)) {
+    return Did.Utils.getKiltDidFromIdentifier(uriOrAddress, didType);
   } else {
     return null;
   }
@@ -54,13 +56,13 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
   useEffect(() => {
     if (!didOrAddress) return;
 
-    const identifier = getIdentifier(didOrAddress);
+    const uri = getDidUri(didOrAddress, 'full');
 
-    if (identifier) {
+    if (uri) {
       setError(null);
 
       setFetching(true);
-      Did.FullDidDetails.fromChainInfo(identifier)
+      Did.FullDidDetails.fromChainInfo(uri)
         .then((didDetails) => {
           setDidDetails(didDetails);
 
@@ -76,7 +78,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
         })
         .finally(() => setFetching(false));
     } else {
-      setError(new Error('Input is not a validate did or identifier'));
+      setError(new Error('Input is not a validate didUri or address'));
     }
   }, [didOrAddress]);
 

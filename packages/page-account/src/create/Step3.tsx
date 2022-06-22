@@ -1,5 +1,3 @@
-import type { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
-
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Box, Button, FormControl, Grid, InputLabel, OutlinedInput } from '@mui/material';
 import FileSaver from 'file-saver';
@@ -12,7 +10,6 @@ function random(min = 0, max = 11): number {
 }
 
 const Step3: React.FC<{
-  accountType: ACCOUNT_TYPE;
   prevStep: () => void;
   nextStep: () => void;
   mnemonic: string;
@@ -46,13 +43,13 @@ const Step3: React.FC<{
   }, [keyWords, keyWordsIndex, mnemonic]);
 
   const toggleContinue = useCallback(() => {
-    // TODO: maybe has attester
-    const json = addKeystore(mnemonic, 'claimer', password);
-    const blob = new Blob([JSON.stringify(json)], {
+    const json = addKeystore(mnemonic, password);
+
+    const blobSiningJson = new Blob([JSON.stringify(json)], {
       type: 'text/plain;charset=utf-8'
     });
 
-    FileSaver.saveAs(blob, `${json.address}.json`);
+    FileSaver.saveAs(blobSiningJson, `sining${json.address}.json`);
 
     nextStep();
   }, [addKeystore, mnemonic, nextStep, password]);

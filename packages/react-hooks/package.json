@@ -17,7 +17,7 @@
   "version": "0.0.0",
   "dependencies": {
     "@credential/app-db": "0.0.0",
-    "@zcloak/service": "^0.0.2-17",
+    "@zcloak/service": "^0.0.2-21",
     "copy-to-clipboard": "^3.3.1",
     "dexie-react-hooks": "^1.1.1"
   }
