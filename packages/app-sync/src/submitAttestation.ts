@@ -30,6 +30,8 @@ export async function submitAttestation(db: CredentialData, message: Message) {
     .where('rootHash')
     .equals(message.body.content.attestation.claimHash)
     .modify({
+      createAt: message.createdAt,
+      messageId: message.messageId!,
       status: RequestForAttestationStatus.SUBMIT
     });
 }

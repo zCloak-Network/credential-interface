@@ -65,13 +65,13 @@ export class MessageSync {
       await this.db.message.bulkAdd(messages);
 
       if (messageData.length >= this.batch) {
-        await this.sync();
+        await this.syncMessage();
       }
     }
   }
 
   private async parseMessageBody(): Promise<void> {
-    const messages = await this.db.message.where('deal').equals(0).sortBy('messageCreateAt');
+    const messages = await this.db.message.where('deal').equals(0).sortBy('createdAt');
 
     for (const message of messages) {
       await this.db.transaction(

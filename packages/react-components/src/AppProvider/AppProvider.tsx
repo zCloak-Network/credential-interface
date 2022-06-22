@@ -25,7 +25,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     const didDetails = dids.didDetails;
     const encryptionKey = didDetails.encryptionKey;
 
-    if (!dids.isLocked && didDetails && encryptionKey) {
+    if ((await dids.isReady) && !dids.isLocked && didDetails && encryptionKey) {
       const messageSync = new MessageSync(
         {
           getMessage: async (id: number, _, length?: number) => {

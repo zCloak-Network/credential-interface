@@ -5,6 +5,7 @@ import { Dialog, DialogContent, Stack } from '@mui/material';
 import React, { useCallback, useContext, useState } from 'react';
 
 import {
+  AppContext,
   ButtonUnlock,
   DialogHeader,
   InputDid,
@@ -18,6 +19,7 @@ const ShareCredential: React.FC<{
   open: boolean;
   onClose?: () => void;
 }> = ({ credential, onClose, open }) => {
+  const { db } = useContext(AppContext);
   const [fullDid, setFullDid] = useState<Did.FullDidDetails | null>(null);
   const [loading, setLoading] = useState(false);
   const { claimer } = useClaimer();
@@ -48,13 +50,14 @@ const ShareCredential: React.FC<{
         nonce: encrypted.nonce,
         ciphertext: encrypted.ciphertext
       });
+      await db.message.add({ ...message, deal: 0 });
       onClose?.();
     } catch (error) {
       notifyError(error);
     } finally {
       setLoading(false);
     }
-  }, [claimer, credential, fullDid, notifyError, onClose]);
+  }, [claimer, credential, db.message, fullDid, notifyError, onClose]);
 
   return (
     <Dialog fullWidth onClose={onClose} open={open}>

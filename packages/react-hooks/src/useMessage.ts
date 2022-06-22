@@ -22,8 +22,6 @@ export function useRequestMessages(db: CredentialData, rootHash: string) {
   const getRequestMessages = useCallback(async () => {
     const messages = db.message
       .filter((message) => {
-        console.log(message, rootHash);
-
         if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
           return message.body.content.requestForAttestation.rootHash === rootHash;
         }
