@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 
 import { CTypeContext } from './CTypeProvider';
 
-const CTypeName: React.FC<{ cTypeHash: string }> = ({ cTypeHash }) => {
+const CTypeName: React.FC<{ cTypeHash?: string }> = ({ cTypeHash }) => {
   const { cTypeList } = useContext(CTypeContext);
   const { importCType } = useContext(CTypeContext);
 
@@ -13,11 +13,17 @@ const CTypeName: React.FC<{ cTypeHash: string }> = ({ cTypeHash }) => {
   }, [cTypeHash, cTypeList]);
 
   const handleClick = useCallback(() => {
-    importCType(cTypeHash);
+    if (cTypeHash) {
+      importCType(cTypeHash);
+    }
   }, [cTypeHash, importCType]);
 
   if (cType) {
     return <>{cType.schema.title}</>;
+  }
+
+  if (!cTypeHash) {
+    return null;
   }
 
   return (
