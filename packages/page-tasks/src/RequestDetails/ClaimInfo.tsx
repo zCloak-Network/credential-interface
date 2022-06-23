@@ -7,13 +7,14 @@ import { RequestForAttestation } from '@credential/app-db/requestForAttestation'
 import { CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
-import AttestationStatus from '../AttestationStatus';
+import RequestStatus from '../RequestStatus';
 import Approve from './Approve';
 import Reject from './Reject';
 
 const ClaimInfo: React.FC<{
+  showActions: boolean;
   request: RequestForAttestation;
-}> = ({ request }) => {
+}> = ({ request, showActions }) => {
   return (
     <Box sx={({ palette }) => ({ background: palette.common.white, paddingX: 8, paddingY: 4 })}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -26,10 +27,12 @@ const ClaimInfo: React.FC<{
             </Typography>
           </Box>
         </Stack>
-        <Stack alignItems="center" direction="row" spacing={1.5}>
-          <Approve request={request} />
-          <Reject request={request} />
-        </Stack>
+        {showActions && (
+          <Stack alignItems="center" direction="row" spacing={1.5}>
+            <Approve request={request} />
+            <Reject request={request} />
+          </Stack>
+        )}
       </Box>
       <Box mt={5}>
         <Grid
@@ -55,7 +58,7 @@ const ClaimInfo: React.FC<{
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Status</Typography>
-            <AttestationStatus status={request.status} />
+            <RequestStatus status={request.status} />
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>

@@ -6,13 +6,25 @@ import { CredentialData } from '@credential/app-db';
 
 import { useDebounce } from '.';
 
-export function useRequestForAttestation(db: CredentialData, sender?: DidUri) {
+export function useRequestForAttestation(db: CredentialData, owner?: DidUri) {
   const data = useLiveQuery(
     () =>
-      sender
-        ? db.requestForAttestation.filter((data) => data.claim.owner === sender).toArray()
+      owner
+        ? db.requestForAttestation.filter((data) => data.claim.owner === owner).toArray()
         : db.requestForAttestation.toArray(),
-    [sender]
+    [owner]
+  );
+
+  return useDebounce(data, 300);
+}
+
+export function useRequest(db: CredentialData, rootHash?: string) {
+  const data = useLiveQuery(
+    () =>
+      db.requestForAttestation.get({
+        rootHash
+      }),
+    [rootHash]
   );
 
   return useDebounce(data, 300);

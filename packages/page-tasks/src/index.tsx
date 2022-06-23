@@ -1,7 +1,7 @@
 import { Box, Stack, Tab, Tabs } from '@mui/material';
 import React from 'react';
 
-import AttestationTable from './AttestationTable';
+import RequestTable from './RequestTable';
 
 const Tasks: React.FC = () => {
   return (
@@ -16,7 +16,7 @@ const Tasks: React.FC = () => {
         <Tab label="My CTypes" />
       </Tabs>
       <Box px={4}>
-        <AttestationTable />
+        <RequestTable />
       </Box>
     </Stack>
   );

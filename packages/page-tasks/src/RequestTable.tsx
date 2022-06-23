@@ -15,9 +15,9 @@ import { ellipsisMixin } from '@credential/react-components/utils';
 import { useRequestForAttestation } from '@credential/react-hooks';
 
 import ActionButton from './ActionButton';
-import AttestationStatus from './AttestationStatus';
+import RequestStatus from './RequestStatus';
 
-const AttestationTable: React.FC = () => {
+const RequestTable: React.FC = () => {
   const { db } = useContext(AppContext);
   const list = useRequestForAttestation(db);
 
@@ -50,7 +50,7 @@ const AttestationTable: React.FC = () => {
               </TableCell>
               <TableCell>{moment(item.createAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
               <TableCell>
-                <AttestationStatus status={item.status} />{' '}
+                <RequestStatus status={item.status} />{' '}
               </TableCell>
               <TableCell>
                 <ActionButton request={item} />
@@ -63,4 +63,4 @@ const AttestationTable: React.FC = () => {
   );
 };
 
-export default AttestationTable;
+export default RequestTable;
