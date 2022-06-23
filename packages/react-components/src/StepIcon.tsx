@@ -17,7 +17,7 @@ const StepIcon: React.FC<StepIconProps> = ({ active, completed, icon }) => {
         alignItems="center"
         bgcolor={active || completed ? palette.primary.main : 'transparent'}
         borderRadius={2}
-        color={active || completed ? 'white' : palette.grey[500]}
+        color={active || completed ? palette.common.white : palette.grey[500]}
         display="flex"
         height="100%"
         justifyContent="center"

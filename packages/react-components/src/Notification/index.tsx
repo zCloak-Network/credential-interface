@@ -17,6 +17,7 @@ interface NotificationState {
 export const NotificationContext = createContext<NotificationState>({} as NotificationState);
 
 const NotificationWrapper = styled(Box)`
+  z-index: 9999;
   position: fixed;
   top: 0;
   right: 0;

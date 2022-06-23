@@ -1,35 +1,41 @@
-import { useCallback, useEffect, useState } from 'react';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 
 import { deserializer, getCache, serializer } from './cache';
 
 export function useLocalStorage<T>(
+  key: string
+): [T | undefined, (value: T | ((value: T) => T)) => void, () => void];
+export function useLocalStorage<T>(
+  key: string,
+  initialvalue: T
+): [T, (value: T | ((value: T) => T)) => void, () => void];
+
+export function useLocalStorage<T>(
   key: string,
   initialvalue?: T
-): [T | undefined, (value: T) => void, () => void] {
-  const [value, setValue] = useState<T | undefined>(getCache<T>(key) || initialvalue);
+): [T | undefined, (value: T | ((value: T | undefined) => T)) => void, () => void] {
+  const keyRef = useRef<string>(key);
 
-  const saveValue = useCallback(
-    (_value: T) => {
-      const v = serializer(_value);
-
-      localStorage.setItem(key, v);
-      setValue(_value);
-    },
-    [key]
-  );
+  const [value, setValue] = useState<T | undefined>(getCache<T>(keyRef.current) || initialvalue);
 
   const remove = useCallback(() => {
-    localStorage.removeItem(key);
+    localStorage.removeItem(keyRef.current);
     setValue(undefined);
-  }, [key]);
+  }, []);
 
   useEffect(() => {
-    const _value = localStorage.getItem(key);
+    const _value = localStorage.getItem(keyRef.current);
 
     if (_value) {
       setValue(deserializer(_value));
     }
-  }, [key]);
+  }, []);
 
-  return [value, saveValue, remove];
+  useEffect(() => {
+    const v = serializer(value);
+
+    localStorage.setItem(keyRef.current, v);
+  }, [value]);
+
+  return useMemo(() => [value, setValue, remove], [remove, value]);
 }

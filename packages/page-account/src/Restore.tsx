@@ -12,7 +12,7 @@ import {
 import React, { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { NotificationContext, PasswordInput } from '@credential/react-components';
+import { InputPassword, NotificationContext } from '@credential/react-components';
 import { useKeystore } from '@credential/react-keystore';
 
 import Success from './Success';
@@ -32,7 +32,7 @@ const Restore: React.FC = () => {
       file
         .text()
         .then((text) => {
-          restoreKeystore(text, 'claimer', password);
+          restoreKeystore(text, password);
         })
         .then(() => setSuccess(true))
         .catch((error) => {
@@ -52,7 +52,7 @@ const Restore: React.FC = () => {
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>
-          <Typography textAlign="center" variant="h5">
+          <Typography textAlign="center" variant="h3">
             Restore account
           </Typography>
           <Typography textAlign="center" variant="h5">
@@ -82,7 +82,7 @@ const Restore: React.FC = () => {
           </FormControl>
           <FormControl fullWidth variant="outlined">
             <InputLabel shrink>Enter password</InputLabel>
-            <PasswordInput onChange={(e) => setPassword(e.target.value)} />
+            <InputPassword onChange={(e) => setPassword(e.target.value)} />
           </FormControl>
           <LoadingButton
             fullWidth

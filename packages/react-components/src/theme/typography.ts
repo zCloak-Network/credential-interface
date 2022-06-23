@@ -24,23 +24,23 @@ const createTypography: Func = () => ({
   ].join(','),
   htmlFontSize: 16,
   h1: {
-    fontSize: '2.5rem',
-    fontWeight: 500,
+    fontSize: '2rem',
+    fontWeight: 600,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '2.125rem'
     }
   },
   h2: {
-    fontSize: '2.25rem',
-    fontWeight: 500,
+    fontSize: '1.75rem',
+    fontWeight: 600,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
       fontSize: '1.875rem'
     }
   },
   h3: {
-    fontSize: '2rem',
+    fontSize: '1.5rem',
     fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
@@ -48,7 +48,7 @@ const createTypography: Func = () => ({
     }
   },
   h4: {
-    fontSize: '1.75rem',
+    fontSize: '1.25rem',
     fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
@@ -56,7 +56,7 @@ const createTypography: Func = () => ({
     }
   },
   h5: {
-    fontSize: '1.5rem',
+    fontSize: '1.125rem',
     fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {
@@ -64,7 +64,7 @@ const createTypography: Func = () => ({
     }
   },
   h6: {
-    fontSize: '1.125rem',
+    fontSize: '1rem',
     fontWeight: 500,
     lineHeight: 1.5,
     '@media (max-width:600px)': {

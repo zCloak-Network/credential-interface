@@ -16,6 +16,7 @@
   "type": "module",
   "version": "0.0.0",
   "dependencies": {
+    "@credential/react-hooks": "0.0.0",
     "@date-io/date-fns": "^2.14.0",
     "@date-io/moment": "^2.14.0",
     "@emotion/react": "^11.9.0",
@@ -24,6 +25,8 @@
     "@mui/icons-material": "^5.8.0",
     "@mui/lab": "^5.0.0-alpha.83",
     "@mui/material": "^5.8.1",
-    "@mui/x-date-pickers": "^5.0.0-alpha.4"
+    "@mui/x-date-pickers": "^5.0.0-alpha.4",
+    "@zcloak/credential-core": "^0.0.2-21",
+    "@zcloak/extension-core": "^0.0.2-21"
   }
 }

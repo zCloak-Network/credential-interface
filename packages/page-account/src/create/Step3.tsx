@@ -43,13 +43,13 @@ const Step3: React.FC<{
   }, [keyWords, keyWordsIndex, mnemonic]);
 
   const toggleContinue = useCallback(() => {
-    // TODO: maybe has attester
-    const json = addKeystore(mnemonic, 'claimer', password);
-    const blob = new Blob([JSON.stringify(json)], {
+    const json = addKeystore(mnemonic, password);
+
+    const blobSiningJson = new Blob([JSON.stringify(json)], {
       type: 'text/plain;charset=utf-8'
     });
 
-    FileSaver.saveAs(blob, `${json.address}.json`);
+    FileSaver.saveAs(blobSiningJson, `sining${json.address}.json`);
 
     nextStep();
   }, [addKeystore, mnemonic, nextStep, password]);
