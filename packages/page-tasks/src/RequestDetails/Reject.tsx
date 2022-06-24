@@ -1,3 +1,5 @@
+import type { IMessage } from '@kiltprotocol/types';
+
 import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
 import { alpha } from '@mui/material';
 import React, { useCallback, useContext, useState } from 'react';
@@ -9,15 +11,14 @@ import {
   NotificationContext,
   useAttester
 } from '@credential/react-components';
-import { useMessage } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
 
 const Reject: React.FC<{
   request: RequestForAttestation;
-}> = ({ request }) => {
+  messageLinked?: IMessage[];
+}> = ({ messageLinked, request }) => {
   const { db } = useContext(AppContext);
   const { attester } = useAttester();
-  const relationMessage = useMessage(db, request.messageId);
   const { notifyError } = useContext(NotificationContext);
   const [loading, setLoading] = useState(false);
 
@@ -29,20 +30,16 @@ const Reject: React.FC<{
         throw new Error("You don't has full did details.");
       }
 
-      if (!relationMessage) {
-        throw new Error('Can not found parent message.');
-      }
-
-      const claimer = Did.LightDidDetails.fromUri(relationMessage.sender);
+      const claimer = Did.LightDidDetails.fromUri(request.claim.owner);
 
       if (!claimer.encryptionKey?.id) {
         throw new Error("Claimer has't encryption key");
       }
 
       // check attestation validity
-      const attestation = Attestation.fromRequestAndDid(request, attester.didDetails.uri);
+      const attestation = await Attestation.query(request.rootHash);
 
-      if (await attestation.checkValidity()) {
+      if (attestation && (await attestation.checkValidity())) {
         throw new Error('Attestation is validity');
       }
 
@@ -55,7 +52,7 @@ const Reject: React.FC<{
         claimer.uri
       );
 
-      message.inReplyTo = relationMessage.messageId;
+      message.references = messageLinked?.map((message) => message.messageId);
       const encrypted = await attester.encryptMessage(message, claimer);
 
       await credentialApi.addMessage({
@@ -71,7 +68,7 @@ const Reject: React.FC<{
     } finally {
       setLoading(false);
     }
-  }, [attester, db.message, notifyError, relationMessage, request]);
+  }, [attester, db.message, messageLinked, notifyError, request.claim.owner, request.rootHash]);
 
   return (
     <ButtonUnlock

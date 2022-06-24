@@ -4,7 +4,6 @@ import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
 import { Message } from '@credential/app-db/message';
-import { RequestForAttestationStatus } from '@credential/app-db/requestForAttestation';
 import RequestDetails from '@credential/page-tasks/RequestDetails';
 import { AppContext, CredentialStatus, CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';

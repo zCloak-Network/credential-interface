@@ -9,6 +9,7 @@ import { useToggle } from '@credential/react-hooks';
 import RequestDetails from './RequestDetails';
 
 const ActionButton: React.FC<{ request: RequestForAttestation; attestation?: Attestation }> = ({
+  attestation,
   request
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -46,7 +47,12 @@ const ActionButton: React.FC<{ request: RequestForAttestation; attestation?: Att
         </MenuItem>
       </Menu>
       {detailsOpen && (
-        <RequestDetails onClose={toggleDetailsOpen} open={detailsOpen} request={request} />
+        <RequestDetails
+          attestation={attestation}
+          onClose={toggleDetailsOpen}
+          open={detailsOpen}
+          request={request}
+        />
       )}
     </>
   );

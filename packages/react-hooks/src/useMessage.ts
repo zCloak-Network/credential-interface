@@ -8,18 +8,6 @@ import { Message, MessageBodyType } from '@credential/app-db/message';
 
 import { useDebounce } from '.';
 
-export function useMessage(db: CredentialData, messageId: string) {
-  const data = useLiveQuery(
-    () =>
-      db.message.get({
-        messageId
-      }),
-    [messageId]
-  );
-
-  return useDebounce(data, 100);
-}
-
 export function useRequestMessages(db: CredentialData, rootHash: string) {
   const getRequestMessages = useCallback(async () => {
     const messages = db.message
