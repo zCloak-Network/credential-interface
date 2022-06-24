@@ -369,6 +369,9 @@ const createComponents: Func = () => ({
         '&.MuiTableRow-hover:hover': {
           backgroundColor: alpha(theme.palette.primary.main, 0.1)
         }
+      }),
+      head: ({ theme }) => ({
+        backgroundColor: alpha(theme.palette.primary.main, 0.1)
       })
     }
   },
@@ -377,10 +380,10 @@ const createComponents: Func = () => ({
       root: ({ theme }) => ({
         color: theme.palette.grey[900],
         padding: '8px 16px',
-        height: 45
+        height: 45,
+        borderBottom: 'none'
       }),
       head: ({ theme }) => ({
-        background: theme.palette.grey[100],
         color: theme.palette.grey[500],
         borderBottom: 'none'
       })

@@ -12,6 +12,7 @@ import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
+import PageMessage from '@credential/page-message';
 import PageAttesterMessage from '@credential/page-message/attester';
 import PageTasks from '@credential/page-tasks';
 import { AppProvider, DidsProvider } from '@credential/react-components';
@@ -43,7 +44,7 @@ const createAppClaimer = () => (
         >
           <Route element={<PageCType />} path="ctype" />
           <Route element={<PageClaims />} path="claims" />
-          <Route element={<div>message</div>} path="message" />
+          <Route element={<PageMessage />} path="message" />
         </Route>
         <Route element={<Account />} path="account">
           <Route element={<PageCreateAccount />} path="create" />

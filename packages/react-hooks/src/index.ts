@@ -5,6 +5,7 @@ export * from './useLocalStorage';
 export * from './useToggle';
 
 // db query
+export * from './useAttestation';
 export * from './useCredentials';
 export * from './useRequestForAttestation';
 export * from './useMessage';

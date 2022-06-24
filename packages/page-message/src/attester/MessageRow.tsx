@@ -6,10 +6,9 @@ import React, { useContext, useMemo } from 'react';
 import { Message } from '@credential/app-db/message';
 import { RequestForAttestationStatus } from '@credential/app-db/requestForAttestation';
 import RequestDetails from '@credential/page-tasks/RequestDetails';
-import RequestStatus from '@credential/page-tasks/RequestStatus';
-import { AppContext, CTypeName, DidName } from '@credential/react-components';
+import { AppContext, CredentialStatus, CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { useRequest, useToggle } from '@credential/react-hooks';
+import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
 
 const MessageRow: React.FC<{
   message: Message & { body: IRequestAttestation | ISubmitCredential };
@@ -23,6 +22,7 @@ const MessageRow: React.FC<{
   }, [message.body.content, message.body.type]);
 
   const request = useRequest(db, rootHash);
+  const attestation = useAttestation(db, rootHash);
 
   return (
     <>
@@ -44,7 +44,11 @@ const MessageRow: React.FC<{
           </Box>
         </TableCell>
         <TableCell>
-          <RequestStatus status={request?.status ?? RequestForAttestationStatus.INIT} />
+          <CredentialStatus
+            revoked={attestation?.revoked}
+            role="attester"
+            status={request?.status}
+          />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </TableRow>

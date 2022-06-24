@@ -10,16 +10,15 @@ import {
 import moment from 'moment';
 import React, { useContext } from 'react';
 
-import { AppContext, CTypeName } from '@credential/react-components';
+import { AppContext, CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { useRequestForAttestation } from '@credential/react-hooks';
+import { useCredentials } from '@credential/react-hooks';
 
 import ActionButton from './ActionButton';
-import RequestStatus from './RequestStatus';
 
 const RequestTable: React.FC = () => {
   const { db } = useContext(AppContext);
-  const list = useRequestForAttestation(db);
+  const list = useCredentials(db);
 
   return (
     <TableContainer>
@@ -35,25 +34,29 @@ const RequestTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list?.map((item, index) => (
+          {list?.map(({ attestation, request }, index) => (
             <TableRow key={index}>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>{item.claim.owner}</Box>
+                <Box sx={{ width: 120, ...ellipsisMixin() }}>{request.claim.owner}</Box>
               </TableCell>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>{item.rootHash}</Box>
+                <Box sx={{ width: 120, ...ellipsisMixin() }}>{request.rootHash}</Box>
               </TableCell>
               <TableCell>
                 <Box sx={{ width: 120, ...ellipsisMixin() }}>
-                  <CTypeName cTypeHash={item.claim.cTypeHash} />
+                  <CTypeName cTypeHash={request.claim.cTypeHash} />
                 </Box>
               </TableCell>
-              <TableCell>{moment(item.createAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+              <TableCell>{moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
               <TableCell>
-                <RequestStatus status={item.status} />{' '}
+                <CredentialStatus
+                  revoked={attestation?.revoked}
+                  role="attester"
+                  status={request.status}
+                />
               </TableCell>
               <TableCell>
-                <ActionButton request={item} />
+                <ActionButton attestation={attestation} request={request} />
               </TableCell>
             </TableRow>
           ))}

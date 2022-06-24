@@ -10,12 +10,14 @@ export function useRequestForAttestation(db: CredentialData, owner?: DidUri) {
   const data = useLiveQuery(
     () =>
       owner
-        ? db.requestForAttestation.filter((data) => data.claim.owner === owner).toArray()
-        : db.requestForAttestation.toArray(),
+        ? db.requestForAttestation
+            .filter((data) => data.claim.owner === owner)
+            .sortBy('createdAt', (requests) => requests.reverse())
+        : db.requestForAttestation.orderBy('createdAt').reverse().toArray(),
     [owner]
   );
 
-  return useDebounce(data, 300);
+  return useDebounce(data, 100);
 }
 
 export function useRequest(db: CredentialData, rootHash?: string) {
@@ -27,5 +29,5 @@ export function useRequest(db: CredentialData, rootHash?: string) {
     [rootHash]
   );
 
-  return useDebounce(data, 300);
+  return useDebounce(data, 100);
 }

@@ -13,7 +13,7 @@ const Tasks: React.FC = () => {
         }}
         value={0}
       >
-        <Tab label="My CTypes" />
+        <Tab label="Tasks" />
       </Tabs>
       <Box px={4}>
         <RequestTable />

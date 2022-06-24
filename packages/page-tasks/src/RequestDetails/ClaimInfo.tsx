@@ -3,18 +3,19 @@ import { Box, Grid, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
+import { Attestation } from '@credential/app-db/attestation/Attestation';
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import { CTypeName, DidName } from '@credential/react-components';
+import { CredentialStatus, CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
-import RequestStatus from '../RequestStatus';
 import Approve from './Approve';
 import Reject from './Reject';
 
 const ClaimInfo: React.FC<{
   showActions: boolean;
   request: RequestForAttestation;
-}> = ({ request, showActions }) => {
+  attestation?: Attestation;
+}> = ({ attestation, request, showActions }) => {
   return (
     <Box sx={({ palette }) => ({ background: palette.common.white, paddingX: 8, paddingY: 4 })}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -58,13 +59,17 @@ const ClaimInfo: React.FC<{
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Status</Typography>
-            <RequestStatus status={request.status} />
+            <CredentialStatus
+              revoked={attestation?.revoked}
+              role="attester"
+              status={request.status}
+            />
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
               Approval initiation time
             </Typography>
-            <Typography>{moment(request.createAt).format('YYYY-MM-DD HH:mm:ss')}</Typography>
+            <Typography>{moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Typography>
           </Grid>
         </Grid>
       </Box>

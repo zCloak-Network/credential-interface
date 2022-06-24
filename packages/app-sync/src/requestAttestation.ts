@@ -7,7 +7,7 @@ export async function requestAttestation(db: CredentialData, message: Message) {
   if (message.body.type !== MessageBodyType.REQUEST_ATTESTATION) return;
 
   await db.requestForAttestation.add({
-    createAt: message.createdAt,
+    createdAt: message.createdAt,
     messageId: message.messageId!,
     status: RequestForAttestationStatus.INIT,
     ...message.body.content.requestForAttestation

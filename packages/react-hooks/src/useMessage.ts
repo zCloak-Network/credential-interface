@@ -17,12 +17,14 @@ export function useMessage(db: CredentialData, messageId: string) {
     [messageId]
   );
 
-  return useDebounce(data, 300);
+  return useDebounce(data, 100);
 }
 
 export function useRequestMessages(db: CredentialData, rootHash: string) {
   const getRequestMessages = useCallback(async () => {
     const messages = db.message
+      .orderBy('createdAt')
+      .reverse()
       .filter((message) => {
         if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
           return message.body.content.requestForAttestation.rootHash === rootHash;
@@ -45,7 +47,7 @@ export function useRequestMessages(db: CredentialData, rootHash: string) {
 
   const data = useLiveQuery(() => getRequestMessages(), [getRequestMessages]);
 
-  return useDebounce(data, 300);
+  return useDebounce(data, 100);
 }
 
 export function useMessages(
@@ -72,10 +74,10 @@ export function useMessages(
 
         return true;
       })
-      .toArray();
+      .sortBy('createdAt', (messages) => messages.reverse());
   }, [db, filter]);
 
   const data = useLiveQuery(() => getMessages(), [getMessages]);
 
-  return useDebounce(data, 300);
+  return useDebounce(data, 100);
 }
