@@ -7,7 +7,7 @@ export async function rejectAttestation(db: CredentialData, message: Message) {
   if (message.body.type !== MessageBodyType.REJECT_ATTESTATION) return;
 
   await db.requestForAttestation.where('rootHash').equals(message.body.content).modify({
-    createAt: message.createdAt,
+    createdAt: message.createdAt,
     messageId: message.messageId!,
     status: RequestForAttestationStatus.REJECT
   });

@@ -1,4 +1,4 @@
-import { type PaletteMode } from '@mui/material';
+import { type PaletteMode, alpha } from '@mui/material';
 import { type ThemeOptions } from '@mui/material/styles';
 
 type Func = (mode: PaletteMode) => NonNullable<ThemeOptions['components']>;
@@ -367,8 +367,11 @@ const createComponents: Func = () => ({
           borderBottom: 'none'
         },
         '&.MuiTableRow-hover:hover': {
-          backgroundColor: '#E5E7ED'
+          backgroundColor: alpha(theme.palette.primary.main, 0.1)
         }
+      }),
+      head: ({ theme }) => ({
+        backgroundColor: alpha(theme.palette.primary.main, 0.1)
       })
     }
   },
@@ -376,10 +379,11 @@ const createComponents: Func = () => ({
     styleOverrides: {
       root: ({ theme }) => ({
         color: theme.palette.grey[900],
-        fontWeight: 500
+        padding: '8px 16px',
+        height: 45,
+        borderBottom: 'none'
       }),
       head: ({ theme }) => ({
-        background: theme.palette.grey[100],
         color: theme.palette.grey[500],
         borderBottom: 'none'
       })

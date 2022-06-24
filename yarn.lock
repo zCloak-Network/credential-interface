@@ -1568,6 +1568,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@credential/page-message@workspace:packages/page-message":
+  version: 0.0.0-use.local
+  resolution: "@credential/page-message@workspace:packages/page-message"
+  dependencies:
+    "@credential/react-keystore": 0.0.0
+  languageName: unknown
+  linkType: soft
+
 "@credential/page-tasks@workspace:packages/page-tasks":
   version: 0.0.0-use.local
   resolution: "@credential/page-tasks@workspace:packages/page-tasks"
@@ -3048,14 +3056,14 @@ __metadata:
   linkType: hard
 
 "@polkadot/ui-keyring@npm:^2.4.1":
-  version: 2.4.1
-  resolution: "@polkadot/ui-keyring@npm:2.4.1"
+  version: 2.5.1
+  resolution: "@polkadot/ui-keyring@npm:2.5.1"
   dependencies:
     "@babel/runtime": ^7.18.3
-    "@polkadot/keyring": ^9.4.1
-    "@polkadot/ui-settings": 2.4.1
-    "@polkadot/util": ^9.4.1
-    "@polkadot/util-crypto": ^9.4.1
+    "@polkadot/keyring": ^9.5.1
+    "@polkadot/ui-settings": 2.5.1
+    "@polkadot/util": ^9.5.1
+    "@polkadot/util-crypto": ^9.5.1
     mkdirp: ^1.0.4
     rxjs: ^7.5.5
     store: ^2.0.12
@@ -3063,23 +3071,23 @@ __metadata:
     "@polkadot/keyring": "*"
     "@polkadot/ui-settings": "*"
     "@polkadot/util": "*"
-  checksum: d07eb9397669864ec905cdf408c3f08a371ff4ecfc7cba1f6f8d492add93d79276ca97e951b0001aec64a57953893876de67a74ab22299502cc5b6dc2e78b37b
+  checksum: 076158a040bf6ca2ec6c086b49f1b8f64a81ae2bd542cc6772a8f55e6d5545e88ab07780bb08e2c0833f8a9360ff900bf91c8d1151c34bde5b8f3b6da08dc3c6
   languageName: node
   linkType: hard
 
-"@polkadot/ui-settings@npm:2.4.1":
-  version: 2.4.1
-  resolution: "@polkadot/ui-settings@npm:2.4.1"
+"@polkadot/ui-settings@npm:2.5.1":
+  version: 2.5.1
+  resolution: "@polkadot/ui-settings@npm:2.5.1"
   dependencies:
     "@babel/runtime": ^7.18.3
-    "@polkadot/networks": ^9.4.1
-    "@polkadot/util": ^9.4.1
+    "@polkadot/networks": ^9.5.1
+    "@polkadot/util": ^9.5.1
     eventemitter3: ^4.0.7
     store: ^2.0.12
   peerDependencies:
     "@polkadot/networks": "*"
     "@polkadot/util": "*"
-  checksum: 03545b7c434427ddee7d2d25bfe32c62a3d20e0a9626c161de809798be866a453faf7fe44d7698b8e5bf8fe32ad8018833c169ec426ce81e4f918673392893d2
+  checksum: 40456988e5b96f83675d4c30f11c142f196205807cfed23d8d0ea4ebabac000afaa4fea12445358586434e0e9736b8d832766a68811a259ab7900e98a3389164
   languageName: node
   linkType: hard
 

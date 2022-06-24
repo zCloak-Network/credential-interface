@@ -38,5 +38,5 @@ export function useCredentials(db: CredentialData, owner?: DidUri) {
     return getCredential();
   }, [getCredential]);
 
-  return useDebounce(data, 300);
+  return useDebounce(data, 100);
 }

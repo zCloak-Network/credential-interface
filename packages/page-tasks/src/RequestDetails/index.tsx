@@ -12,7 +12,8 @@ const RequestDetails: React.FC<{
   request: RequestForAttestation;
   open: boolean;
   onClose?: () => void;
-}> = ({ onClose, open, request }) => {
+  showActions?: boolean;
+}> = ({ onClose, open, request, showActions = true }) => {
   const { db } = useContext(AppContext);
   const messageLinked = useRequestMessages(db, request.rootHash);
 
@@ -24,7 +25,7 @@ const RequestDetails: React.FC<{
         maxWidth="lg"
         sx={{ background: 'transparent !important' }}
       >
-        <ClaimInfo request={request} />
+        <ClaimInfo request={request} showActions={showActions} />
         <Details contents={request.claim.contents} messageLinked={messageLinked} />
       </Container>
       <DialogActions></DialogActions>

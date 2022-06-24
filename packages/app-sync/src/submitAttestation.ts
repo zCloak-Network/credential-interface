@@ -13,13 +13,13 @@ export async function submitAttestation(db: CredentialData, message: Message) {
   if (attestation) {
     // update attestation if has claimHash
     db.attestation.update(attestation.id!, {
-      createAt: message.createdAt,
+      createdAt: message.createdAt,
       messageId: message.messageId!,
       ...message.body.content.attestation
     });
   } else {
     db.attestation.add({
-      createAt: message.createdAt,
+      createdAt: message.createdAt,
       messageId: message.messageId!,
       ...message.body.content.attestation
     });
@@ -30,7 +30,7 @@ export async function submitAttestation(db: CredentialData, message: Message) {
     .where('rootHash')
     .equals(message.body.content.attestation.claimHash)
     .modify({
-      createAt: message.createdAt,
+      createdAt: message.createdAt,
       messageId: message.messageId!,
       status: RequestForAttestationStatus.SUBMIT
     });

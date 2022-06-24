@@ -9,7 +9,13 @@ import {
   RequestForAttestation,
   RequestForAttestationStatus
 } from '@credential/app-db/requestForAttestation';
-import { AppContext, CTypeContext, CTypeName, DidName } from '@credential/react-components';
+import {
+  AppContext,
+  CredentialStatus,
+  CTypeContext,
+  CTypeName,
+  DidName
+} from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { useMessage, useToggle } from '@credential/react-hooks';
 
@@ -17,7 +23,6 @@ import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
 import ShareButton from './button/ShareButton';
 import CredentialModal from './modals/CredentialModal';
-import Status from './Status';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
   position: 'relative',
@@ -131,9 +136,13 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
         />
         <Wrapper onClick={toggleOpen}>
           <Box className="CredentialCell_Status">
-            <Status status={request.status} />
+            <CredentialStatus
+              revoked={attestation?.revoked}
+              role="claimer"
+              status={request.status}
+            />
             <Typography className="CredentialCell_Time" variant="inherit">
-              {moment(attestation?.createAt ?? request.createAt).format('YYYY:MM:DD HH:mm:ss')}
+              {moment(attestation?.createdAt ?? request.createdAt).format('YYYY:MM:DD HH:mm:ss')}
             </Typography>
           </Box>
           <Typography className="CredentialCell_title" mt={2} variant="h3">

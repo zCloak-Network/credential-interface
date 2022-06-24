@@ -2,12 +2,15 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
 
+import { Attestation } from '@credential/app-db/attestation/Attestation';
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
 import { useToggle } from '@credential/react-hooks';
 
 import RequestDetails from './RequestDetails';
 
-const ActionButton: React.FC<{ request: RequestForAttestation }> = ({ request }) => {
+const ActionButton: React.FC<{ request: RequestForAttestation; attestation?: Attestation }> = ({
+  request
+}) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
   const [detailsOpen, toggleDetailsOpen] = useToggle();
 
