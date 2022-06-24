@@ -17,7 +17,7 @@ const CredentialStatus: React.FC<{
   );
   const rejectText = useMemo(() => (role === 'attester' ? 'Rejected' : 'Rejected'), [role]);
   const initColor = useMemo(
-    () => (role === 'attester' ? theme.palette.grey[400] : theme.palette.warning.main),
+    () => (role === 'attester' ? theme.palette.grey[600] : theme.palette.warning.main),
     [role, theme.palette.grey, theme.palette.warning.main]
   );
   const submitColor = useMemo(

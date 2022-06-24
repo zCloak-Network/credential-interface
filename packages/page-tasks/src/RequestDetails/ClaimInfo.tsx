@@ -4,18 +4,24 @@ import moment from 'moment';
 import React from 'react';
 
 import { Attestation } from '@credential/app-db/attestation/Attestation';
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
+import { Message } from '@credential/app-db/message';
+import {
+  RequestForAttestation,
+  RequestForAttestationStatus
+} from '@credential/app-db/requestForAttestation';
 import { CredentialStatus, CTypeName, DidName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 
 import Approve from './Approve';
 import Reject from './Reject';
+import Revoke from './Revoke';
 
 const ClaimInfo: React.FC<{
   showActions: boolean;
   request: RequestForAttestation;
   attestation?: Attestation;
-}> = ({ attestation, request, showActions }) => {
+  messageLinked?: Message[];
+}> = ({ attestation, messageLinked, request, showActions }) => {
   return (
     <Box sx={({ palette }) => ({ background: palette.common.white, paddingX: 8, paddingY: 4 })}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
@@ -30,8 +36,15 @@ const ClaimInfo: React.FC<{
         </Stack>
         {showActions && (
           <Stack alignItems="center" direction="row" spacing={1.5}>
-            <Approve request={request} />
-            <Reject request={request} />
+            {request.status === RequestForAttestationStatus.INIT && (
+              <Approve messageLinked={messageLinked} request={request} />
+            )}
+            {request.status === RequestForAttestationStatus.INIT && (
+              <Reject messageLinked={messageLinked} request={request} />
+            )}
+            {request.status === RequestForAttestationStatus.SUBMIT && attestation && (
+              <Revoke attestation={attestation} messageLinked={messageLinked} request={request} />
+            )}
           </Stack>
         )}
       </Box>

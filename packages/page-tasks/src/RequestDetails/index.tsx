@@ -1,6 +1,7 @@
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import React, { useContext } from 'react';
 
+import { Attestation } from '@credential/app-db/attestation/Attestation';
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
 import { AppContext, DialogHeader } from '@credential/react-components';
 import { useRequestMessages } from '@credential/react-hooks';
@@ -10,10 +11,11 @@ import Details from './Details';
 
 const RequestDetails: React.FC<{
   request: RequestForAttestation;
+  attestation?: Attestation;
   open: boolean;
   onClose?: () => void;
   showActions?: boolean;
-}> = ({ onClose, open, request, showActions = true }) => {
+}> = ({ attestation, onClose, open, request, showActions = true }) => {
   const { db } = useContext(AppContext);
   const messageLinked = useRequestMessages(db, request.rootHash);
 
@@ -25,7 +27,12 @@ const RequestDetails: React.FC<{
         maxWidth="lg"
         sx={{ background: 'transparent !important' }}
       >
-        <ClaimInfo request={request} showActions={showActions} />
+        <ClaimInfo
+          attestation={attestation}
+          messageLinked={messageLinked}
+          request={request}
+          showActions={showActions}
+        />
         <Details contents={request.claim.contents} messageLinked={messageLinked} />
       </Container>
       <DialogActions></DialogActions>

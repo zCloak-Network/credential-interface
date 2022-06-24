@@ -17,7 +17,7 @@ import {
   DidName
 } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { useMessage, useToggle } from '@credential/react-hooks';
+import { useRequestMessages, useToggle } from '@credential/react-hooks';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -109,7 +109,7 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
       (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
     );
   }, [cTypeList, request.claim.cTypeHash]);
-  const relationMessage = useMessage(db, request.messageId);
+  const requestMessages = useRequestMessages(db, request.rootHash);
 
   return (
     <>
@@ -128,7 +128,9 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
             borderBottomRightRadius: 4,
             background:
               request.status === RequestForAttestationStatus.SUBMIT
-                ? palette.success.main
+                ? attestation?.revoked
+                  ? palette.error.main
+                  : palette.success.main
                 : request.status === RequestForAttestationStatus.REJECT
                 ? palette.error.main
                 : palette.warning.main
@@ -161,7 +163,7 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  <DidName value={attestation?.owner ?? relationMessage?.receiver} />
+                  <DidName value={attestation?.owner ?? requestMessages?.[0]?.receiver} />
                 </Typography>
               </Tooltip>
             </Box>

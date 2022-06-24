@@ -1,4 +1,4 @@
-import type { IMessage } from '@kiltprotocol/types';
+import type { IAttestation, IMessage } from '@kiltprotocol/types';
 
 import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
 import { alpha } from '@mui/material';
@@ -13,16 +13,17 @@ import {
 } from '@credential/react-components';
 import { credentialApi } from '@credential/react-hooks/api';
 
-const Approve: React.FC<{
+const Revoke: React.FC<{
   request: RequestForAttestation;
+  attestation: IAttestation;
   messageLinked?: IMessage[];
-}> = ({ messageLinked, request }) => {
+}> = ({ attestation: _attestation, messageLinked, request }) => {
   const { db } = useContext(AppContext);
   const { attester } = useAttester();
   const { notifyError } = useContext(NotificationContext);
   const [loading, setLoading] = useState(false);
 
-  const approve = useCallback(async () => {
+  const revoke = useCallback(async () => {
     try {
       setLoading(true);
 
@@ -36,7 +37,13 @@ const Approve: React.FC<{
         throw new Error("Claimer has't encryption key");
       }
 
-      const attestation = Attestation.fromRequestAndDid(request, attester.didDetails.uri);
+      const attestation = Attestation.fromAttestation(_attestation);
+
+      if (!(await attestation.checkValidity())) {
+        throw new Error('Attestation is not validity');
+      }
+
+      attestation.revoked = true;
 
       const message = new Message(
         {
@@ -50,9 +57,7 @@ const Approve: React.FC<{
       message.references = messageLinked?.map((message) => message.messageId);
       const encrypted = await attester.encryptMessage(message, claimer);
 
-      if (!(await attestation.checkValidity())) {
-        await attester.attestClaim(request);
-      }
+      await attester.revokeAttestation(attestation);
 
       await credentialApi.addMessage({
         receiverKeyId: encrypted.receiverKeyUri,
@@ -67,25 +72,25 @@ const Approve: React.FC<{
     } finally {
       setLoading(false);
     }
-  }, [attester, db.message, messageLinked, notifyError, request]);
+  }, [_attestation, attester, db.message, messageLinked, notifyError, request.claim.owner]);
 
   return (
     <ButtonUnlock
       loading={loading}
-      onClick={approve}
+      onClick={revoke}
       sx={({ palette }) => ({
-        background: alpha(palette.success.main, 0.1),
-        borderColor: palette.success.main,
-        color: palette.success.main,
+        background: alpha(palette.error.main, 0),
+        borderColor: palette.error.main,
+        color: palette.error.main,
         ':hover': {
-          borderColor: palette.success.main
+          borderColor: palette.error.main
         }
       })}
       variant="outlined"
     >
-      Approve
+      Revoke
     </ButtonUnlock>
   );
 };
 
-export default React.memo(Approve);
+export default React.memo(Revoke);
