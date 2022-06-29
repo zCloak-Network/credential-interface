@@ -9,6 +9,8 @@ import {
 } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 
+import { useKeystore } from '@credential/react-keystore';
+
 import DialogHeader from './DialogHeader';
 import { useDids } from './DidsProvider';
 import InputPassword from './InputPassword';
@@ -18,13 +20,14 @@ const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () 
   onUnlock,
   open
 }) => {
-  const { account, dids } = useDids();
+  const { unlock } = useKeystore();
+  const { account } = useDids();
   const [password, setPassword] = useState<string>();
 
-  const unlock = useCallback(() => {
-    dids.unlock(password);
+  const _onUnlock = useCallback(() => {
+    unlock(password);
     onUnlock();
-  }, [dids, onUnlock, password]);
+  }, [onUnlock, password, unlock]);
 
   return (
     <Dialog maxWidth="lg" onClose={onClose} open={open}>
@@ -42,7 +45,7 @@ const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () 
         </FormControl>
       </DialogContent>
       <DialogActions>
-        <LoadingButton onClick={unlock} variant="contained">
+        <LoadingButton onClick={_onUnlock} variant="contained">
           Unlock
         </LoadingButton>
       </DialogActions>

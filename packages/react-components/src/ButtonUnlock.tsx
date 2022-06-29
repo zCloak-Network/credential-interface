@@ -1,9 +1,9 @@
 import React, { useCallback } from 'react';
 
 import { useToggle } from '@credential/react-hooks';
+import { useKeystore } from '@credential/react-keystore';
 
 import ButtonWithError, { Props as ButtonWithErrorProps } from './ButtonWithError';
-import { useDids } from './DidsProvider';
 import UnlockModal from './UnlockModal';
 
 interface Props extends ButtonWithErrorProps {
@@ -19,7 +19,7 @@ const ButtonUnlock: React.FC<Props> = ({
   ...props
 }) => {
   const [open, toggle] = useToggle();
-  const { dids } = useDids();
+  const { isLocked } = useKeystore();
 
   const onUnlock = useCallback(() => {
     toggle();
@@ -31,8 +31,8 @@ const ButtonUnlock: React.FC<Props> = ({
 
   return (
     <>
-      <ButtonWithError {...props} onClick={dids.isLocked ? toggle : props.onClick}>
-        {dids.isLocked ? unlockText ?? 'Unlock Account' : children}
+      <ButtonWithError {...props} onClick={isLocked ? toggle : props.onClick}>
+        {isLocked ? unlockText ?? 'Unlock Account' : children}
       </ButtonWithError>
       <UnlockModal onClose={toggle} onUnlock={onUnlock} open={open} />
     </>

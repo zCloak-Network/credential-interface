@@ -4,6 +4,7 @@ import { createCredentialDb, CredentialData } from '@credential/app-db';
 import { MessageSync } from '@credential/app-sync';
 import { useInterval } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
+import { useKeystore } from '@credential/react-keystore';
 
 import { useDids } from '../DidsProvider';
 
@@ -15,6 +16,7 @@ interface State {
 export const AppContext = createContext({} as State);
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
+  const { isLocked } = useKeystore();
   const { account, dids } = useDids();
 
   const db = useMemo(() => {
@@ -25,7 +27,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     const didDetails = dids.didDetails;
     const encryptionKey = didDetails.encryptionKey;
 
-    if ((await dids.isReady) && !dids.isLocked && didDetails && encryptionKey) {
+    if ((await dids.isReady) && !isLocked && didDetails && encryptionKey) {
       const messageSync = new MessageSync(
         {
           getMessage: async (id: number, _, length?: number) => {
@@ -54,7 +56,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
       await messageSync.sync();
     }
-  }, [db, dids]);
+  }, [db, dids, isLocked]);
 
   useInterval(sync, 30000);
 

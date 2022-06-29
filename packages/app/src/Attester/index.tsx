@@ -4,17 +4,19 @@ import { Outlet, useLocation } from 'react-router-dom';
 
 import { UnlockModal, useAttester } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
+import { useKeystore } from '@credential/react-keystore';
 
 import Header from '../Header';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
 import Sidebar from '../Sidebar';
 
 const Attester: React.FC = () => {
+  const { isLocked } = useKeystore();
   const [open, toggleOpen] = useToggle(true);
   const [unlockOpen, toggleUnlockOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { attester, isReady } = useAttester();
+  const { isReady } = useAttester();
 
   const items = useMemo(
     () => [
@@ -68,7 +70,7 @@ const Attester: React.FC = () => {
               })
         }}
       >
-        {attester.isLocked ? (
+        {isLocked ? (
           <UnlockModal onUnlock={toggleUnlockOpen} open={unlockOpen} />
         ) : !isReady ? (
           <Stack

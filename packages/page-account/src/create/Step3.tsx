@@ -49,7 +49,7 @@ const Step3: React.FC<{
       type: 'text/plain;charset=utf-8'
     });
 
-    FileSaver.saveAs(blobSiningJson, `sining${json.address}.json`);
+    FileSaver.saveAs(blobSiningJson, `did-keys-${json.address}.json`);
 
     nextStep();
   }, [addKeystore, mnemonic, nextStep, password]);

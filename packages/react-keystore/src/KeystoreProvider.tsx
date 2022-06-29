@@ -9,6 +9,9 @@ import { createAccount } from './createKeyring';
 interface KeystoreState {
   keystore: DidKeystore | null;
   type: ACCOUNT_TYPE;
+  isLocked: boolean;
+  lock(): void;
+  unlock(passphrase?: string): void;
   addKeystore: (mnemonic: string, passphrase?: string) => KeyringPair$JsonExtra;
   restoreKeystore: (text: string, passphrase?: string) => void;
 }
@@ -86,6 +89,20 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{ type: ACCOUNT_TYPE }>
   const [keystore, setKeystore] = useState<JsonKeystore | null>(
     type === 'claimer' ? initClaimerKeystore : initAttesterKeystore
   );
+  const [isLocked, setIsLocked] = useState(true);
+
+  const unlock = useCallback(
+    (passphrase?: string) => {
+      keystore?.unlock(passphrase);
+      setIsLocked(false);
+    },
+    [keystore]
+  );
+
+  const lock = useCallback(() => {
+    keystore?.lock();
+    setIsLocked(true);
+  }, [keystore]);
 
   const addKeystore = useCallback(
     (mnemonic: string, passphrase?: string): KeyringPair$JsonExtra => {
@@ -138,7 +155,9 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{ type: ACCOUNT_TYPE }>
   );
 
   return (
-    <KeystoreContext.Provider value={{ keystore, addKeystore, restoreKeystore, type }}>
+    <KeystoreContext.Provider
+      value={{ isLocked, unlock, lock, keystore, addKeystore, restoreKeystore, type }}
+    >
       {children}
     </KeystoreContext.Provider>
   );
