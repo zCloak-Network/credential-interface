@@ -1,4 +1,4 @@
-import { Did } from '@kiltprotocol/sdk-js';
+import { Did, DidUri } from '@kiltprotocol/sdk-js';
 import {
   Autocomplete,
   CircularProgress,
@@ -9,7 +9,7 @@ import {
   InputLabel,
   OutlinedInput
 } from '@mui/material';
-import React, { useEffect, useRef, useState } from 'react';
+import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 import { getDidUri } from './InputDid';
 
@@ -35,6 +35,22 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
     onChange?.(didDetails);
   }, [didDetails, onChange]);
 
+  const fetchDid = useCallback((didUri: DidUri) => {
+    return Did.FullDidDetails.fromChainInfo(didUri).then((didDetails) => {
+      setDidDetails(didDetails);
+
+      if (!didDetails) {
+        setWarn(new Error("Can't found full did on chain, please make sure attester is trusted"));
+      } else if (!didDetails.encryptionKey) {
+        setWarn(
+          new Error('Attester does not set encryptionKey, you cannot send message to attester')
+        );
+      } else {
+        setWarn(null);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (!attester) return;
 
@@ -44,27 +60,23 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
       setError(null);
 
       setFetching(true);
-      Did.FullDidDetails.fromChainInfo(uri)
-        .then((didDetails) => {
-          setDidDetails(didDetails);
-
-          if (!didDetails) {
-            setWarn(
-              new Error("Can't found full did on chain, please make sure attester is trusted")
-            );
-          } else if (!didDetails.encryptionKey) {
-            setWarn(
-              new Error('Attester does not set encryptionKey, you cannot send message to attester')
-            );
+      fetchDid(uri).finally(() => setFetching(false));
+    } else {
+      setFetching(true);
+      Did.Web3Names.queryDidForWeb3Name(attester)
+        .then((did) => {
+          if (did) {
+            return fetchDid(did);
           } else {
-            setWarn(null);
+            throw new Error("Can't found web3Name on chain");
           }
         })
+        .catch((error: Error) => {
+          setError(error);
+        })
         .finally(() => setFetching(false));
-    } else {
-      setError(new Error('Input is not a validate didUri or address'));
     }
-  }, [attester]);
+  }, [attester, fetchDid]);
 
   return (
     <Autocomplete<{ title: string; inputValue?: string }, undefined, undefined, true>

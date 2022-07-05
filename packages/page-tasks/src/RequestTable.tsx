@@ -13,6 +13,7 @@ import React from 'react';
 import { credentialDb } from '@credential/app-db';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 import { useCredentials } from '@credential/react-hooks';
 
 import ActionButton from './ActionButton';
@@ -37,13 +38,15 @@ const RequestTable: React.FC = () => {
           {list?.map(({ attestation, request }) => (
             <TableRow key={request.rootHash}>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>{request.claim.owner}</Box>
+                <Box sx={{ width: 200, ...ellipsisMixin() }}>
+                  <DidName value={request.claim.owner} />
+                </Box>
               </TableCell>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>{request.rootHash}</Box>
+                <Box sx={{ width: 200, ...ellipsisMixin() }}>{request.rootHash}</Box>
               </TableCell>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>
+                <Box sx={{ width: 200, ...ellipsisMixin() }}>
                   <CTypeName cTypeHash={request.claim.cTypeHash} />
                 </Box>
               </TableCell>

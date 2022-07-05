@@ -1,27 +1,48 @@
-import { Did } from '@kiltprotocol/sdk-js';
-import React, { useMemo } from 'react';
+import { Did, DidUri } from '@kiltprotocol/sdk-js';
+import React, { useEffect, useMemo, useState } from 'react';
 
-import { getDidUri } from './InputDid';
+import { Address } from '@credential/react-components';
 
 interface Props {
-  value?: string | undefined;
-  type?: 'full' | 'light';
+  value?: DidUri | undefined | null;
+  shorten?: boolean;
 }
 
-const DidName: React.FC<Props> = ({ type, value }) => {
+const w3NameCaches: Record<string, Promise<string | null> | undefined> = {};
+
+const DidName: React.FC<Props> = ({ shorten = true, value }) => {
+  const [w3Name, setW3Name] = useState<string | null>(null);
+
   const identifier = useMemo(() => {
     if (!value) return '';
 
-    const uri = getDidUri(value, type ?? 'light');
+    if (!Did.Utils.isUri(value)) return 'Not Did uri';
 
-    if (!uri) {
-      return value;
+    const { identifier, type } = Did.Utils.parseDidUri(value);
+
+    if (type === 'light') {
+      return identifier.slice(2);
     } else {
-      return Did.Utils.parseDidUri(uri).identifier;
+      return identifier;
     }
-  }, [type, value]);
+  }, [value]);
 
-  return <>{identifier}</>;
+  useEffect(() => {
+    if (identifier) {
+      w3NameCaches[identifier] = Did.Web3Names.queryWeb3NameForDidIdentifier(identifier);
+    }
+
+    w3NameCaches[identifier]?.then(setW3Name);
+  }, [identifier]);
+
+  return w3Name ? (
+    <>{w3Name}</>
+  ) : (
+    <>
+      did:kilt:
+      <Address shorten={shorten} value={identifier} />
+    </>
+  );
 };
 
 export default React.memo(DidName);

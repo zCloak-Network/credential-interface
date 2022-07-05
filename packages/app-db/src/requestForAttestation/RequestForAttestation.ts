@@ -11,4 +11,5 @@ export interface RequestForAttestation extends IRequestForAttestation {
   createdAt: number;
   messageId: string;
   status: RequestForAttestationStatus;
+  isRead?: 0 | 1;
 }

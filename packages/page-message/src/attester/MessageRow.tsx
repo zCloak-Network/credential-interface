@@ -40,7 +40,7 @@ const MessageRow: React.FC<{
         </TableCell>
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
-            <DidName type="full" value={message.receiver} />
+            <DidName value={message.receiver} />
           </Box>
         </TableCell>
         <TableCell>

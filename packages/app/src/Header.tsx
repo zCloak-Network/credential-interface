@@ -1,3 +1,4 @@
+import { DidUri } from '@kiltprotocol/sdk-js';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
@@ -30,8 +31,8 @@ const Logo: React.FC = () => {
   );
 };
 
-const Header: React.FC<{ account?: string; open: boolean; toggleOpen: () => void }> = ({
-  account,
+const Header: React.FC<{ did?: DidUri; open: boolean; toggleOpen: () => void }> = ({
+  did,
   open,
   toggleOpen
 }) => {
@@ -66,7 +67,7 @@ const Header: React.FC<{ account?: string; open: boolean; toggleOpen: () => void
           </Badge>
         </IconButton>
         <Network />
-        {account && <AccountInfo account={account} />}
+        {did && <AccountInfo did={did} />}
       </Stack>
     </Stack>
   );

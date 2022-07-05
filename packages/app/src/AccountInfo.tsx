@@ -1,14 +1,15 @@
+import { DidUri } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
 import { alpha, Button } from '@mui/material';
 import React from 'react';
 
-import { Address } from '@credential/react-components';
+import { DidName } from '@credential/react-dids';
 
 interface Props {
-  account: string;
+  did: DidUri;
 }
 
-const AccountInfo: React.FC<Props> = ({ account }) => {
+const AccountInfo: React.FC<Props> = ({ did }) => {
   return (
     <Button
       endIcon={<Circle />}
@@ -25,7 +26,7 @@ const AccountInfo: React.FC<Props> = ({ account }) => {
       })}
       variant="contained"
     >
-      <Address value={account} />
+      <DidName value={did} />
     </Button>
   );
 };

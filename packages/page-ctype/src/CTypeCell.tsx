@@ -16,6 +16,7 @@ import { useNavigate } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
   position: 'relative',
@@ -119,7 +120,7 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
           </Typography>
           <Tooltip placement="top" title={cType.owner ?? ''}>
             <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-              {cType.owner ?? '--'}
+              <DidName value={cType.owner} />
             </Typography>
           </Tooltip>
         </Box>

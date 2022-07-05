@@ -31,7 +31,7 @@ const ClaimInfo: React.FC<{
           <Box sx={{ width: 300 }}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claimer</Typography>
             <Typography sx={{ ...ellipsisMixin() }} variant="h4">
-              <DidName type="light" value={request.claim.owner} />
+              <DidName value={request.claim.owner} />
             </Typography>
           </Box>
         </Stack>
@@ -59,9 +59,7 @@ const ClaimInfo: React.FC<{
         >
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claim hash</Typography>
-            <Typography sx={{ ...ellipsisMixin() }}>
-              <DidName type="light" value={request.rootHash} />
-            </Typography>
+            <Typography sx={{ ...ellipsisMixin() }}>{request.rootHash}</Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
