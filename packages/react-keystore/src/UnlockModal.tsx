@@ -36,7 +36,7 @@ const UnlockModal: React.FC<{
   const account = useMemo(() => keyring.getAccount(publicKey)?.address, [keyring, publicKey]);
 
   return (
-    <Dialog maxWidth="lg" onClose={onClose} open={open}>
+    <Dialog maxWidth="md" onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Unlock account</DialogHeader>
       <DialogContent>
         <Typography mb={2} variant="h4">

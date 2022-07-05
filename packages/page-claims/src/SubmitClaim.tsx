@@ -52,7 +52,7 @@ const SubmitClaim: React.FC<{
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError) => [
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
             label: 'Request for attestation and sign',
             content: (
@@ -64,6 +64,7 @@ const SubmitClaim: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={sender}
               />
             )
@@ -78,6 +79,7 @@ const SubmitClaim: React.FC<{
                 prevStep={prevStep}
                 receiver={attester}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={sender}
               />
             )
@@ -92,6 +94,7 @@ const SubmitClaim: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           }

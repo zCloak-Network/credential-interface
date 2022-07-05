@@ -1,7 +1,7 @@
 import { Claim, CType, Did, IClaimContents, RequestForAttestation } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { useKeystore } from '@credential/react-keystore';
 
@@ -22,12 +22,16 @@ const RequestAttestationStep: React.FC<Props> = ({
   nextStep,
   prevStep,
   reportError,
+  reportStatus,
   sender
 }) => {
   const { keyring } = useKeystore();
+  const [disabled, setDisabled] = useState(false);
 
   const handleNext = useCallback(async () => {
     try {
+      reportStatus(undefined, true);
+      setDisabled(true);
       assert(sender, 'No sender did provided');
       assert(ctype, 'No CType found');
       assert(contents, 'Claim contents is empty');
@@ -45,13 +49,16 @@ const RequestAttestationStep: React.FC<Props> = ({
       nextStep();
     } catch (error) {
       reportError(error as Error);
+    } finally {
+      reportStatus(undefined, false);
+      setDisabled(false);
     }
-  }, [contents, ctype, handleRequest, keyring, nextStep, reportError, sender]);
+  }, [contents, ctype, handleRequest, keyring, nextStep, reportError, reportStatus, sender]);
 
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={2}>
-        <Button onClick={handleNext} variant="contained">
+        <Button disabled={disabled} onClick={handleNext} variant="contained">
           Sign and Request
         </Button>
         {!isFirst && <Button onClick={prevStep}>Back</Button>}

@@ -1,7 +1,7 @@
 import { Did, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { useKeystore } from '@credential/react-keystore';
 
@@ -22,12 +22,17 @@ const EncryptMessageStep: React.FC<Props> = ({
   prevStep,
   receiver,
   reportError,
+  reportStatus,
   sender
 }) => {
   const { keyring } = useKeystore();
+  const [disabled, setDisabled] = useState(false);
 
   const handleNext = useCallback(async () => {
     try {
+      reportStatus(undefined, true);
+      setDisabled(true);
+
       assert(sender, 'No sender did provided');
       assert(sender.encryptionKey, "Sender has't encryptionKey");
       assert(receiver, 'No receiver did provided');
@@ -45,13 +50,16 @@ const EncryptMessageStep: React.FC<Props> = ({
       nextStep();
     } catch (error) {
       reportError(error as Error);
+    } finally {
+      reportStatus(undefined, false);
+      setDisabled(false);
     }
-  }, [handleEncrypted, keyring, message, nextStep, receiver, reportError, sender]);
+  }, [handleEncrypted, keyring, message, nextStep, receiver, reportError, reportStatus, sender]);
 
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={2}>
-        <Button onClick={handleNext} variant="contained">
+        <Button disabled={disabled} onClick={handleNext} variant="contained">
           Encrypt
         </Button>
         {!isFirst && <Button onClick={prevStep}>Back</Button>}

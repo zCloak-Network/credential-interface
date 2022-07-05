@@ -11,7 +11,7 @@ const Network: React.FC = () => {
     if (isReady) {
       setRuntimeChain(blockchain.api.runtimeChain.toString());
     }
-  }, [blockchain.api.runtimeChain, isReady]);
+  }, [blockchain, isReady]);
 
   return (
     <Button

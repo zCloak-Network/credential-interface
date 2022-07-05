@@ -26,8 +26,12 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
     }[]
   ) {
     super();
-    super.loadAll({}, injected);
-    super.setSS58Format(38);
+    this.loadAll(
+      {
+        ss58Format: 38
+      },
+      injected
+    );
     this.#unlock = unlock;
   }
 

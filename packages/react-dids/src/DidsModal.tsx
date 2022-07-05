@@ -1,5 +1,13 @@
-import { Dialog, DialogContent, Step, StepContent, StepLabel, Stepper } from '@mui/material';
-import React, { useCallback, useMemo, useState } from 'react';
+import {
+  CircularProgress,
+  Dialog,
+  DialogContent,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper
+} from '@mui/material';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 import { DialogHeader } from '@credential/react-components';
 
@@ -11,7 +19,8 @@ const DidsModal: React.FC<{
   steps: (
     prevStep: () => void,
     nextStep: () => void,
-    reportError: (error: Error | null) => void
+    reportError: (error: Error | null) => void,
+    reportStatus: (message?: string, loading?: boolean) => void
   ) => {
     label: React.ReactNode;
     optional?: React.ReactNode;
@@ -20,27 +29,38 @@ const DidsModal: React.FC<{
 }> = ({ onClose, onDone, open, steps, title }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [error, setError] = useState<Record<number, Error | null | undefined>>({});
+  const [status, setStatus] = useState<
+    Record<number, { message?: string; loading?: boolean } | undefined>
+  >({});
 
   const prevStep = useCallback(() => {
     setActiveStep((step) => Math.max(0, step - 1));
   }, []);
 
-  const nextStep = useCallback(() => {
+  useEffect(() => {
     if (activeStep >= steps.length - 1) {
       onDone?.();
-    } else {
-      setActiveStep(activeStep + 1);
     }
   }, [activeStep, onDone, steps.length]);
+
+  const nextStep = useCallback(() => {
+    setActiveStep(activeStep + 1);
+  }, [activeStep]);
 
   const reportError = useCallback(
     (error: Error | null) => setError((_error) => ({ ..._error, [activeStep]: error })),
     [activeStep]
   );
 
+  const reportStatus = useCallback(
+    (message?: string, loading?: boolean) =>
+      setStatus((_status) => ({ ..._status, [activeStep]: { message, loading } })),
+    [activeStep]
+  );
+
   const children = useMemo(
-    () => steps(prevStep, nextStep, reportError),
-    [nextStep, prevStep, reportError, steps]
+    () => steps(prevStep, nextStep, reportError, reportStatus),
+    [nextStep, prevStep, reportError, reportStatus, steps]
   );
 
   return (
@@ -52,7 +72,18 @@ const DidsModal: React.FC<{
             <Step key={index}>
               <StepLabel
                 error={!!error[index]}
-                optional={error[index] ? error[index]?.message ?? optional : optional}
+                icon={
+                  error[index] ? undefined : status[index]?.loading ? (
+                    <CircularProgress size={20} />
+                  ) : undefined
+                }
+                optional={
+                  error[index]
+                    ? error[index]?.message ?? optional
+                    : status[index]
+                    ? status[index]?.message ?? optional
+                    : optional
+                }
               >
                 {label}
               </StepLabel>

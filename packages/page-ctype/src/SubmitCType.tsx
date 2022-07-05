@@ -54,7 +54,7 @@ const SubmitCType: React.FC<{
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError) => [
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
             label: 'Sign and submit ctype',
             content: (
@@ -64,6 +64,7 @@ const SubmitCType: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           },
@@ -76,6 +77,7 @@ const SubmitCType: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={attester?.uri}
               />
             )

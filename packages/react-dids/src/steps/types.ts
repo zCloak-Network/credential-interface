@@ -4,4 +4,5 @@ export interface DidsStepProps {
   prevStep: () => void;
   nextStep: () => void;
   reportError: (error: Error | null) => void;
+  reportStatus: (message?: string, loading?: boolean) => void;
 }
