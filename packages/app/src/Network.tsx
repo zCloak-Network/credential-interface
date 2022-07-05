@@ -1,17 +1,17 @@
 import { alpha, Button, CircularProgress } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 
-import { useDids } from '@credential/react-components';
+import { DidsContext } from '@credential/react-dids';
 
 const Network: React.FC = () => {
-  const { api, isReady } = useDids();
+  const { blockchain, isReady } = useContext(DidsContext);
   const [runtimeChain, setRuntimeChain] = useState<string>();
 
   useEffect(() => {
     if (isReady) {
-      setRuntimeChain(api.runtimeChain.toString());
+      setRuntimeChain(blockchain.api.runtimeChain.toString());
     }
-  }, [api, isReady]);
+  }, [blockchain.api.runtimeChain, isReady]);
 
   return (
     <Button

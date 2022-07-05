@@ -4,30 +4,36 @@ import {
   DialogActions,
   DialogContent,
   FormControl,
+  FormHelperText,
   InputLabel,
   Typography
 } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 
-import { useKeystore } from '@credential/react-keystore';
+import { DialogHeader, InputPassword } from '@credential/react-components';
 
-import DialogHeader from './DialogHeader';
-import { useDids } from './DidsProvider';
-import InputPassword from './InputPassword';
+import { useKeystore } from './KeystoreProvider';
 
-const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () => void }> = ({
-  onClose,
-  onUnlock,
-  open
-}) => {
-  const { unlock } = useKeystore();
-  const { account } = useDids();
+const UnlockModal: React.FC<{
+  open: boolean;
+  publicKey: Uint8Array;
+  onClose?: () => void;
+  onUnlock: () => void;
+}> = ({ onClose, onUnlock, open, publicKey }) => {
   const [password, setPassword] = useState<string>();
+  const { keyring } = useKeystore();
+  const [error, setError] = useState<Error>();
 
   const _onUnlock = useCallback(() => {
-    unlock(password);
-    onUnlock();
-  }, [onUnlock, password, unlock]);
+    try {
+      keyring.getPair(publicKey).unlock(password);
+      onUnlock();
+    } catch (error) {
+      setError(error as Error);
+    }
+  }, [keyring, onUnlock, password, publicKey]);
+
+  const account = useMemo(() => keyring.getAccount(publicKey)?.address, [keyring, publicKey]);
 
   return (
     <Dialog maxWidth="lg" onClose={onClose} open={open}>
@@ -39,9 +45,10 @@ const UnlockModal: React.FC<{ open: boolean; onClose?: () => void; onUnlock: () 
         <Typography mb={4} variant="inherit">
           Account: {account}
         </Typography>
-        <FormControl fullWidth variant="outlined">
+        <FormControl error={!!error} fullWidth variant="outlined">
           <InputLabel shrink>Please input password</InputLabel>
           <InputPassword onChange={(e) => setPassword(e.target.value)} />
+          {error && <FormHelperText>Unable to unlock account</FormHelperText>}
         </FormControl>
       </DialogContent>
       <DialogActions>

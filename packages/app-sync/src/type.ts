@@ -1,4 +1,4 @@
-import { IMessage } from '@credential/app-db/message';
+import type { DidResourceUri } from '@kiltprotocol/sdk-js';
 
 interface MessageType {
   id: number;
@@ -9,12 +9,5 @@ interface MessageType {
 }
 
 export interface IDataSource {
-  getMessage(id: number, keyId?: string, length?: number): Promise<MessageType[]>;
+  getMessage(id: number, uri?: DidResourceUri, length?: number): Promise<MessageType[]>;
 }
-
-export type ParserFunc = (encoded: {
-  ciphertext: string;
-  nonce: string;
-  senderKeyId: string;
-  receiverKeyId: string;
-}) => Promise<IMessage>;

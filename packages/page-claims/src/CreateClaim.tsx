@@ -22,7 +22,7 @@ const CreateClaim: React.FC = () => {
   const [open, toggleOpen] = useToggle();
   const navigate = useNavigate();
   const { state } = useLocation();
-  const [cType, setCType] = useState<CType>();
+  const [ctype, setCType] = useState<CType>();
   const [attester, setAttester] = useState<Did.FullDidDetails | null>(null);
   const [contents, setContents] = useState<Record<string, unknown>>({});
 
@@ -44,7 +44,7 @@ const CreateClaim: React.FC = () => {
     }
   }, [state, toggleOpen]);
 
-  if (!cType) return null;
+  if (!ctype) return null;
 
   return (
     <FullScreenDialog onClose={onClose} open={open}>
@@ -52,8 +52,8 @@ const CreateClaim: React.FC = () => {
         <Stack alignItems="center" direction="row" spacing={3}>
           <SvgIcon component={LogoCircleIcon} sx={{ fontSize: 50 }} viewBox="0 0 60 60" />
           <Box sx={({ palette }) => ({ color: palette.common.white })}>
-            <Typography variant="h4">{cType.schema.title}</Typography>
-            <Typography variant="inherit">{cType.owner}</Typography>
+            <Typography variant="h4">{ctype.schema.title}</Typography>
+            <Typography variant="inherit">{ctype.owner}</Typography>
           </Box>
         </Stack>
       </FullScreenDialogHeader>
@@ -62,13 +62,13 @@ const CreateClaim: React.FC = () => {
           Create Claim
         </Typography>
         <CTypeForm
-          cType={cType}
-          defaultAttester={cType.owner ?? undefined}
+          cType={ctype}
+          defaultAttester={ctype.owner ?? undefined}
           handleAttester={setAttester}
           onChange={setContents}
         />
         <Box mt={4} textAlign="center">
-          <SubmitClaim attester={attester} cType={cType} contents={contents} onDone={onClose} />
+          <SubmitClaim attester={attester} contents={contents} ctype={ctype} onDone={onClose} />
         </Box>
       </FullScreenDialogContent>
     </FullScreenDialog>

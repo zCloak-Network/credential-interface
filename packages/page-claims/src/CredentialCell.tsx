@@ -5,18 +5,14 @@ import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
+import { credentialDb } from '@credential/app-db';
 import {
   RequestForAttestation,
   RequestForAttestationStatus
 } from '@credential/app-db/requestForAttestation';
-import {
-  AppContext,
-  CredentialStatus,
-  CTypeContext,
-  CTypeName,
-  DidName
-} from '@credential/react-components';
+import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 import { useRequestMessages, useToggle } from '@credential/react-hooks';
 
 import DownloadButton from './button/DownloadButton';
@@ -101,7 +97,6 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
   attestation,
   request
 }) => {
-  const { db } = useContext(AppContext);
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const cType = useMemo(() => {
@@ -109,7 +104,7 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
       (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
     );
   }, [cTypeList, request.claim.cTypeHash]);
-  const requestMessages = useRequestMessages(db, request.rootHash);
+  const requestMessages = useRequestMessages(credentialDb, request.rootHash);
 
   return (
     <>

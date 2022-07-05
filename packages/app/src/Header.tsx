@@ -4,7 +4,6 @@ import { alpha, Box, IconButton, Link, Stack } from '@mui/material';
 import React from 'react';
 
 import { LogoBlackIcon } from '@credential/app-config/icons';
-import { useDids } from '@credential/react-components';
 
 import AccountInfo from './AccountInfo';
 import Network from './Network';
@@ -29,9 +28,11 @@ const Logo: React.FC = () => {
   );
 };
 
-const Header: React.FC<{ open: boolean; toggleOpen: () => void }> = ({ open, toggleOpen }) => {
-  const { account } = useDids();
-
+const Header: React.FC<{ account?: string; open: boolean; toggleOpen: () => void }> = ({
+  account,
+  open,
+  toggleOpen
+}) => {
   return (
     <Stack
       alignItems="center"

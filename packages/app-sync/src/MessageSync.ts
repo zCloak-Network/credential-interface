@@ -1,45 +1,42 @@
 /* eslint-disable @typescript-eslint/no-non-null-assertion */
 
+import {
+  Did,
+  DidResourceUri,
+  IEncryptedMessage,
+  Message,
+  NaclBoxCapable
+} from '@kiltprotocol/sdk-js';
+
 import { CredentialData } from '@credential/app-db';
-import { Message, MessageBodyType } from '@credential/app-db/message';
+import { Message as MessageDb, MessageBodyType } from '@credential/app-db/message';
 
 import { rejectAttestation } from './rejectAttestation';
 import { requestAttestation } from './requestAttestation';
 import { submitAttestation } from './submitAttestation';
-import { IDataSource, ParserFunc } from './type';
+import { IDataSource } from './type';
 
 export class MessageSync {
   public dataSource: IDataSource;
   public db: CredentialData;
-  public keyId: string;
+  public keyUri: DidResourceUri;
   public batch: number;
-  public parse: ParserFunc;
 
-  constructor(
-    dataSource: IDataSource,
-    parse: ParserFunc,
-    db: CredentialData,
-    keyId: string,
-    batch = 2048
-  ) {
+  public encryptMessages: (IEncryptedMessage & { syncId: number })[] = [];
+
+  constructor(dataSource: IDataSource, db: CredentialData, keyUri: DidResourceUri, batch = 2048) {
     this.dataSource = dataSource;
-    this.parse = parse;
     this.db = db;
-    this.keyId = keyId;
+    this.keyUri = keyUri;
     this.batch = batch;
   }
 
-  public async sync(): Promise<void> {
-    await this.syncMessage();
-    await this.parseMessageBody();
-  }
-
-  private async syncMessage() {
+  public async syncMessage() {
     const lastOne = await this.db.message
       .orderBy('syncId')
       .reverse()
       .filter((data) => {
-        return data.receiver === this.keyId;
+        return data.receiver === this.keyUri;
       })
       .first();
 
@@ -51,23 +48,47 @@ export class MessageSync {
       originId = 0;
     }
 
-    const messageData = await this.dataSource.getMessage(originId, this.keyId, this.batch);
+    const messageData = await this.dataSource.getMessage(originId, this.keyUri, this.batch);
 
     if (messageData.length > 0) {
-      const messages: Message[] = (
-        await Promise.all(messageData.map((data) => this.parse(data)))
-      ).map((message, index) => ({
-        ...message,
-        syncId: messageData[index].id,
-        deal: 0
-      }));
-
-      await this.db.message.bulkAdd(messages);
+      this.encryptMessages.push(
+        ...messageData.map((message) => ({
+          syncId: message.id,
+          receiverKeyUri: message.receiverKeyId as any,
+          senderKeyUri: message.senderKeyId as any,
+          nonce: message.nonce,
+          ciphertext: message.ciphertext
+        }))
+      );
 
       if (messageData.length >= this.batch) {
         await this.syncMessage();
       }
     }
+  }
+
+  public async parse(keystore: Pick<NaclBoxCapable, 'decrypt'>, receiverDetails: Did.DidDetails) {
+    const messages: MessageDb[] = [];
+
+    while (this.encryptMessages.length > 0) {
+      const encrypted = this.encryptMessages.shift();
+
+      if (!encrypted) {
+        break;
+      }
+
+      const message = await Message.decrypt(encrypted, keystore, receiverDetails);
+
+      messages.push({
+        ...message,
+        syncId: encrypted.syncId,
+        deal: 0
+      });
+    }
+
+    await this.db.message.bulkAdd(messages);
+
+    await this.parseMessageBody();
   }
 
   private async parseMessageBody(): Promise<void> {

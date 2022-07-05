@@ -1,22 +1,20 @@
 import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { UnlockModal, useAttester } from '@credential/react-components';
+import { DidsContext, useDidDetails } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 import Header from '../Header';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
 import Sidebar from '../Sidebar';
 
 const Attester: React.FC = () => {
-  const { isLocked } = useKeystore();
   const [open, toggleOpen] = useToggle(true);
-  const [unlockOpen, toggleUnlockOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { isReady } = useAttester();
+  const { didUri, isReady } = useContext(DidsContext);
+  const didDetails = useDidDetails(didUri);
 
   const items = useMemo(
     () => [
@@ -50,7 +48,7 @@ const Attester: React.FC = () => {
 
   return (
     <Box bgcolor="#fff" minHeight="100vh">
-      <Header open={open} toggleOpen={toggleOpen} />
+      <Header account={didDetails?.identifier} open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="attester" items={items} open={open} />
       <Box
         minHeight="100vh"
@@ -70,9 +68,7 @@ const Attester: React.FC = () => {
               })
         }}
       >
-        {isLocked ? (
-          <UnlockModal onUnlock={toggleUnlockOpen} open={unlockOpen} />
-        ) : !isReady ? (
+        {!isReady ? (
           <Stack
             sx={{
               position: 'absolute',

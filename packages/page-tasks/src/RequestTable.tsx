@@ -8,17 +8,17 @@ import {
   TableRow
 } from '@mui/material';
 import moment from 'moment';
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { AppContext, CredentialStatus, CTypeName } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { useCredentials } from '@credential/react-hooks';
 
 import ActionButton from './ActionButton';
 
 const RequestTable: React.FC = () => {
-  const { db } = useContext(AppContext);
-  const list = useCredentials(db);
+  const list = useCredentials(credentialDb);
 
   return (
     <TableContainer>

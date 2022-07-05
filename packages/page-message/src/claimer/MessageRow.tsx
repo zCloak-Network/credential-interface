@@ -9,22 +9,17 @@ import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
+import { credentialDb } from '@credential/app-db';
 import { Message } from '@credential/app-db/message';
 import CredentialModal from '@credential/page-claims/modals/CredentialModal';
-import {
-  AppContext,
-  CredentialStatus,
-  CTypeContext,
-  CTypeName,
-  DidName
-} from '@credential/react-components';
+import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
 
 const MessageRow: React.FC<{
   message: Message & { body: ISubmitAttestation | IRejectAttestation | IRequestAttestation };
 }> = ({ message }) => {
-  const { db } = useContext(AppContext);
   const { cTypeList } = useContext(CTypeContext);
   const [open, toggleOpen] = useToggle();
 
@@ -36,8 +31,8 @@ const MessageRow: React.FC<{
       : message.body.content;
   }, [message.body.content, message.body.type]);
 
-  const request = useRequest(db, rootHash);
-  const attestation = useAttestation(db, rootHash);
+  const request = useRequest(credentialDb, rootHash);
+  const attestation = useAttestation(credentialDb, rootHash);
   const cType = useMemo(() => {
     return cTypeList.find(
       (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request?.claim.cTypeHash

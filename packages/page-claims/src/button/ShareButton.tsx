@@ -1,18 +1,21 @@
-import type { ICredential } from '@kiltprotocol/sdk-js';
-
+import { Did, ICredential, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { IconForward } from '@credential/app-config/icons';
+import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { EncryptMessageStep, InputDidStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
-
-import ShareCredential from '../ShareCredential';
 
 const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = ({
   credential,
   withText = false
 }) => {
+  const { didUri } = useContext(DidsContext);
   const [open, toggleOpen] = useToggle();
+  const [receiver, setReceiver] = useState<Did.FullDidDetails | null>(null);
+  const sender = useDidDetails(didUri);
+  const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
 
   const _toggleOpen: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
@@ -20,6 +23,21 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
       toggleOpen();
     },
     [toggleOpen]
+  );
+
+  const message = useMemo(
+    () =>
+      sender && receiver
+        ? new Message(
+            {
+              content: [credential],
+              type: Message.BodyType.SUBMIT_CREDENTIAL
+            },
+            sender.uri,
+            receiver.uri
+          )
+        : null,
+    [credential, receiver, sender]
   );
 
   return (
@@ -36,7 +54,52 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
           )}
         </Stack>
       </Tooltip>
-      <ShareCredential credential={credential} onClose={toggleOpen} open={open} />
+      <DidsModal
+        onClose={toggleOpen}
+        open={open}
+        steps={(prevStep, nextStep, reportError) => [
+          {
+            label: 'Input receiver',
+            content: (
+              <InputDidStep
+                isFirst
+                nextStep={nextStep}
+                onChange={setReceiver}
+                prevStep={prevStep}
+                reportError={reportError}
+              />
+            )
+          },
+          {
+            label: 'Encrypt message',
+            content: (
+              <EncryptMessageStep
+                handleEncrypted={setEncryptedMessage}
+                message={message}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                receiver={receiver}
+                reportError={reportError}
+                sender={sender}
+              />
+            )
+          },
+          {
+            label: 'Send and save message',
+            content: (
+              <SendMessageStep
+                encryptedMessage={encryptedMessage}
+                isLast
+                message={message}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                reportError={reportError}
+              />
+            )
+          }
+        ]}
+        title="Share this with others"
+      />
     </>
   );
 };
