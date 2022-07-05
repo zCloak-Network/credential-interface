@@ -30,14 +30,20 @@ const MessageRow: React.FC<{
       ? message.body.content.requestForAttestation.rootHash
       : message.body.content;
   }, [message.body.content, message.body.type]);
-
+  const cTypeHash = useMemo(() => {
+    return message.body.type === MessageBodyType.SUBMIT_ATTESTATION
+      ? message.body.content.attestation.cTypeHash
+      : message.body.type === MessageBodyType.REQUEST_ATTESTATION
+      ? message.body.content.requestForAttestation.claim.cTypeHash
+      : null;
+  }, [message]);
   const request = useRequest(credentialDb, rootHash);
   const attestation = useAttestation(credentialDb, rootHash);
   const cType = useMemo(() => {
-    return cTypeList.find(
-      (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request?.claim.cTypeHash
+    return cTypeList.find((cType) =>
+      [cTypeHash].includes(CType.fromSchema(cType.schema, cType.owner).hash)
     );
-  }, [cTypeList, request]);
+  }, [cTypeHash, cTypeList]);
 
   return (
     <>
@@ -63,10 +69,10 @@ const MessageRow: React.FC<{
           </Box>
         </TableCell>
         <TableCell>
-          <Box sx={{ width: 150, ...ellipsisMixin() }}>{request?.rootHash}</Box>
+          <Box sx={{ width: 150, ...ellipsisMixin() }}>{request?.rootHash ?? rootHash}</Box>
         </TableCell>
         <TableCell>
-          <CTypeName cTypeHash={request?.claim.cTypeHash} />
+          <CTypeName cTypeHash={request?.claim.cTypeHash ?? cTypeHash} />
         </TableCell>
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
