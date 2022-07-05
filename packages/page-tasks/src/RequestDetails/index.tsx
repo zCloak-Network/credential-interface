@@ -1,9 +1,10 @@
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
-import React, { useContext } from 'react';
+import React from 'react';
 
+import { credentialDb } from '@credential/app-db';
 import { Attestation } from '@credential/app-db/attestation/Attestation';
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import { AppContext, DialogHeader } from '@credential/react-components';
+import { DialogHeader } from '@credential/react-components';
 import { useRequestMessages } from '@credential/react-hooks';
 
 import ClaimInfo from './ClaimInfo';
@@ -16,8 +17,7 @@ const RequestDetails: React.FC<{
   onClose?: () => void;
   showActions?: boolean;
 }> = ({ attestation, onClose, open, request, showActions = true }) => {
-  const { db } = useContext(AppContext);
-  const messageLinked = useRequestMessages(db, request.rootHash);
+  const messageLinked = useRequestMessages(credentialDb, request.rootHash);
 
   return (
     <Dialog fullScreen open={open}>

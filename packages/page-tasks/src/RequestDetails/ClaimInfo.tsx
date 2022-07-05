@@ -9,8 +9,9 @@ import {
   RequestForAttestation,
   RequestForAttestationStatus
 } from '@credential/app-db/requestForAttestation';
-import { CredentialStatus, CTypeName, DidName } from '@credential/react-components';
+import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 
 import Approve from './Approve';
 import Reject from './Reject';

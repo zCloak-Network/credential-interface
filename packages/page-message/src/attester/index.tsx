@@ -2,22 +2,22 @@ import { MessageBodyType } from '@kiltprotocol/types';
 import { Box, Stack, Tab, Tabs } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 
-import { AppContext, useAttester } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
 import Messages from './Messages';
 
 const AttesterMessage: React.FC = () => {
-  const { db } = useContext(AppContext);
-  const { attester } = useAttester();
+  const { didUri } = useContext(DidsContext);
   const filter = useMemo(
     () => ({
-      receiver: attester.didDetails.uri,
+      receiver: didUri,
       bodyTypes: [MessageBodyType.REQUEST_ATTESTATION, MessageBodyType.SUBMIT_CREDENTIAL]
     }),
-    [attester.didDetails.uri]
+    [didUri]
   );
-  const messages = useMessages(db, filter);
+  const messages = useMessages(credentialDb, filter);
 
   return (
     <Stack spacing={3}>

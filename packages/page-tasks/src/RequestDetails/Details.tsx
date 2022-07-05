@@ -7,7 +7,8 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useMemo, useState } from 'react';
 
-import { ClaimDisplay, DidName } from '@credential/react-components';
+import { ClaimDisplay } from '@credential/react-components';
+import { DidName } from '@credential/react-dids';
 
 interface Props {
   contents: IClaimContents;

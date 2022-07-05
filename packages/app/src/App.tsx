@@ -1,11 +1,6 @@
 import React from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
-import {
-  Attester as AttesterConstructor,
-  Claimer as ClaimerConstructor
-} from '@zcloak/credential-core';
-
 import PageAccount from '@credential/page-account';
 import PageCreateAccount from '@credential/page-account/Create';
 import PageRestoreAccount from '@credential/page-account/Restore';
@@ -15,8 +10,6 @@ import PageOwnerCType from '@credential/page-ctype/OwnerCType';
 import PageMessage from '@credential/page-message';
 import PageAttesterMessage from '@credential/page-message/attester';
 import PageTasks from '@credential/page-tasks';
-import { AppProvider, DidsProvider } from '@credential/react-components';
-import { KeystoreProvider } from '@credential/react-keystore';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -28,65 +21,53 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
 };
 
 const createAppClaimer = () => (
-  <KeystoreProvider type="claimer">
-    <HashRouter basename="/claimer">
-      <Routes>
-        <Route
-          element={
-            <AccountAuth>
-              <DidsProvider DidsConstructor={ClaimerConstructor}>
-                <AppProvider>
-                  <Claimer />
-                </AppProvider>
-              </DidsProvider>
-            </AccountAuth>
-          }
-        >
-          <Route element={<PageCType />} path="ctype" />
-          <Route element={<PageClaims />} path="claims" />
-          <Route element={<PageMessage />} path="message" />
-        </Route>
-        <Route element={<Account />} path="account">
-          <Route element={<PageCreateAccount />} path="create" />
-          <Route element={<PageRestoreAccount />} path="restore" />
-          <Route element={<PageAccount />} index />
-        </Route>
-        <Route element={<NoMatch to="/ctype" />} path="*" />
-        <Route element={<NoMatch to="/ctype" />} index />
-      </Routes>
-    </HashRouter>
-  </KeystoreProvider>
+  <HashRouter basename="/claimer">
+    <Routes>
+      <Route
+        element={
+          <AccountAuth>
+            <Claimer />
+          </AccountAuth>
+        }
+      >
+        <Route element={<PageCType />} path="ctype" />
+        <Route element={<PageClaims />} path="claims" />
+        <Route element={<PageMessage />} path="message" />
+      </Route>
+      <Route element={<Account />} path="account">
+        <Route element={<PageCreateAccount didRole="claimer" />} path="create" />
+        <Route element={<PageRestoreAccount didRole="claimer" />} path="restore" />
+        <Route element={<PageAccount />} index />
+      </Route>
+      <Route element={<NoMatch to="/ctype" />} path="*" />
+      <Route element={<NoMatch to="/ctype" />} index />
+    </Routes>
+  </HashRouter>
 );
 
 const createAppAttester = () => (
-  <KeystoreProvider type="attester">
-    <HashRouter basename="/attester">
-      <Routes>
-        <Route
-          element={
-            <AccountAuth>
-              <DidsProvider DidsConstructor={AttesterConstructor}>
-                <AppProvider>
-                  <Attester />
-                </AppProvider>
-              </DidsProvider>
-            </AccountAuth>
-          }
-        >
-          <Route element={<PageOwnerCType />} path="my-ctype" />
-          <Route element={<PageTasks />} path="tasks" />
-          <Route element={<PageAttesterMessage />} path="message" />
-        </Route>
-        <Route element={<Account />} path="account">
-          <Route element={<PageCreateAccount />} path="create" />
-          <Route element={<PageRestoreAccount />} path="restore" />
-          <Route element={<PageAccount />} index />
-        </Route>
-        <Route element={<NoMatch to="/my-ctype" />} path="*" />
-        <Route element={<NoMatch to="/my-ctype" />} index />
-      </Routes>
-    </HashRouter>
-  </KeystoreProvider>
+  <HashRouter basename="/attester">
+    <Routes>
+      <Route
+        element={
+          <AccountAuth>
+            <Attester />
+          </AccountAuth>
+        }
+      >
+        <Route element={<PageOwnerCType />} path="my-ctype" />
+        <Route element={<PageTasks />} path="tasks" />
+        <Route element={<PageAttesterMessage />} path="message" />
+      </Route>
+      <Route element={<Account />} path="account">
+        <Route element={<PageCreateAccount didRole="attester" />} path="create" />
+        <Route element={<PageRestoreAccount didRole="attester" />} path="restore" />
+        <Route element={<PageAccount />} index />
+      </Route>
+      <Route element={<NoMatch to="/my-ctype" />} path="*" />
+      <Route element={<NoMatch to="/my-ctype" />} index />
+    </Routes>
+  </HashRouter>
 );
 
 const AppClaimer = createAppClaimer();

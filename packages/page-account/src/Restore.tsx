@@ -1,3 +1,5 @@
+import type { DidRole } from '@credential/react-dids/types';
+
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
@@ -13,26 +15,26 @@ import React, { useCallback, useContext, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { InputPassword, NotificationContext } from '@credential/react-components';
-import { useKeystore } from '@credential/react-keystore';
+import { DidsContext } from '@credential/react-dids';
 
 import Success from './Success';
 
-const Restore: React.FC = () => {
+const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
   const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState<string>();
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
   const [file, setFile] = useState<File>();
-  const { restoreKeystore } = useKeystore();
   const { notifyError } = useContext(NotificationContext);
+  const { restoreDid } = useContext(DidsContext);
 
   const restore = useCallback(() => {
-    if (file) {
+    if (file && password) {
       setLoading(true);
       file
         .text()
         .then((text) => {
-          restoreKeystore(text, password);
+          restoreDid(text, password, didRole);
         })
         .then(() => setSuccess(true))
         .catch((error) => {
@@ -40,7 +42,7 @@ const Restore: React.FC = () => {
         })
         .finally(() => setLoading(false));
     }
-  }, [file, notifyError, password, restoreKeystore]);
+  }, [didRole, file, notifyError, password, restoreDid]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -66,7 +68,6 @@ const Restore: React.FC = () => {
                   <Button component="label" variant="contained">
                     Select keystore file
                     <input
-                      accept="application/json"
                       hidden
                       onChange={(e) => {
                         setFile(e.target.files?.[0]);

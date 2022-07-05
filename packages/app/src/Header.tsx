@@ -1,10 +1,11 @@
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
-import { alpha, Box, IconButton, Link, Stack } from '@mui/material';
-import React from 'react';
+import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import { alpha, Badge, Box, IconButton, Link, Stack } from '@mui/material';
+import React, { useContext } from 'react';
 
 import { LogoBlackIcon } from '@credential/app-config/icons';
-import { useDids } from '@credential/react-components';
+import { AppContext } from '@credential/react-components';
 
 import AccountInfo from './AccountInfo';
 import Network from './Network';
@@ -29,8 +30,12 @@ const Logo: React.FC = () => {
   );
 };
 
-const Header: React.FC<{ open: boolean; toggleOpen: () => void }> = ({ open, toggleOpen }) => {
-  const { account } = useDids();
+const Header: React.FC<{ account?: string; open: boolean; toggleOpen: () => void }> = ({
+  account,
+  open,
+  toggleOpen
+}) => {
+  const { parse, unread } = useContext(AppContext);
 
   return (
     <Stack
@@ -54,7 +59,12 @@ const Header: React.FC<{ open: boolean; toggleOpen: () => void }> = ({ open, tog
         </IconButton>
         <Logo />
       </Stack>
-      <Stack direction="row" spacing={2}>
+      <Stack alignItems="center" direction="row" spacing={2}>
+        <IconButton onClick={parse} sx={{ marginRight: 3 }}>
+          <Badge badgeContent={unread} color="warning" max={99}>
+            <NotificationsNoneOutlinedIcon />
+          </Badge>
+        </IconButton>
         <Network />
         {account && <AccountInfo account={account} />}
       </Stack>

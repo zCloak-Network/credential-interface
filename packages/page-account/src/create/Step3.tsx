@@ -1,9 +1,11 @@
+import type { DidRole } from '@credential/react-dids/types';
+
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Box, Button, FormControl, Grid, InputLabel, OutlinedInput } from '@mui/material';
 import FileSaver from 'file-saver';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
-import { useKeystore } from '@credential/react-keystore';
+import { DidsContext } from '@credential/react-dids';
 
 function random(min = 0, max = 11): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -14,10 +16,11 @@ const Step3: React.FC<{
   nextStep: () => void;
   mnemonic: string;
   password?: string;
-}> = ({ mnemonic, nextStep, password, prevStep }) => {
+  didRole: DidRole;
+}> = ({ didRole, mnemonic, nextStep, password, prevStep }) => {
   const [keyWordsIndex, setKeyWordsIndex] = useState<number[]>([]);
   const [keyWords, setKeyWords] = useState<string[]>([]);
-  const { addKeystore } = useKeystore();
+  const { generateDid } = useContext(DidsContext);
 
   useEffect(() => {
     const set = new Set<number>();
@@ -42,17 +45,18 @@ const Step3: React.FC<{
     }
   }, [keyWords, keyWordsIndex, mnemonic]);
 
-  const toggleContinue = useCallback(() => {
-    const json = addKeystore(mnemonic, password);
+  const toggleContinue = useCallback(async () => {
+    if (!password) return;
 
+    const json = await generateDid(mnemonic, password, didRole);
     const blobSiningJson = new Blob([JSON.stringify(json)], {
       type: 'text/plain;charset=utf-8'
     });
 
-    FileSaver.saveAs(blobSiningJson, `sining${json.address}.json`);
+    FileSaver.saveAs(blobSiningJson, `${json.didUri}.did`);
 
     nextStep();
-  }, [addKeystore, mnemonic, nextStep, password]);
+  }, [didRole, generateDid, mnemonic, nextStep, password]);
 
   return (
     <>

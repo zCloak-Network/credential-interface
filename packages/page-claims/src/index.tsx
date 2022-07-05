@@ -1,17 +1,17 @@
 import { Box, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
-import { AppContext, useClaimer } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { DidsContext } from '@credential/react-dids';
 import { useCredentials } from '@credential/react-hooks';
 
 import CreateClaim from './CreateClaim';
 import CredentialCell from './CredentialCell';
 
 const Claims: React.FC = () => {
-  const { db } = useContext(AppContext);
+  const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
-  const { claimer } = useClaimer();
-  const credentials = useCredentials(db, claimer.didDetails.uri);
+  const credentials = useCredentials(credentialDb, didUri);
 
   const list = useMemo(() => {
     return type === 0

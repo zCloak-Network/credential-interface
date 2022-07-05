@@ -1,91 +1,104 @@
-import type { IMessage } from '@kiltprotocol/types';
+import type { IEncryptedMessage, IMessage } from '@kiltprotocol/types';
 
-import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
-import { alpha } from '@mui/material';
-import React, { useCallback, useContext, useState } from 'react';
+import { Message } from '@kiltprotocol/sdk-js';
+import { alpha, Button } from '@mui/material';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import {
-  AppContext,
-  ButtonUnlock,
-  NotificationContext,
-  useAttester
-} from '@credential/react-components';
-import { credentialApi } from '@credential/react-hooks/api';
+import { AppContext } from '@credential/react-components';
+import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { EncryptMessageStep, SendMessageStep } from '@credential/react-dids/steps';
+import { useToggle } from '@credential/react-hooks';
 
 const Reject: React.FC<{
   request: RequestForAttestation;
   messageLinked?: IMessage[];
 }> = ({ messageLinked, request }) => {
-  const { db } = useContext(AppContext);
-  const { attester } = useAttester();
-  const { notifyError } = useContext(NotificationContext);
-  const [loading, setLoading] = useState(false);
+  const [open, toggleOpen] = useToggle();
+  const { didUri } = useContext(DidsContext);
+  const attester = useDidDetails(didUri);
+  const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const { parseMessageBody } = useContext(AppContext);
 
-  const reject = useCallback(async () => {
-    try {
-      setLoading(true);
-
-      if (!attester.isFullDid) {
-        throw new Error("You don't has full did details.");
-      }
-
-      const claimer = Did.LightDidDetails.fromUri(request.claim.owner);
-
-      if (!claimer.encryptionKey?.id) {
-        throw new Error("Claimer has't encryption key");
-      }
-
-      // check attestation validity
-      const attestation = await Attestation.query(request.rootHash);
-
-      if (attestation && (await attestation.checkValidity())) {
-        throw new Error('Attestation is validity');
-      }
-
-      const message = new Message(
-        {
-          content: request.rootHash,
-          type: Message.BodyType.REJECT_ATTESTATION
-        },
-        attester.didDetails.uri,
-        claimer.uri
-      );
-
-      message.references = messageLinked?.map((message) => message.messageId);
-      const encrypted = await attester.encryptMessage(message, claimer);
-
-      await credentialApi.addMessage({
-        receiverKeyId: encrypted.receiverKeyUri,
-        senderKeyId: encrypted.senderKeyUri,
-        nonce: encrypted.nonce,
-        ciphertext: encrypted.ciphertext
-      });
-
-      await db.message.add({ ...message, deal: 0 });
-    } catch (error) {
-      notifyError(error);
-    } finally {
-      setLoading(false);
+  const message = useMemo(() => {
+    if (!didUri) {
+      return null;
     }
-  }, [attester, db.message, messageLinked, notifyError, request.claim.owner, request.rootHash]);
+
+    const message = new Message(
+      {
+        content: request.rootHash,
+        type: Message.BodyType.REJECT_ATTESTATION
+      },
+      didUri,
+      request.claim.owner
+    );
+
+    message.references = messageLinked?.map((message) => message.messageId);
+
+    return message;
+  }, [didUri, messageLinked, request.claim.owner, request.rootHash]);
+  const claimer = useDidDetails(request.claim.owner);
+
+  const onDone = useCallback(() => {
+    parseMessageBody();
+    toggleOpen();
+  }, [parseMessageBody, toggleOpen]);
 
   return (
-    <ButtonUnlock
-      loading={loading}
-      onClick={reject}
-      sx={({ palette }) => ({
-        background: alpha(palette.error.main, 0),
-        borderColor: palette.error.main,
-        color: palette.error.main,
-        ':hover': {
-          borderColor: palette.error.main
-        }
-      })}
-      variant="outlined"
-    >
-      Reject
-    </ButtonUnlock>
+    <>
+      <Button
+        onClick={toggleOpen}
+        sx={({ palette }) => ({
+          background: alpha(palette.error.main, 0),
+          borderColor: palette.error.main,
+          color: palette.error.main,
+          ':hover': {
+            borderColor: palette.error.main
+          }
+        })}
+        variant="outlined"
+      >
+        Reject
+      </Button>
+      <DidsModal
+        onClose={toggleOpen}
+        onDone={onDone}
+        open={open}
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
+          {
+            label: 'Encrypt message',
+            content: (
+              <EncryptMessageStep
+                handleEncrypted={setEncryptedMessage}
+                message={message}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                receiver={claimer}
+                reportError={reportError}
+                reportStatus={reportStatus}
+                sender={attester}
+              />
+            )
+          },
+          {
+            label: 'Send and save message',
+            content: (
+              <SendMessageStep
+                encryptedMessage={encryptedMessage}
+                isLast
+                message={message}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                reportError={reportError}
+                reportStatus={reportStatus}
+              />
+            )
+          }
+        ]}
+        title="Reject the request"
+      />
+    </>
   );
 };
 
