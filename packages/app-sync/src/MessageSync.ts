@@ -73,15 +73,15 @@ export class MessageSync {
     const messages: MessageDb[] = [];
 
     for (const [key, encrypted] of this.encryptMessages) {
-      if (encrypted) {
-        const message = await Message.decrypt(encrypted, keystore, receiverDetails);
+      const message = await Message.decrypt(encrypted, keystore, receiverDetails);
 
-        messages.push({
-          ...message,
-          syncId: key,
-          deal: 0
-        });
-      }
+      messages.push({
+        ...message,
+        syncId: key,
+        deal: 0
+      });
+
+      this.encryptMessages.delete(key);
     }
 
     await this.db.message.bulkAdd(messages);

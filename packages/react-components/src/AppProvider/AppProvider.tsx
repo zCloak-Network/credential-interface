@@ -1,4 +1,4 @@
-import React, { createContext, useCallback, useContext, useEffect } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
 import { MessageSync } from '@credential/app-sync';
@@ -8,6 +8,7 @@ import { credentialApi } from '@credential/react-hooks/api';
 import { useKeystore } from '@credential/react-keystore';
 
 interface State {
+  unread: number;
   parse: () => Promise<void>;
 }
 
@@ -31,22 +32,26 @@ const dataSource: IDataSource = {
 
 const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
 
-async function syncMessage() {
+async function syncMessage(onDone: (count: number) => void) {
   while (true) {
     if (messageSync) {
       await messageSync.syncMessage();
+      onDone(messageSync.encryptMessages.size);
     }
 
     await sleep(30000);
   }
 }
 
-syncMessage();
-
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { keyring } = useKeystore();
   const { didUri } = useContext(DidsContext);
   const didDetails = useDidDetails(didUri);
+  const [unread, setUnread] = useState(0);
+
+  useEffect(() => {
+    syncMessage(setUnread);
+  }, []);
 
   useEffect(() => {
     if (didDetails && didDetails.encryptionKey && messageSync === null) {
@@ -59,12 +64,13 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [didDetails]);
 
   const parse = useCallback(async () => {
-    if (didDetails) {
-      await messageSync?.parse(keyring, didDetails);
+    if (didDetails && messageSync) {
+      await messageSync.parse(keyring, didDetails);
+      setUnread(messageSync.encryptMessages.size);
     }
   }, [didDetails, keyring]);
 
-  return <AppContext.Provider value={{ parse }}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{ unread, parse }}>{children}</AppContext.Provider>;
 };
 
 export default AppProvider;
