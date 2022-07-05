@@ -17,12 +17,13 @@ import { submitAttestation } from './submitAttestation';
 import { IDataSource } from './type';
 
 export class MessageSync {
+  private originId?: number;
+
   public dataSource: IDataSource;
   public db: CredentialData;
   public keyUri: DidResourceUri;
   public batch: number;
-
-  public encryptMessages: (IEncryptedMessage & { syncId: number })[] = [];
+  public encryptMessages: Map<number, IEncryptedMessage> = new Map();
 
   constructor(dataSource: IDataSource, db: CredentialData, keyUri: DidResourceUri, batch = 2048) {
     this.dataSource = dataSource;
@@ -32,34 +33,35 @@ export class MessageSync {
   }
 
   public async syncMessage() {
-    const lastOne = await this.db.message
-      .orderBy('syncId')
-      .reverse()
-      .filter((data) => {
-        return data.receiver === this.keyUri;
-      })
-      .first();
+    if (this.originId === undefined) {
+      const lastOne = await this.db.message
+        .orderBy('syncId')
+        .reverse()
+        .filter((data) => {
+          return data.receiver === this.keyUri;
+        })
+        .first();
 
-    let originId: number;
-
-    if (lastOne && lastOne.syncId) {
-      originId = lastOne.syncId;
-    } else {
-      originId = 0;
+      if (lastOne && lastOne.syncId) {
+        this.originId = lastOne.syncId;
+      } else {
+        this.originId = 0;
+      }
     }
 
-    const messageData = await this.dataSource.getMessage(originId, this.keyUri, this.batch);
+    const messageData = await this.dataSource.getMessage(this.originId, this.keyUri, this.batch);
 
     if (messageData.length > 0) {
-      this.encryptMessages.push(
-        ...messageData.map((message) => ({
-          syncId: message.id,
+      messageData.forEach((message) => {
+        this.encryptMessages.set(message.id, {
           receiverKeyUri: message.receiverKeyId as any,
           senderKeyUri: message.senderKeyId as any,
           nonce: message.nonce,
           ciphertext: message.ciphertext
-        }))
-      );
+        });
+      });
+
+      this.originId = messageData[messageData.length - 1].id;
 
       if (messageData.length >= this.batch) {
         await this.syncMessage();
@@ -70,20 +72,16 @@ export class MessageSync {
   public async parse(keystore: Pick<NaclBoxCapable, 'decrypt'>, receiverDetails: Did.DidDetails) {
     const messages: MessageDb[] = [];
 
-    while (this.encryptMessages.length > 0) {
-      const encrypted = this.encryptMessages.shift();
+    for (const [key, encrypted] of this.encryptMessages) {
+      if (encrypted) {
+        const message = await Message.decrypt(encrypted, keystore, receiverDetails);
 
-      if (!encrypted) {
-        break;
+        messages.push({
+          ...message,
+          syncId: key,
+          deal: 0
+        });
       }
-
-      const message = await Message.decrypt(encrypted, keystore, receiverDetails);
-
-      messages.push({
-        ...message,
-        syncId: encrypted.syncId,
-        deal: 0
-      });
     }
 
     await this.db.message.bulkAdd(messages);

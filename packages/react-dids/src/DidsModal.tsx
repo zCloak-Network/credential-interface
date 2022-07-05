@@ -37,12 +37,6 @@ const DidsModal: React.FC<{
     setActiveStep((step) => Math.max(0, step - 1));
   }, []);
 
-  useEffect(() => {
-    if (activeStep >= steps.length - 1) {
-      onDone?.();
-    }
-  }, [activeStep, onDone, steps.length]);
-
   const nextStep = useCallback(() => {
     setActiveStep(activeStep + 1);
   }, [activeStep]);
@@ -63,10 +57,16 @@ const DidsModal: React.FC<{
     [nextStep, prevStep, reportError, reportStatus, steps]
   );
 
+  useEffect(() => {
+    if (activeStep >= children.length) {
+      onDone?.();
+    }
+  }, [activeStep, onDone, children.length]);
+
   return (
-    <Dialog maxWidth="md" onClose={onClose} open={open}>
+    <Dialog maxWidth="sm" open={open}>
       <DialogHeader onClose={onClose}>{title}</DialogHeader>
-      <DialogContent>
+      <DialogContent sx={{ minWidth: 325 }}>
         <Stepper activeStep={activeStep} orientation="vertical">
           {children.map(({ content, label, optional }, index) => (
             <Step key={index}>

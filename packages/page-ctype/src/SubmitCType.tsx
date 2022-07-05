@@ -65,6 +65,7 @@ const SubmitCType: React.FC<{
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                sender={attester?.authenticationKey.publicKey}
               />
             )
           },
@@ -73,7 +74,6 @@ const SubmitCType: React.FC<{
             content: (
               <AddCTypeStep
                 ctype={ctype}
-                isFirst
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}

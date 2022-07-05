@@ -1,7 +1,7 @@
 import { CType, DidUri } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { credentialApi } from '@credential/react-hooks/api';
 
@@ -18,10 +18,16 @@ const AddCTypeStep: React.FC<Props> = ({
   nextStep,
   prevStep,
   reportError,
+  reportStatus,
   sender
 }) => {
+  const [disabled, setDisabled] = useState(false);
+
   const handleNext = useCallback(async () => {
     try {
+      reportStatus(undefined, true);
+      setDisabled(true);
+
       assert(ctype, 'No ctype found');
       assert(sender, 'No sender found');
 
@@ -33,13 +39,16 @@ const AddCTypeStep: React.FC<Props> = ({
       nextStep();
     } catch (error) {
       reportError(error as Error);
+    } finally {
+      reportStatus(undefined, false);
+      setDisabled(false);
     }
-  }, [ctype, nextStep, reportError, sender]);
+  }, [ctype, nextStep, reportError, reportStatus, sender]);
 
   return (
     <Stack spacing={3}>
       <Stack direction="row" spacing={2}>
-        <Button onClick={handleNext} variant="contained">
+        <Button disabled={disabled} onClick={handleNext} variant="contained">
           Send
         </Button>
         {!isFirst && <Button onClick={prevStep}>Back</Button>}

@@ -83,7 +83,7 @@ const Approve: React.FC<{
         onClose={toggleOpen}
         onDone={toggleOpen}
         open={open}
-        steps={(prevStep, nextStep, reportError) => [
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
             label: 'Sign and submit attestation',
             content: (
@@ -93,6 +93,7 @@ const Approve: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           },
@@ -106,6 +107,7 @@ const Approve: React.FC<{
                 prevStep={prevStep}
                 receiver={attester}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={attester}
               />
             )
@@ -120,6 +122,7 @@ const Approve: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           }

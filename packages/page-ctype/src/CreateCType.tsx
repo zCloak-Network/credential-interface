@@ -51,6 +51,7 @@ const CreateCType: React.FC = () => {
   }, [cTypeContent]);
 
   const onDone = useCallback(() => {
+    console.log(1234);
     clear();
     toggleOpen();
   }, [clear, toggleOpen]);

@@ -57,7 +57,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
       <DidsModal
         onClose={toggleOpen}
         open={open}
-        steps={(prevStep, nextStep, reportError) => [
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
             label: 'Input receiver',
             content: (
@@ -67,6 +67,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
                 onChange={setReceiver}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           },
@@ -80,6 +81,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
                 prevStep={prevStep}
                 receiver={receiver}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={sender}
               />
             )
@@ -94,6 +96,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           }

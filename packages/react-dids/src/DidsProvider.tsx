@@ -16,6 +16,10 @@ let blockchain: Blockchain;
 
 const storageKey = 'credential:didUri';
 
+init({
+  address: KILT_PEREGRINE_ENDPOINT
+});
+
 const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
   const { addKeystore, keyring, restoreKeystore } = useKeystore();
@@ -87,16 +91,10 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   );
 
   useEffect(() => {
-    init({
-      address: KILT_PEREGRINE_ENDPOINT
-    })
-      .then(() => {
-        return connect();
-      })
-      .then((_blockchain) => {
-        blockchain = _blockchain;
-        setIsReady(true);
-      });
+    connect().then((_blockchain) => {
+      blockchain = _blockchain;
+      setIsReady(true);
+    });
   }, []);
 
   const value = useMemo(

@@ -91,7 +91,7 @@ const Revoke: React.FC<{
         onClose={toggleOpen}
         onDone={toggleOpen}
         open={open}
-        steps={(prevStep, nextStep, reportError) => [
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
             label: 'Sign and submit attestation',
             content: (
@@ -101,6 +101,7 @@ const Revoke: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           },
@@ -114,6 +115,7 @@ const Revoke: React.FC<{
                 prevStep={prevStep}
                 receiver={attester}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={attester}
               />
             )
@@ -128,6 +130,7 @@ const Revoke: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           }

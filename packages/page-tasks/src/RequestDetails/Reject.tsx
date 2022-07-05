@@ -57,7 +57,7 @@ const Reject: React.FC<{
         onClose={toggleOpen}
         onDone={toggleOpen}
         open={open}
-        steps={(prevStep, nextStep, reportError) => [
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
             label: 'Encrypt message',
             content: (
@@ -68,6 +68,7 @@ const Reject: React.FC<{
                 prevStep={prevStep}
                 receiver={attester}
                 reportError={reportError}
+                reportStatus={reportStatus}
                 sender={attester}
               />
             )
@@ -82,6 +83,7 @@ const Reject: React.FC<{
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
+                reportStatus={reportStatus}
               />
             )
           }
