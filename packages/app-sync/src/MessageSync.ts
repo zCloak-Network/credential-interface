@@ -38,7 +38,7 @@ export class MessageSync {
         .orderBy('syncId')
         .reverse()
         .filter((data) => {
-          return data.receiver === this.keyUri;
+          return this.keyUri.includes(data.receiver);
         })
         .first();
 
@@ -89,7 +89,7 @@ export class MessageSync {
     await this.parseMessageBody();
   }
 
-  private async parseMessageBody(): Promise<void> {
+  public async parseMessageBody(): Promise<void> {
     const messages = await this.db.message.where('deal').equals(0).sortBy('createdAt');
 
     for (const message of messages) {

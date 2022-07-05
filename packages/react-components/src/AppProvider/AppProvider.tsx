@@ -10,6 +10,7 @@ import { useKeystore } from '@credential/react-keystore';
 interface State {
   unread: number;
   parse: () => Promise<void>;
+  parseMessageBody: () => Promise<void>;
 }
 
 export const AppContext = createContext({} as State);
@@ -70,7 +71,15 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     }
   }, [didDetails, keyring]);
 
-  return <AppContext.Provider value={{ unread, parse }}>{children}</AppContext.Provider>;
+  const parseMessageBody = useCallback(async () => {
+    await messageSync?.parseMessageBody();
+  }, []);
+
+  return (
+    <AppContext.Provider value={{ unread, parse, parseMessageBody }}>
+      {children}
+    </AppContext.Provider>
+  );
 };
 
 export default AppProvider;

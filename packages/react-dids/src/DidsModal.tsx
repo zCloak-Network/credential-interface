@@ -74,7 +74,7 @@ const DidsModal: React.FC<{
                 error={!!error[index]}
                 icon={
                   error[index] ? undefined : status[index]?.loading ? (
-                    <CircularProgress size={20} />
+                    <CircularProgress size={24} />
                   ) : undefined
                 }
                 optional={

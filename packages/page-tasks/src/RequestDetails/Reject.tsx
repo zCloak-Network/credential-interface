@@ -2,9 +2,10 @@ import type { IEncryptedMessage, IMessage } from '@kiltprotocol/types';
 
 import { Message } from '@kiltprotocol/sdk-js';
 import { alpha, Button } from '@mui/material';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
+import { AppContext } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -17,6 +18,7 @@ const Reject: React.FC<{
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const { parseMessageBody } = useContext(AppContext);
 
   const message = useMemo(() => {
     if (!didUri) {
@@ -36,6 +38,12 @@ const Reject: React.FC<{
 
     return message;
   }, [didUri, messageLinked, request.claim.owner, request.rootHash]);
+  const claimer = useDidDetails(request.claim.owner);
+
+  const onDone = useCallback(() => {
+    parseMessageBody();
+    toggleOpen();
+  }, [parseMessageBody, toggleOpen]);
 
   return (
     <>
@@ -55,7 +63,7 @@ const Reject: React.FC<{
       </Button>
       <DidsModal
         onClose={toggleOpen}
-        onDone={toggleOpen}
+        onDone={onDone}
         open={open}
         steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
@@ -66,7 +74,7 @@ const Reject: React.FC<{
                 message={message}
                 nextStep={nextStep}
                 prevStep={prevStep}
-                receiver={attester}
+                receiver={claimer}
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester}

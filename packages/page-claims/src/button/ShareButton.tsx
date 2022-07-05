@@ -3,6 +3,7 @@ import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { IconForward } from '@credential/app-config/icons';
+import { AppContext } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, InputDidStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -16,6 +17,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
   const [receiver, setReceiver] = useState<Did.FullDidDetails | null>(null);
   const sender = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const { parseMessageBody } = useContext(AppContext);
 
   const _toggleOpen: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
@@ -40,6 +42,13 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
     [credential, receiver, sender]
   );
 
+  const onDone = useCallback(() => {
+    parseMessageBody();
+    toggleOpen();
+  }, [parseMessageBody, toggleOpen]);
+
+  console.log(receiver);
+
   return (
     <>
       <Tooltip title="Share to other">
@@ -56,6 +65,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
       </Tooltip>
       <DidsModal
         onClose={toggleOpen}
+        onDone={onDone}
         open={open}
         steps={(prevStep, nextStep, reportError, reportStatus) => [
           {

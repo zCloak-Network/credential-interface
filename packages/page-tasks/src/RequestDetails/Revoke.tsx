@@ -5,6 +5,7 @@ import { alpha, Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
+import { AppContext } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, ExtrinsicStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -20,6 +21,7 @@ const Revoke: React.FC<{
   const attester = useDidDetails(didUri);
   const { keyring } = useKeystore();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const { parseMessageBody } = useContext(AppContext);
 
   const attestation = useMemo(() => {
     if (didUri) {
@@ -71,6 +73,13 @@ const Revoke: React.FC<{
     return message;
   }, [attestation, didUri, messageLinked, request.claim.owner]);
 
+  const claimer = useDidDetails(request.claim.owner);
+
+  const onDone = useCallback(() => {
+    parseMessageBody();
+    toggleOpen();
+  }, [parseMessageBody, toggleOpen]);
+
   return (
     <>
       <Button
@@ -89,7 +98,7 @@ const Revoke: React.FC<{
       </Button>
       <DidsModal
         onClose={toggleOpen}
-        onDone={toggleOpen}
+        onDone={onDone}
         open={open}
         steps={(prevStep, nextStep, reportError, reportStatus) => [
           {
@@ -102,6 +111,7 @@ const Revoke: React.FC<{
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                sender={attester?.authenticationKey.publicKey}
               />
             )
           },
@@ -113,7 +123,7 @@ const Revoke: React.FC<{
                 message={message}
                 nextStep={nextStep}
                 prevStep={prevStep}
-                receiver={attester}
+                receiver={claimer}
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester}

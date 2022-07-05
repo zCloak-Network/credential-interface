@@ -6,8 +6,9 @@ import {
   RequestForAttestation
 } from '@kiltprotocol/sdk-js';
 import { Button } from '@mui/material';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
 
+import { AppContext } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import {
   EncryptMessageStep,
@@ -27,6 +28,7 @@ const SubmitClaim: React.FC<{
   const sender = useDidDetails(didUri);
   const [request, setRequest] = useState<RequestForAttestation>();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const { parseMessageBody } = useContext(AppContext);
 
   const message = useMemo(
     () =>
@@ -43,6 +45,11 @@ const SubmitClaim: React.FC<{
     [attester, request, sender]
   );
 
+  const _onDone = useCallback(() => {
+    parseMessageBody();
+    onDone?.();
+  }, [onDone, parseMessageBody]);
+
   return (
     <>
       <Button onClick={toggleOpen} variant="contained">
@@ -50,7 +57,7 @@ const SubmitClaim: React.FC<{
       </Button>
       <DidsModal
         onClose={toggleOpen}
-        onDone={onDone}
+        onDone={_onDone}
         open={open}
         steps={(prevStep, nextStep, reportError, reportStatus) => [
           {

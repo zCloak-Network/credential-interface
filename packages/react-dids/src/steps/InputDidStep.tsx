@@ -9,17 +9,18 @@ interface Props extends DidsStepProps {
   onChange: (fullDid: Did.FullDidDetails | null) => void;
 }
 
-const InputDidStep: React.FC<Props> = ({ isFirst, nextStep, prevStep, reportError }) => {
+const InputDidStep: React.FC<Props> = ({ isFirst, nextStep, onChange, prevStep, reportError }) => {
   const [fullDid, setFullDid] = useState<Did.FullDidDetails | null>(null);
 
   const handleNext = useCallback(() => {
     if (fullDid) {
       reportError(null);
+      onChange(fullDid);
       nextStep();
     } else {
       reportError(new Error("Can't found full did on chain, please make sure it is trusted"));
     }
-  }, [fullDid, nextStep, reportError]);
+  }, [fullDid, nextStep, onChange, reportError]);
 
   return (
     <Stack spacing={3}>
