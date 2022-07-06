@@ -1,7 +1,6 @@
+import type { InstanceType } from '@kiltprotocol/sdk-js';
 import type React from 'react';
 import type { ItemMap, ItemProps } from './types';
-
-import { InstanceType } from '@credential/react-components/CTypeProvider/types';
 
 import CTypeBool from './CTypeBool';
 import CTypeInput from './CTypeInput';

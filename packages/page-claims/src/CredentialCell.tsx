@@ -1,4 +1,4 @@
-import { CType } from '@kiltprotocol/sdk-js';
+import { CType, IAttestation } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
@@ -8,7 +8,7 @@ import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-com
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useRequestMessages, useToggle } from '@credential/react-hooks';
-import { Attestation, Request, RequestStatus } from '@credential/react-hooks/types';
+import { Request, RequestStatus } from '@credential/react-hooks/types';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -88,7 +88,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CredentialCell: React.FC<{ request: Request; attestation?: Attestation }> = ({
+const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
   attestation,
   request
 }) => {
@@ -134,7 +134,7 @@ const CredentialCell: React.FC<{ request: Request; attestation?: Attestation }> 
               status={request.status}
             />
             <Typography className="CredentialCell_Time" variant="inherit">
-              {moment(attestation?.createdAt ?? request.createdAt).format('YYYY:MM:DD HH:mm:ss')}
+              {moment(request.createdAt).format('YYYY:MM:DD HH:mm:ss')}
             </Typography>
           </Box>
           <Typography className="CredentialCell_title" mt={2} variant="h3">

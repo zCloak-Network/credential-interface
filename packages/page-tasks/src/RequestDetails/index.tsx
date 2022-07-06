@@ -1,5 +1,6 @@
-import type { Attestation, Request } from '@credential/react-hooks/types';
+import type { Request } from '@credential/react-hooks/types';
 
+import { IAttestation } from '@kiltprotocol/sdk-js';
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import React from 'react';
 
@@ -12,7 +13,7 @@ import Details from './Details';
 
 const RequestDetails: React.FC<{
   request: Request;
-  attestation?: Attestation;
+  attestation?: IAttestation | null;
   open: boolean;
   onClose?: () => void;
   showActions?: boolean;

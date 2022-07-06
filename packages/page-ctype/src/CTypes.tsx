@@ -1,14 +1,15 @@
+import type { ICType } from '@kiltprotocol/sdk-js';
+
 import { Box, Paper, Stack, SvgIcon, Typography } from '@mui/material';
 import React from 'react';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
-import { ICTypeMetadata } from '@credential/react-components/CTypeProvider/types';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 
 import CreateCType from './CreateCType';
 
-const CTypes: React.FC<{ list: ICTypeMetadata[] }> = ({ list }) => {
+const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
   return (
     <Box>
       <Box sx={{ textAlign: 'right', mb: 3 }}>
@@ -17,7 +18,7 @@ const CTypes: React.FC<{ list: ICTypeMetadata[] }> = ({ list }) => {
       <Stack spacing={3}>
         {list.map((cType) => (
           <Paper
-            key={cType.ctypeHash}
+            key={cType.hash}
             sx={{
               display: 'flex',
               alignItems: 'center',
@@ -57,7 +58,7 @@ const CTypes: React.FC<{ list: ICTypeMetadata[] }> = ({ list }) => {
                 CType Hash
               </Typography>
               <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
-                {cType.ctypeHash}
+                {cType.hash}
               </Typography>
             </Stack>
           </Paper>

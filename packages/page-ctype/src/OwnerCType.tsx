@@ -1,9 +1,9 @@
-import type { DidUri } from '@kiltprotocol/types';
+import type { DidUri, ICType } from '@kiltprotocol/types';
 
+import { CType } from '@kiltprotocol/sdk-js';
 import { Box, Stack, Tab, Tabs } from '@mui/material';
 import React, { useContext, useEffect, useState } from 'react';
 
-import { ICTypeMetadata, ICTypeSchema } from '@credential/react-components/CTypeProvider/types';
 import { DidsContext } from '@credential/react-dids';
 import { credentialApi } from '@credential/react-hooks/api';
 
@@ -11,17 +11,13 @@ import CTypes from './CTypes';
 
 const OwnerCType: React.FC = () => {
   const { didUri } = useContext(DidsContext);
-  const [ownCTypes, setOwnCTypes] = useState<ICTypeMetadata[]>([]);
+  const [ownCTypes, setOwnCTypes] = useState<ICType[]>([]);
 
   useEffect(() => {
     if (didUri) {
       credentialApi.getUserCType(didUri).then((res) => {
         setOwnCTypes(
-          res.data.map((d) => ({
-            ...d,
-            owner: d.owner as DidUri,
-            schema: d.metadata as ICTypeSchema
-          }))
+          res.data.map((d) => CType.fromSchema(d.metadata as ICType['schema'], d.owner as DidUri))
         );
       });
     }

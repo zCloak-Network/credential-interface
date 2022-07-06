@@ -22,7 +22,7 @@ const MessageRow: React.FC<{
   }, [message.body.content, message.body.type]);
 
   const request = useRequest(credentialDb, rootHash);
-  const attestation = useAttestation(credentialDb, rootHash);
+  const attestation = useAttestation(rootHash);
 
   return (
     <>
@@ -59,7 +59,13 @@ const MessageRow: React.FC<{
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </TableRow>
       {open && request && (
-        <RequestDetails onClose={toggleOpen} open={open} request={request} showActions={false} />
+        <RequestDetails
+          attestation={attestation}
+          onClose={toggleOpen}
+          open={open}
+          request={request}
+          showActions={false}
+        />
       )}
     </>
   );
