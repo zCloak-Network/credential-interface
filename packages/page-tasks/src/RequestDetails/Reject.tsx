@@ -1,17 +1,18 @@
 import type { IEncryptedMessage, IMessage } from '@kiltprotocol/types';
 
+import type { Request } from '@credential/react-hooks/types';
+
 import { Message } from '@kiltprotocol/sdk-js';
 import { alpha, Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
 import { AppContext } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 
 const Reject: React.FC<{
-  request: RequestForAttestation;
+  request: Request;
   messageLinked?: IMessage[];
 }> = ({ messageLinked, request }) => {
   const [open, toggleOpen] = useToggle();

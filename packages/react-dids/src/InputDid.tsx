@@ -81,6 +81,8 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
       Did.Web3Names.queryDidForWeb3Name(didOrAddress)
         .then((did) => {
           if (did) {
+            setError(null);
+
             return fetchDid(did);
           } else {
             throw new Error("Can't found web3Name on chain");
@@ -101,7 +103,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
       fullWidth
       variant="outlined"
     >
-      <InputLabel>Receipt address</InputLabel>
+      <InputLabel>Receiver</InputLabel>
       <OutlinedInput
         {...props}
         defaultValue={didOrAddress}

@@ -8,7 +8,7 @@ import { credentialApi } from '@credential/react-hooks/api';
 import { useKeystore } from '@credential/react-keystore';
 
 interface State {
-  unread: number;
+  unParsed: number;
   parse: () => Promise<void>;
   parseMessageBody: () => Promise<void>;
 }
@@ -48,10 +48,10 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { keyring } = useKeystore();
   const { didUri } = useContext(DidsContext);
   const didDetails = useDidDetails(didUri);
-  const [unread, setUnread] = useState(0);
+  const [unParsed, setUnParsed] = useState(0);
 
   useEffect(() => {
-    syncMessage(setUnread);
+    syncMessage(setUnParsed);
   }, []);
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const parse = useCallback(async () => {
     if (didDetails && messageSync) {
       await messageSync.parse(keyring, didDetails);
-      setUnread(messageSync.encryptMessages.size);
+      setUnParsed(messageSync.encryptMessages.size);
     }
   }, [didDetails, keyring]);
 
@@ -76,7 +76,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, []);
 
   return (
-    <AppContext.Provider value={{ unread, parse, parseMessageBody }}>
+    <AppContext.Provider value={{ unParsed, parse, parseMessageBody }}>
       {children}
     </AppContext.Provider>
   );

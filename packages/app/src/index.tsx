@@ -13,4 +13,11 @@ if (!rootElement) {
 
 const root = createRoot(rootElement);
 
+if (
+  !window.location.hash.startsWith('#/attester') &&
+  !window.location.hash.startsWith('#/claimer')
+) {
+  window.location.hash = '#/claimer';
+}
+
 cryptoWaitReady().then(() => root.render(<Root />));

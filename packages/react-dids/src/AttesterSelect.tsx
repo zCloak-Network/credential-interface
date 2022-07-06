@@ -66,6 +66,8 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
       Did.Web3Names.queryDidForWeb3Name(attester)
         .then((did) => {
           if (did) {
+            setError(null);
+
             return fetchDid(did);
           } else {
             throw new Error("Can't found web3Name on chain");

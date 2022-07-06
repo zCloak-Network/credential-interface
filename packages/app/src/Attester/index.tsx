@@ -2,12 +2,34 @@ import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/materia
 import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import { credentialDb } from '@credential/app-db';
 import { DidsContext, useDidDetails } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
+import { useUnread } from '../Notification/useUnread';
 import Sidebar from '../Sidebar';
+
+const Badge: React.FC<{ value: number }> = ({ value }) => {
+  return (
+    <Box
+      color="warning"
+      sx={({ palette }) => ({
+        minWidth: 20,
+        height: 20,
+        borderRadius: '10px',
+        textAlign: 'center',
+        lineHeight: '20px',
+        background: palette.warning.main,
+        fontSize: 12,
+        color: palette.common.black
+      })}
+    >
+      {value > 99 ? '99+' : value}
+    </Box>
+  );
+};
 
 const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
@@ -15,6 +37,7 @@ const Attester: React.FC = () => {
   const { palette, transitions } = useTheme();
   const { didUri, isReady } = useContext(DidsContext);
   const didDetails = useDidDetails(didUri);
+  const { messageUnread, taskUnread } = useUnread(credentialDb);
 
   const items = useMemo(
     () => [
@@ -32,7 +55,8 @@ const Attester: React.FC = () => {
         svgIcon: (
           <ClaimsIcon color={pathname.startsWith('/tasks') ? palette.common.white : undefined} />
         ),
-        text: 'Tasks'
+        text: 'Tasks',
+        extra: taskUnread ? <Badge value={taskUnread} /> : undefined
       },
       {
         to: '/message',
@@ -40,10 +64,11 @@ const Attester: React.FC = () => {
         svgIcon: (
           <MessageIcon color={pathname.startsWith('/message') ? palette.common.white : undefined} />
         ),
-        text: 'Message'
+        text: 'Message',
+        extra: messageUnread ? <Badge value={messageUnread} /> : undefined
       }
     ],
-    [palette.common.white, pathname]
+    [messageUnread, palette.common.white, pathname, taskUnread]
   );
 
   return (

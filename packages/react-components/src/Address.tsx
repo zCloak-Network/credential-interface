@@ -1,6 +1,9 @@
 import React from 'react';
 
-const Address: React.FC<{ value?: string; shorten?: boolean }> = ({ shorten = true, value }) => {
+const Address: React.FC<{ value?: string | null; shorten?: boolean }> = ({
+  shorten = true,
+  value
+}) => {
   if (!value) {
     return null;
   }

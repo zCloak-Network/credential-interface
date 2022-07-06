@@ -8,13 +8,14 @@ interface Props {
   shorten?: boolean;
 }
 
-const w3NameCaches: Record<string, Promise<string | null> | undefined> = {};
+const w3NameCachesPromise: Record<string, Promise<string | null> | undefined> = {};
+const w3NameCaches: Record<string, string | null | undefined> = {};
 
 const DidName: React.FC<Props> = ({ shorten = true, value }) => {
   const [w3Name, setW3Name] = useState<string | null>(null);
 
   const identifier = useMemo(() => {
-    if (!value) return '';
+    if (!value) return null;
 
     if (!Did.Utils.isUri(value)) return 'Not Did uri';
 
@@ -28,15 +29,22 @@ const DidName: React.FC<Props> = ({ shorten = true, value }) => {
   }, [value]);
 
   useEffect(() => {
-    if (identifier) {
-      w3NameCaches[identifier] = Did.Web3Names.queryWeb3NameForDidIdentifier(identifier);
+    if (!identifier) return;
+
+    if (!w3NameCachesPromise[identifier]) {
+      w3NameCachesPromise[identifier] = Did.Web3Names.queryWeb3NameForDidIdentifier(identifier);
     }
 
-    w3NameCaches[identifier]?.then(setW3Name);
+    w3NameCachesPromise[identifier]?.then((name) => {
+      setW3Name(name);
+      w3NameCaches[identifier] = name;
+    });
   }, [identifier]);
 
   return w3Name ? (
     <>{w3Name}</>
+  ) : identifier && w3NameCaches[identifier] ? (
+    <>{w3NameCaches[identifier]}</>
   ) : (
     <>
       did:kilt:

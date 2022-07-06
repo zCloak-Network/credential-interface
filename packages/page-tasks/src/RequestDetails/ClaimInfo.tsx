@@ -1,17 +1,15 @@
+import type { Attestation, Request } from '@credential/react-hooks/types';
+
 import Circle from '@mui/icons-material/Circle';
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
-import { Attestation } from '@credential/app-db/attestation/Attestation';
 import { Message } from '@credential/app-db/message';
-import {
-  RequestForAttestation,
-  RequestForAttestationStatus
-} from '@credential/app-db/requestForAttestation';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
+import { RequestStatus } from '@credential/react-hooks/types';
 
 import Approve from './Approve';
 import Reject from './Reject';
@@ -19,7 +17,7 @@ import Revoke from './Revoke';
 
 const ClaimInfo: React.FC<{
   showActions: boolean;
-  request: RequestForAttestation;
+  request: Request;
   attestation?: Attestation;
   messageLinked?: Message[];
 }> = ({ attestation, messageLinked, request, showActions }) => {
@@ -37,13 +35,13 @@ const ClaimInfo: React.FC<{
         </Stack>
         {showActions && (
           <Stack alignItems="center" direction="row" spacing={1.5}>
-            {request.status === RequestForAttestationStatus.INIT && (
+            {request.status === RequestStatus.INIT && (
               <Approve messageLinked={messageLinked} request={request} />
             )}
-            {request.status === RequestForAttestationStatus.INIT && (
+            {request.status === RequestStatus.INIT && (
               <Reject messageLinked={messageLinked} request={request} />
             )}
-            {request.status === RequestForAttestationStatus.SUBMIT && attestation && (
+            {request.status === RequestStatus.SUBMIT && attestation && (
               <Revoke attestation={attestation} messageLinked={messageLinked} request={request} />
             )}
           </Stack>
