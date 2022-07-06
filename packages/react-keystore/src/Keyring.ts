@@ -15,10 +15,10 @@ import { KeypairType, KiltKeystore } from './types';
 const supportedAlgs = { ...EncryptionAlgorithms, ...SigningAlgorithms };
 
 export class Keyring extends PolkadotKeyring implements KiltKeystore {
-  #unlock: (publicKey: Uint8Array) => Promise<void>;
+  #unlock: () => Promise<void>;
 
   constructor(
-    unlock: (publicKey: Uint8Array) => Promise<void>,
+    unlock: () => Promise<void>,
     injected?: {
       address: string;
       meta: KeyringJson$Meta;
@@ -47,7 +47,7 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
     const pair = this.getPair(publicKey);
 
     if (pair.isLocked) {
-      await this.#unlock(pair.publicKey);
+      await this.#unlock();
     }
 
     const signature = pair.sign(data, { withType: false });
@@ -66,7 +66,7 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
     const pair = this.getPair(publicKey);
 
     if (pair.isLocked) {
-      await this.#unlock(pair.publicKey);
+      await this.#unlock();
     }
 
     const nonce = randomAsU8a(24);
@@ -89,7 +89,7 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
     const pair = this.getPair(publicKey);
 
     if (pair.isLocked) {
-      await this.#unlock(pair.publicKey);
+      await this.#unlock();
     }
 
     const decrypted = pair.decryptMessage(data, peerPublicKey);

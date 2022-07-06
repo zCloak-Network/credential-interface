@@ -5,6 +5,7 @@ import { assert } from '@polkadot/util';
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { KILT_PEREGRINE_ENDPOINT } from '@credential/app-config/constants';
+import UnlockModal from '@credential/react-dids/UnlockModal';
 import { useLocalStorage } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -22,7 +23,7 @@ init({
 
 const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
-  const { addKeystore, keyring, restoreKeystore } = useKeystore();
+  const { addKeystore, keyring, queueUnlock, restoreKeystore, setQueueUnlock } = useKeystore();
   const [didUri, setDidUri] = useLocalStorage<DidUri>(storageKey);
 
   const generateDid = useCallback(
@@ -108,7 +109,25 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     [didUri, generateDid, isReady, restoreDid]
   );
 
-  return <DidsContext.Provider value={value}>{children}</DidsContext.Provider>;
+  return (
+    <DidsContext.Provider value={value}>
+      {children}
+      {queueUnlock.length > 0 && (
+        <UnlockModal
+          did={didUri}
+          onClose={() => {
+            setQueueUnlock(queueUnlock.slice(1));
+            queueUnlock[0].callback(new Error('User reject'));
+          }}
+          onUnlock={() => {
+            setQueueUnlock(queueUnlock.slice(1));
+            queueUnlock[0].callback(null);
+          }}
+          open
+        />
+      )}
+    </DidsContext.Provider>
+  );
 };
 
 export default React.memo<typeof DidsProvider>(DidsProvider);
