@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/materia
 import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { DidsContext, useDidDetails } from '@credential/react-dids';
+import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
@@ -14,7 +14,6 @@ const Claimer: React.FC = () => {
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
   const { didUri, isReady } = useContext(DidsContext);
-  const didDetails = useDidDetails(didUri);
 
   const items = useMemo(
     () => [
@@ -48,7 +47,7 @@ const Claimer: React.FC = () => {
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
-      <Header did={didDetails?.uri} open={open} toggleOpen={toggleOpen} />
+      <Header did={didUri} open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="claimer" items={items} open={open} />
       <Box
         minHeight="100vh"

@@ -17,7 +17,7 @@ interface Props {
 const Notification: React.FC<Props> = ({ onClose, open }) => {
   const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
-  const { allUnread, messageUnread, taskUnread } = useUnread(credentialDb);
+  const { allUnread, messageUnread, taskUnread } = useUnread(credentialDb, didUri);
 
   const filter = useMemo(
     () =>

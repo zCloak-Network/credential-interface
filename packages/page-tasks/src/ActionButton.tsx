@@ -4,6 +4,7 @@ import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
 
+import { credentialDb } from '@credential/app-db';
 import { useToggle } from '@credential/react-hooks';
 
 import RequestDetails from './RequestDetails';
@@ -40,6 +41,7 @@ const ActionButton: React.FC<{ request: Request; attestation?: Attestation }> = 
           onClick={() => {
             toggleDetailsOpen();
             handleClose();
+            credentialDb.readMessage(request.messageId);
           }}
           sx={({ palette }) => ({ color: palette.grey[600] })}
         >

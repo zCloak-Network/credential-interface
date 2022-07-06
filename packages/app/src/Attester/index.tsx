@@ -3,7 +3,7 @@ import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { credentialDb } from '@credential/app-db';
-import { DidsContext, useDidDetails } from '@credential/react-dids';
+import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
@@ -36,8 +36,7 @@ const Attester: React.FC = () => {
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
   const { didUri, isReady } = useContext(DidsContext);
-  const didDetails = useDidDetails(didUri);
-  const { messageUnread, taskUnread } = useUnread(credentialDb);
+  const { messageUnread, taskUnread } = useUnread(credentialDb, didUri);
 
   const items = useMemo(
     () => [
@@ -73,7 +72,7 @@ const Attester: React.FC = () => {
 
   return (
     <Box bgcolor="#fff" minHeight="100vh">
-      <Header did={didDetails?.uri} open={open} toggleOpen={toggleOpen} />
+      <Header did={didUri} open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="attester" items={items} open={open} />
       <Box
         minHeight="100vh"

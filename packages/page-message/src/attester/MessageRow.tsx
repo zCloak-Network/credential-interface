@@ -26,7 +26,13 @@ const MessageRow: React.FC<{
 
   return (
     <>
-      <TableRow hover onClick={toggleOpen}>
+      <TableRow
+        hover
+        onClick={() => {
+          toggleOpen();
+          credentialDb.readMessage(message.messageId);
+        }}
+      >
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
             <DidName value={message.sender} />

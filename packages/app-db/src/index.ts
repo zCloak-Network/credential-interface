@@ -20,6 +20,14 @@ export class CredentialData extends Dexie {
       // attestation: '++id, createdAt, messageId, &claimHash, cTypeHash, delegationId, revoked'
     });
   }
+
+  public async readMessage(messageId?: string) {
+    if (messageId) {
+      await this.message.where('messageId').equals(messageId).modify({
+        isRead: 1
+      });
+    }
+  }
 }
 
 export const credentialDb = new CredentialData();

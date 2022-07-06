@@ -48,7 +48,10 @@ const MessageRow: React.FC<{
   return (
     <>
       <TableRow
-        onClick={toggleOpen}
+        onClick={() => {
+          toggleOpen();
+          credentialDb.readMessage(message.messageId);
+        }}
         sx={({ palette }) => ({
           border: 'none',
           background: palette.background.paper,

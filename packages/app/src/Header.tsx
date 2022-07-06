@@ -42,7 +42,7 @@ const Header: React.FC<{ did?: DidUri; open: boolean; toggleOpen: () => void }> 
 }) => {
   const { parse, unParsed } = useContext(AppContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
-  const { allUnread } = useUnread(credentialDb);
+  const { allUnread } = useUnread(credentialDb, did);
 
   const handleNotification = useCallback(() => {
     toggleNotiOpen();
