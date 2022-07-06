@@ -38,7 +38,7 @@ const MessageRow: React.FC<{
       : null;
   }, [message]);
   const request = useRequest(credentialDb, rootHash);
-  const attestation = useAttestation(credentialDb, rootHash);
+  const attestation = useAttestation(rootHash);
   const cType = useMemo(() => {
     return cTypeList.find((cType) =>
       [cTypeHash].includes(CType.fromSchema(cType.schema, cType.owner).hash)

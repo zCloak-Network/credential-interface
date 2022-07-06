@@ -1,6 +1,4 @@
-import type { Did } from '@kiltprotocol/sdk-js';
-
-import type { ICTypeMetadata } from '@credential/react-components/CTypeProvider/types';
+import type { Did, ICType } from '@kiltprotocol/sdk-js';
 
 import { CType } from '@kiltprotocol/sdk-js';
 import { Box, Stack, SvgIcon, Typography } from '@mui/material';
@@ -33,7 +31,7 @@ const CreateClaim: React.FC = () => {
 
   useEffect(() => {
     if (state) {
-      const { cType } = state as { cType?: ICTypeMetadata };
+      const { cType } = state as { cType?: ICType };
 
       if (cType) {
         try {

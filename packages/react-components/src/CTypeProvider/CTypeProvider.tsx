@@ -6,8 +6,6 @@ import React, { createContext, useCallback, useEffect, useMemo } from 'react';
 import { useLocalStorage } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
 
-import { ICTypeMetadata, ICTypeSchema } from './types';
-
 interface State {
   cTypeList: CType[];
   importCType: (hash: string) => void;
@@ -18,21 +16,17 @@ export const CTypeContext = createContext<State>({} as State);
 const STORAGE_KEY = 'credential:ctypes';
 
 const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [cTypeList, setCTypeList] = useLocalStorage<ICTypeMetadata[]>(STORAGE_KEY, []);
+  const [cTypeList, setCTypeList] = useLocalStorage<CType[]>(STORAGE_KEY, []);
 
   const importCType = useCallback(
     (hash: string) => {
-      const has = !!cTypeList.find(({ ctypeHash }) => ctypeHash === hash);
+      const has = !!cTypeList.find(({ hash: _hash }) => _hash === hash);
 
       if (has) return;
 
       credentialApi.getCType(hash).then((res) => {
         setCTypeList((value) => [
-          {
-            owner: res.data.owner as DidUri,
-            ctypeHash: res.data.ctypeHash,
-            schema: res.data.metadata as ICTypeSchema
-          },
+          CType.fromSchema(res.data.metadata as CType['schema'], res.data.owner as DidUri),
           ...value
         ]);
       });
@@ -42,22 +36,22 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
   useEffect(() => {
     if (cTypeList.length === 0) {
-      credentialApi.getCTypes().then((res) =>
-        setCTypeList(
-          res.data.map(({ ctypeHash, metadata, owner }) => ({
-            owner: owner as DidUri,
-            ctypeHash,
-            schema: metadata as ICTypeSchema
-          }))
-        )
-      );
+      credentialApi
+        .getCTypes()
+        .then((res) =>
+          setCTypeList(
+            res.data.map(({ metadata, owner }) =>
+              CType.fromSchema(metadata as CType['schema'], owner as DidUri)
+            )
+          )
+        );
     }
   }, [cTypeList.length, setCTypeList]);
 
   const value = useMemo(() => {
     return {
       importCType,
-      cTypeList: cTypeList.map((cType) => CType.fromSchema(cType.schema, cType.owner))
+      cTypeList
     };
   }, [cTypeList, importCType]);
 

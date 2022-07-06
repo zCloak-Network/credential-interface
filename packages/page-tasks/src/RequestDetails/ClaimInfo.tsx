@@ -1,7 +1,9 @@
-import type { Attestation, Request } from '@credential/react-hooks/types';
+import type { IAttestation } from '@kiltprotocol/sdk-js';
+
+import type { Request } from '@credential/react-hooks/types';
 
 import Circle from '@mui/icons-material/Circle';
-import { Box, Grid, Stack, Typography } from '@mui/material';
+import { Box, Grid, Link, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
@@ -18,7 +20,7 @@ import Revoke from './Revoke';
 const ClaimInfo: React.FC<{
   showActions: boolean;
   request: Request;
-  attestation?: Attestation;
+  attestation?: IAttestation | null;
   messageLinked?: Message[];
 }> = ({ attestation, messageLinked, request, showActions }) => {
   return (
@@ -51,35 +53,49 @@ const ClaimInfo: React.FC<{
         <Grid
           container
           spacing={{
-            lg: 10,
-            xs: 5
+            lg: 6,
+            xs: 3
           }}
         >
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claim hash</Typography>
-            <Typography sx={{ ...ellipsisMixin() }}>{request.rootHash}</Typography>
+            <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
+              {request.rootHash}
+            </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
               Credential type
             </Typography>
-            <Typography sx={{ ...ellipsisMixin() }}>
+            <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
               <CTypeName cTypeHash={request.claim.cTypeHash} />
             </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Status</Typography>
-            <CredentialStatus
-              revoked={attestation?.revoked}
-              role="attester"
-              status={request.status}
-            />
+            <Stack direction="row" spacing={2}>
+              <CredentialStatus
+                revoked={attestation?.revoked}
+                role="attester"
+                status={request.status}
+              />
+              {attestation?.owner && (
+                <Typography sx={({ palette }) => ({ color: palette.grey[700] })} variant="inherit">
+                  By{' '}
+                  <Link>
+                    <DidName value={attestation.owner} />
+                  </Link>
+                </Typography>
+              )}
+            </Stack>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
               Approval initiation time
             </Typography>
-            <Typography>{moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}</Typography>
+            <Typography variant="inherit">
+              {moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+            </Typography>
           </Grid>
         </Grid>
       </Box>

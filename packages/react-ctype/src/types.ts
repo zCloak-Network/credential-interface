@@ -1,6 +1,5 @@
+import type { InstanceType } from '@kiltprotocol/sdk-js';
 import type React from 'react';
-
-import type { InstanceType } from '@credential/react-components/CTypeProvider/types';
 
 export interface ItemProps {
   name: string;

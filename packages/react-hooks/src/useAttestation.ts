@@ -1,43 +1,24 @@
-import type { Attestation } from './types';
+import { Attestation, Hash } from '@kiltprotocol/sdk-js';
+import { useEffect, useState } from 'react';
 
-import { MessageBodyType } from '@kiltprotocol/sdk-js';
-import { useLiveQuery } from 'dexie-react-hooks';
-import { useCallback } from 'react';
+export function useAttestation(claimHash?: Hash): Attestation | null {
+  const [attestation, setAttestation] = useState<Attestation | null>(null);
 
-import { CredentialData } from '@credential/app-db';
-
-import { useDebounce } from '.';
-
-export function useAttestation(db: CredentialData, claimHash?: string): Attestation | undefined {
-  const getAttestation = useCallback(async () => {
-    if (!claimHash) return undefined;
-
-    const message = await db.message
-      .orderBy('createdAt')
-      .reverse()
-      .filter(
-        (message) =>
-          message.body.type === MessageBodyType.SUBMIT_ATTESTATION &&
-          message.body.content.attestation.claimHash === claimHash
-      )
-      .first();
-
-    if (message && message.body.type === MessageBodyType.SUBMIT_ATTESTATION) {
-      return {
-        ...message.body.content.attestation,
-        messageId: message.messageId,
-        createdAt: message.createdAt,
-        receivedAt: message.receivedAt,
-        isRead: !!message.isRead
-      };
+  useEffect(() => {
+    if (claimHash) {
+      Attestation.query(claimHash).then(setAttestation);
     }
+  }, [claimHash]);
 
-    return undefined;
-  }, [claimHash, db.message]);
+  return attestation;
+}
 
-  const data = useLiveQuery(async () => {
-    return getAttestation();
-  }, [getAttestation]);
+export function useAttestationBatch(claimHashs: Hash[]): (Attestation | null)[] {
+  const [attestations, setAttestations] = useState<(Attestation | null)[]>([]);
 
-  return useDebounce(data, 100);
+  useEffect(() => {
+    Promise.all(claimHashs.map((claimHash) => Attestation.query(claimHash))).then(setAttestations);
+  }, [claimHashs]);
+
+  return attestations;
 }

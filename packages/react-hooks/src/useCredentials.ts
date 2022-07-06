@@ -1,56 +1,31 @@
-import type { DidUri, ISubmitAttestation } from '@kiltprotocol/types';
-import type { Attestation, Request } from './types';
+import type { DidUri } from '@kiltprotocol/types';
+import type { Request } from './types';
 
-import { MessageBodyType } from '@kiltprotocol/sdk-js';
-import { useLiveQuery } from 'dexie-react-hooks';
-import { useCallback } from 'react';
+import { Attestation } from '@kiltprotocol/sdk-js';
+import { useMemo } from 'react';
 
 import { CredentialData } from '@credential/app-db';
 
+import { useAttestationBatch } from './useAttestation';
 import { useRequestForAttestation } from './useRequestForAttestation';
-import { useDebounce } from '.';
 
-export function useCredentials(db: CredentialData, owner?: DidUri) {
+export function useCredentials(
+  db: CredentialData,
+  owner?: DidUri
+): { request: Request; attestation: Attestation | null | undefined }[] {
   const requests = useRequestForAttestation(db, owner);
 
-  const getCredential = useCallback(async () => {
-    if (!requests) return [];
+  const claimHashs = useMemo(() => (requests ?? []).map((request) => request.rootHash), [requests]);
+  const attestations = useAttestationBatch(claimHashs);
 
-    const messages = await Promise.all(
-      requests.map((request) =>
-        db.message
-          .orderBy('createdAt')
-          .reverse()
-          .filter(
-            (message) =>
-              message.body.type === MessageBodyType.SUBMIT_ATTESTATION &&
-              message.body.content.attestation.claimHash === request.rootHash
-          )
-          .first()
-      )
-    );
-
-    const credentials: { attestation?: Attestation; request: Request }[] = messages.map(
-      (message, index) => ({
-        request: requests[index],
-        attestation: message
-          ? {
-              ...(message.body as ISubmitAttestation).content.attestation,
-              messageId: message.messageId,
-              createdAt: message.createdAt,
-              receivedAt: message.receivedAt,
-              isRead: !!message.isRead
-            }
-          : undefined
-      })
-    );
-
-    return credentials;
-  }, [db.message, requests]);
-
-  const data = useLiveQuery(async () => {
-    return getCredential();
-  }, [getCredential]);
-
-  return useDebounce(data, 100);
+  return useMemo(() => {
+    if (requests && attestations) {
+      return requests.map((request, index) => ({
+        request,
+        attestation: attestations[index]
+      }));
+    } else {
+      return [];
+    }
+  }, [attestations, requests]);
 }

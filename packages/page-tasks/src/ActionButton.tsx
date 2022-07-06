@@ -1,5 +1,6 @@
-import type { Attestation, Request } from '@credential/react-hooks/types';
+import type { Request } from '@credential/react-hooks/types';
 
+import { IAttestation } from '@kiltprotocol/sdk-js';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
@@ -9,7 +10,7 @@ import { useToggle } from '@credential/react-hooks';
 
 import RequestDetails from './RequestDetails';
 
-const ActionButton: React.FC<{ request: Request; attestation?: Attestation }> = ({
+const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
   attestation,
   request
 }) => {
