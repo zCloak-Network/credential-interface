@@ -42,15 +42,15 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: ${{ matrix.node-version }}
-      # - run: yarn install
-      # - run: yarn build
-      # - uses: appleboy/scp-action@master
-      #   with:
-      #     username: ubuntu
-      #     host: ${{ secrets.HOST }}
-      #     port: 22
-      #     key: ${{ secrets.KEY }}
-      #     source: ${{ github.workspace }}/packages/app/build
-      #     target: "/home/ubuntu/zkID-interface-v2"
-      #     strip_components: 5
-      #     rm: true
+      - run: yarn install
+      - run: CREDENTIAL_SERVICE=https://credential-service.zkid.app yarn build
+      - uses: appleboy/scp-action@master
+        with:
+          username: ubuntu
+          host: ${{ secrets.HOST }}
+          port: 22
+          key: ${{ secrets.KEY }}
+          source: ${{ github.workspace }}/packages/app/build
+          target: "/home/ubuntu/credential-interface"
+          strip_components: 5
+          rm: true
