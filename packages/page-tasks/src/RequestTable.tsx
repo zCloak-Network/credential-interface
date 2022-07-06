@@ -8,17 +8,18 @@ import {
   TableRow
 } from '@mui/material';
 import moment from 'moment';
-import React, { useContext } from 'react';
+import React from 'react';
 
-import { AppContext, CredentialStatus, CTypeName } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 import { useCredentials } from '@credential/react-hooks';
 
 import ActionButton from './ActionButton';
 
 const RequestTable: React.FC = () => {
-  const { db } = useContext(AppContext);
-  const list = useCredentials(db);
+  const list = useCredentials(credentialDb);
 
   return (
     <TableContainer>
@@ -34,16 +35,18 @@ const RequestTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list?.map(({ attestation, request }, index) => (
-            <TableRow key={index}>
+          {list?.map(({ attestation, request }) => (
+            <TableRow key={request.rootHash}>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>{request.claim.owner}</Box>
+                <Box sx={{ width: 200, ...ellipsisMixin() }}>
+                  <DidName value={request.claim.owner} />
+                </Box>
               </TableCell>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>{request.rootHash}</Box>
+                <Box sx={{ width: 200, ...ellipsisMixin() }}>{request.rootHash}</Box>
               </TableCell>
               <TableCell>
-                <Box sx={{ width: 120, ...ellipsisMixin() }}>
+                <Box sx={{ width: 200, ...ellipsisMixin() }}>
                   <CTypeName cTypeHash={request.claim.cTypeHash} />
                 </Box>
               </TableCell>

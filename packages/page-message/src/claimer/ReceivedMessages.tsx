@@ -10,22 +10,25 @@ import {
 } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 
-import { AppContext, useClaimer } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
 import MessageRow from './MessageRow';
 
 const ReceivedMessages: React.FC = () => {
-  const { db } = useContext(AppContext);
-  const { claimer } = useClaimer();
+  const { didUri } = useContext(DidsContext);
   const filter = useMemo(
-    () => ({
-      receiver: claimer.didDetails.uri,
-      bodyTypes: [MessageBodyType.SUBMIT_ATTESTATION, MessageBodyType.REJECT_ATTESTATION]
-    }),
-    [claimer.didDetails.uri]
+    () =>
+      didUri
+        ? {
+            receiver: didUri,
+            bodyTypes: [MessageBodyType.SUBMIT_ATTESTATION, MessageBodyType.REJECT_ATTESTATION]
+          }
+        : undefined,
+    [didUri]
   );
-  const messages = useMessages(db, filter);
+  const messages = useMessages(credentialDb, filter);
 
   return (
     <TableContainer>

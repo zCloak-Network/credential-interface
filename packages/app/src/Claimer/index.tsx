@@ -1,8 +1,8 @@
 import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { UnlockModal, useClaimer } from '@credential/react-components';
+import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
@@ -11,10 +11,9 @@ import Sidebar from '../Sidebar';
 
 const Claimer: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
-  const [unlockOpen, toggleUnlockOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { claimer, isReady } = useClaimer();
+  const { didUri, isReady } = useContext(DidsContext);
 
   const items = useMemo(
     () => [
@@ -48,7 +47,7 @@ const Claimer: React.FC = () => {
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
-      <Header open={open} toggleOpen={toggleOpen} />
+      <Header did={didUri} open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="claimer" items={items} open={open} />
       <Box
         minHeight="100vh"
@@ -70,9 +69,7 @@ const Claimer: React.FC = () => {
               })
         }}
       >
-        {claimer.isLocked ? (
-          <UnlockModal onUnlock={toggleUnlockOpen} open={unlockOpen} />
-        ) : !isReady ? (
+        {!isReady ? (
           <Stack
             sx={{
               position: 'absolute',

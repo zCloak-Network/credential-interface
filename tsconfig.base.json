@@ -28,6 +28,8 @@
       "@credential/react-components/*": ["react-components/src/*"],
       "@credential/react-ctype": ["react-ctype/src"],
       "@credential/react-ctype/*": ["react-ctype/src/*"],
+      "@credential/react-dids": ["react-dids/src"],
+      "@credential/react-dids/*": ["react-dids/src/*"],
       "@credential/react-hooks": ["react-hooks/src"],
       "@credential/react-hooks/*": ["react-hooks/src/*"],
       "@credential/react-keystore": ["react-keystore/src"],

@@ -1,4 +1,3 @@
-import { CType } from '@kiltprotocol/sdk-js';
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
 import IndeterminateCheckBoxOutlinedIcon from '@mui/icons-material/IndeterminateCheckBoxOutlined';
 import {
@@ -20,18 +19,13 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import {
-  ButtonUnlock,
-  DialogHeader,
-  NotificationContext,
-  useAttester
-} from '@credential/react-components';
+import { DialogHeader } from '@credential/react-components';
 import { useLocalStorage, useToggle } from '@credential/react-hooks';
-import { credentialApi } from '@credential/react-hooks/api';
 
 import CreateProperty from './CreateProperty';
+import SubmitCType from './SubmitCType';
 
 const key = 'credential:ctype:draft';
 
@@ -42,56 +36,24 @@ const CreateCType: React.FC = () => {
     description?: string;
     properties?: Record<string, string>;
   }>(key);
-  const { attester } = useAttester();
-  const { notifyError } = useContext(NotificationContext);
-  const [loading, setLoading] = useState(false);
-
-  const createCType = useCallback(async () => {
-    try {
-      if (!attester.isFullDid) {
-        throw new Error('The DID with the given identifier is not on chain.');
-      }
-
-      const fullDid = attester.didDetails;
-
-      if (cTypeContent?.title && cTypeContent?.description && cTypeContent?.properties) {
-        setLoading(true);
-        const title = cTypeContent.title;
-
-        const properties = Object.entries(cTypeContent.properties)
-          .map(([name, property]) => ({
-            [name]: {
-              type: property as any
-            }
-          }))
-          .reduce((l, r) => ({ ...l, ...r }));
-
-        const ctype = CType.fromSchema(
-          {
-            title,
-            $schema: 'http://kilt-protocol.org/draft-01/ctype#',
-            type: 'object',
-            properties
-          },
-          fullDid.uri
-        );
-
-        await attester.createCType(ctype);
-
-        await credentialApi.addCType({
-          owner: fullDid.uri,
-          ctypeHash: ctype.hash,
-          metadata: ctype.schema
-        });
-        clear();
-        toggleOpen();
-      }
-    } catch (error) {
-      notifyError(error);
-    } finally {
-      setLoading(false);
+  const properties = useMemo(() => {
+    if (cTypeContent?.title && cTypeContent?.description && cTypeContent?.properties) {
+      return Object.entries(cTypeContent.properties)
+        .map(([name, property]) => ({
+          [name]: {
+            type: property as any
+          }
+        }))
+        .reduce((l, r) => ({ ...l, ...r }));
+    } else {
+      return undefined;
     }
-  }, [cTypeContent, attester, clear, toggleOpen, notifyError]);
+  }, [cTypeContent]);
+
+  const onDone = useCallback(() => {
+    clear();
+    toggleOpen();
+  }, [clear, toggleOpen]);
 
   return (
     <>
@@ -183,9 +145,7 @@ const CreateCType: React.FC = () => {
         </Container>
         <DialogActions>
           <Button variant="outlined">Save</Button>
-          <ButtonUnlock loading={loading} onClick={createCType} variant="contained">
-            Submit
-          </ButtonUnlock>
+          <SubmitCType onDone={onDone} properties={properties} title={cTypeContent?.title} />
         </DialogActions>
       </Dialog>
       <Button onClick={toggleOpen} startIcon={<AddBoxOutlinedIcon />} variant="contained">

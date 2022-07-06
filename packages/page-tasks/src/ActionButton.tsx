@@ -1,14 +1,16 @@
+import type { Attestation, Request } from '@credential/react-hooks/types';
+
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
 
-import { Attestation } from '@credential/app-db/attestation/Attestation';
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
+import { credentialDb } from '@credential/app-db';
 import { useToggle } from '@credential/react-hooks';
 
 import RequestDetails from './RequestDetails';
 
-const ActionButton: React.FC<{ request: RequestForAttestation; attestation?: Attestation }> = ({
+const ActionButton: React.FC<{ request: Request; attestation?: Attestation }> = ({
+  attestation,
   request
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
@@ -39,6 +41,7 @@ const ActionButton: React.FC<{ request: RequestForAttestation; attestation?: Att
           onClick={() => {
             toggleDetailsOpen();
             handleClose();
+            credentialDb.readMessage(request.messageId);
           }}
           sx={({ palette }) => ({ color: palette.grey[600] })}
         >
@@ -46,7 +49,12 @@ const ActionButton: React.FC<{ request: RequestForAttestation; attestation?: Att
         </MenuItem>
       </Menu>
       {detailsOpen && (
-        <RequestDetails onClose={toggleDetailsOpen} open={detailsOpen} request={request} />
+        <RequestDetails
+          attestation={attestation}
+          onClose={toggleDetailsOpen}
+          open={detailsOpen}
+          request={request}
+        />
       )}
     </>
   );

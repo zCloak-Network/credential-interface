@@ -1,12 +1,12 @@
-import React from 'react';
+import React, { useContext } from 'react';
 import { Navigate } from 'react-router-dom';
 
-import { useKeystore } from '@credential/react-keystore';
+import { DidsContext } from '@credential/react-dids';
 
 const AccountAuth: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const { keystore } = useKeystore();
+  const { didUri } = useContext(DidsContext);
 
-  return keystore ? <>{children}</> : <Navigate to="/account" />;
+  return didUri ? <>{children}</> : <Navigate to="/account" />;
 };
 
 export default React.memo(AccountAuth);

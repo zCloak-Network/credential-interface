@@ -1,21 +1,23 @@
-import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
-import React, { useContext } from 'react';
+import type { Attestation, Request } from '@credential/react-hooks/types';
 
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import { AppContext, DialogHeader } from '@credential/react-components';
+import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
+import React from 'react';
+
+import { credentialDb } from '@credential/app-db';
+import { DialogHeader } from '@credential/react-components';
 import { useRequestMessages } from '@credential/react-hooks';
 
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
 
 const RequestDetails: React.FC<{
-  request: RequestForAttestation;
+  request: Request;
+  attestation?: Attestation;
   open: boolean;
   onClose?: () => void;
   showActions?: boolean;
-}> = ({ onClose, open, request, showActions = true }) => {
-  const { db } = useContext(AppContext);
-  const messageLinked = useRequestMessages(db, request.rootHash);
+}> = ({ attestation, onClose, open, request, showActions = true }) => {
+  const messageLinked = useRequestMessages(credentialDb, request.rootHash);
 
   return (
     <Dialog fullScreen open={open}>
@@ -25,7 +27,12 @@ const RequestDetails: React.FC<{
         maxWidth="lg"
         sx={{ background: 'transparent !important' }}
       >
-        <ClaimInfo request={request} showActions={showActions} />
+        <ClaimInfo
+          attestation={attestation}
+          messageLinked={messageLinked}
+          request={request}
+          showActions={showActions}
+        />
         <Details contents={request.claim.contents} messageLinked={messageLinked} />
       </Container>
       <DialogActions></DialogActions>

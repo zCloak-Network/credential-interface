@@ -1,23 +1,14 @@
-import type { Attestation } from '@credential/app-db/attestation/Attestation';
-
 import { CType } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import {
-  RequestForAttestation,
-  RequestForAttestationStatus
-} from '@credential/app-db/requestForAttestation';
-import {
-  AppContext,
-  CredentialStatus,
-  CTypeContext,
-  CTypeName,
-  DidName
-} from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { useMessage, useToggle } from '@credential/react-hooks';
+import { DidName } from '@credential/react-dids';
+import { useRequestMessages, useToggle } from '@credential/react-hooks';
+import { Attestation, Request, RequestStatus } from '@credential/react-hooks/types';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -97,11 +88,10 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: Attestation }> = ({
+const CredentialCell: React.FC<{ request: Request; attestation?: Attestation }> = ({
   attestation,
   request
 }) => {
-  const { db } = useContext(AppContext);
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const cType = useMemo(() => {
@@ -109,7 +99,7 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
       (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
     );
   }, [cTypeList, request.claim.cTypeHash]);
-  const relationMessage = useMessage(db, request.messageId);
+  const requestMessages = useRequestMessages(credentialDb, request.rootHash);
 
   return (
     <>
@@ -127,9 +117,11 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
             borderTopRightRadius: 4,
             borderBottomRightRadius: 4,
             background:
-              request.status === RequestForAttestationStatus.SUBMIT
-                ? palette.success.main
-                : request.status === RequestForAttestationStatus.REJECT
+              request.status === RequestStatus.SUBMIT
+                ? attestation?.revoked
+                  ? palette.error.main
+                  : palette.success.main
+                : request.status === RequestStatus.REJECT
                 ? palette.error.main
                 : palette.warning.main
           })}
@@ -161,7 +153,7 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  <DidName value={attestation?.owner ?? relationMessage?.receiver} />
+                  <DidName value={attestation?.owner ?? requestMessages?.[0]?.receiver} />
                 </Typography>
               </Tooltip>
             </Box>

@@ -3,7 +3,7 @@ import type { CType, Did } from '@kiltprotocol/sdk-js';
 import { Box, FormControl, InputLabel, OutlinedInput, Stack } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
-import { AttesterSelect } from '@credential/react-components';
+import { AttesterSelect } from '@credential/react-dids';
 
 import CTypeItem from './CTypeItem';
 

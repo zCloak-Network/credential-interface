@@ -1,20 +1,42 @@
 import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/material';
-import React, { useMemo } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { UnlockModal, useAttester } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
+import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
+import { useUnread } from '../Notification/useUnread';
 import Sidebar from '../Sidebar';
+
+const Badge: React.FC<{ value: number }> = ({ value }) => {
+  return (
+    <Box
+      color="warning"
+      sx={({ palette }) => ({
+        minWidth: 20,
+        height: 20,
+        borderRadius: '10px',
+        textAlign: 'center',
+        lineHeight: '20px',
+        background: palette.warning.main,
+        fontSize: 12,
+        color: palette.common.black
+      })}
+    >
+      {value > 99 ? '99+' : value}
+    </Box>
+  );
+};
 
 const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
-  const [unlockOpen, toggleUnlockOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { attester, isReady } = useAttester();
+  const { didUri, isReady } = useContext(DidsContext);
+  const { messageUnread, taskUnread } = useUnread(credentialDb, didUri);
 
   const items = useMemo(
     () => [
@@ -32,7 +54,8 @@ const Attester: React.FC = () => {
         svgIcon: (
           <ClaimsIcon color={pathname.startsWith('/tasks') ? palette.common.white : undefined} />
         ),
-        text: 'Tasks'
+        text: 'Tasks',
+        extra: taskUnread ? <Badge value={taskUnread} /> : undefined
       },
       {
         to: '/message',
@@ -40,15 +63,16 @@ const Attester: React.FC = () => {
         svgIcon: (
           <MessageIcon color={pathname.startsWith('/message') ? palette.common.white : undefined} />
         ),
-        text: 'Message'
+        text: 'Message',
+        extra: messageUnread ? <Badge value={messageUnread} /> : undefined
       }
     ],
-    [palette.common.white, pathname]
+    [messageUnread, palette.common.white, pathname, taskUnread]
   );
 
   return (
     <Box bgcolor="#fff" minHeight="100vh">
-      <Header open={open} toggleOpen={toggleOpen} />
+      <Header did={didUri} open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="attester" items={items} open={open} />
       <Box
         minHeight="100vh"
@@ -68,9 +92,7 @@ const Attester: React.FC = () => {
               })
         }}
       >
-        {attester.isLocked ? (
-          <UnlockModal onUnlock={toggleUnlockOpen} open={unlockOpen} />
-        ) : !isReady ? (
+        {!isReady ? (
           <Stack
             sx={{
               position: 'absolute',

@@ -2,13 +2,13 @@ import Circle from '@mui/icons-material/Circle';
 import { Stack, Typography, useTheme } from '@mui/material';
 import React, { useMemo } from 'react';
 
-import { RequestForAttestationStatus } from '@credential/app-db/requestForAttestation';
+import { RequestStatus } from '@credential/react-hooks/types';
 
 const CredentialStatus: React.FC<{
   role: 'attester' | 'claimer';
-  status?: RequestForAttestationStatus;
+  status?: RequestStatus;
   revoked?: boolean;
-}> = ({ role, revoked, status = RequestForAttestationStatus.INIT }) => {
+}> = ({ role, revoked, status = RequestStatus.INIT }) => {
   const theme = useTheme();
   const initText = useMemo(() => (role === 'attester' ? 'Pending' : 'Verifying'), [role]);
   const submitText = useMemo(
@@ -17,7 +17,7 @@ const CredentialStatus: React.FC<{
   );
   const rejectText = useMemo(() => (role === 'attester' ? 'Rejected' : 'Rejected'), [role]);
   const initColor = useMemo(
-    () => (role === 'attester' ? theme.palette.grey[400] : theme.palette.warning.main),
+    () => (role === 'attester' ? theme.palette.grey[600] : theme.palette.warning.main),
     [role, theme.palette.grey, theme.palette.warning.main]
   );
   const submitColor = useMemo(
@@ -45,18 +45,18 @@ const CredentialStatus: React.FC<{
         alignItems: 'center',
         direction: 'row',
         color:
-          status === RequestForAttestationStatus.SUBMIT
+          status === RequestStatus.SUBMIT
             ? submitColor
-            : status === RequestForAttestationStatus.REJECT
+            : status === RequestStatus.REJECT
             ? rejectColor
             : initColor
       })}
     >
       <Circle sx={{ width: 10, height: 10 }} />
       <Typography variant="inherit">
-        {status === RequestForAttestationStatus.SUBMIT
+        {status === RequestStatus.SUBMIT
           ? submitText
-          : status === RequestForAttestationStatus.REJECT
+          : status === RequestStatus.REJECT
           ? rejectText
           : initText}
       </Typography>

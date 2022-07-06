@@ -17,7 +17,8 @@
   "version": "0.0.0",
   "dependencies": {
     "@credential/react-components": "0.0.0",
-    "@mui/lab": "^5.0.0-alpha.83",
-    "@mui/material": "^5.8.1"
+    "@credential/react-dids": "0.0.0",
+    "@mui/lab": "^5.0.0-alpha.88",
+    "@mui/material": "^5.8.6"
   }
 }

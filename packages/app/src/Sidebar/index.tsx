@@ -7,6 +7,7 @@ import {
   ListItemButton,
   ListItemIcon,
   ListItemText,
+  Stack,
   styled,
   Theme
 } from '@mui/material';
@@ -20,6 +21,7 @@ interface Item {
   active: boolean;
   svgIcon: React.ReactNode;
   text: string;
+  extra?: React.ReactNode;
 }
 
 interface Props {
@@ -81,7 +83,7 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open }) => {
   return (
     <Drawer accountType={accountType} open={open} variant="permanent">
       <List>
-        {items.map(({ active, svgIcon, text, to }, index) => (
+        {items.map(({ active, extra, svgIcon, text, to }, index) => (
           <ListItem
             disablePadding
             key={index}
@@ -111,7 +113,12 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open }) => {
                 {svgIcon}
               </ListItemIcon>
               <ListItemText
-                primary={text}
+                primary={
+                  <Stack alignItems="center" direction="row" spacing={1}>
+                    <span>{text}</span>
+                    {extra}
+                  </Stack>
+                }
                 sx={({ palette }) => ({
                   opacity: open ? 1 : 0,
                   color:

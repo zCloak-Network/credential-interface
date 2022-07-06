@@ -4,7 +4,7 @@ import React, { useCallback, useContext, useMemo } from 'react';
 
 import { CTypeContext } from './CTypeProvider';
 
-const CTypeName: React.FC<{ cTypeHash?: string }> = ({ cTypeHash }) => {
+const CTypeName: React.FC<{ cTypeHash?: string | null }> = ({ cTypeHash }) => {
   const { cTypeList } = useContext(CTypeContext);
   const { importCType } = useContext(CTypeContext);
 

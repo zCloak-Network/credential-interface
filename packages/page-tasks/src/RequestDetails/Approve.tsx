@@ -1,93 +1,146 @@
-import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
-import { alpha } from '@mui/material';
-import React, { useCallback, useContext, useState } from 'react';
+import type { IMessage } from '@kiltprotocol/types';
 
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-import {
-  AppContext,
-  ButtonUnlock,
-  NotificationContext,
-  useAttester
-} from '@credential/react-components';
-import { useMessage } from '@credential/react-hooks';
-import { credentialApi } from '@credential/react-hooks/api';
+import type { Request } from '@credential/react-hooks/types';
+
+import { Attestation, Did, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
+import { alpha, Button } from '@mui/material';
+import React, { useCallback, useContext, useMemo, useState } from 'react';
+
+import { AppContext } from '@credential/react-components';
+import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { EncryptMessageStep, ExtrinsicStep, SendMessageStep } from '@credential/react-dids/steps';
+import { useToggle } from '@credential/react-hooks';
+import { useKeystore } from '@credential/react-keystore';
 
 const Approve: React.FC<{
-  request: RequestForAttestation;
-}> = ({ request }) => {
-  const { db } = useContext(AppContext);
-  const { attester } = useAttester();
-  const relationMessage = useMessage(db, request.messageId);
-  const { notifyError } = useContext(NotificationContext);
-  const [loading, setLoading] = useState(false);
+  request: Request;
+  messageLinked?: IMessage[];
+}> = ({ messageLinked, request }) => {
+  const [open, toggleOpen] = useToggle();
+  const { didUri } = useContext(DidsContext);
+  const attester = useDidDetails(didUri);
+  const { keyring } = useKeystore();
+  const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const { parseMessageBody } = useContext(AppContext);
 
-  const approve = useCallback(async () => {
-    try {
-      setLoading(true);
+  const attestation = useMemo(
+    () => (didUri ? Attestation.fromRequestAndDid(request, didUri) : null),
+    [didUri, request]
+  );
 
-      if (!attester.isFullDid) {
-        throw new Error("You don't has full did details.");
-      }
-
-      if (!relationMessage) {
-        throw new Error('Can not found parent message.');
-      }
-
-      const claimer = Did.LightDidDetails.fromUri(relationMessage.sender);
-
-      if (!claimer.encryptionKey?.id) {
-        throw new Error("Claimer has't encryption key");
-      }
-
-      const attestation = Attestation.fromRequestAndDid(request, attester.didDetails.uri);
-
-      const message = new Message(
-        {
-          content: { attestation },
-          type: Message.BodyType.SUBMIT_ATTESTATION
-        },
-        attester.didDetails.uri,
-        claimer.uri
-      );
-
-      message.inReplyTo = relationMessage.messageId;
-      const encrypted = await attester.encryptMessage(message, claimer);
-
-      if (!(await attestation.checkValidity())) {
-        await attester.attestClaim(request);
-      }
-
-      await credentialApi.addMessage({
-        receiverKeyId: encrypted.receiverKeyUri,
-        senderKeyId: encrypted.senderKeyUri,
-        nonce: encrypted.nonce,
-        ciphertext: encrypted.ciphertext
-      });
-
-      await db.message.add({ ...message, deal: 0 });
-    } catch (error) {
-      notifyError(error);
-    } finally {
-      setLoading(false);
+  const getExtrinsic = useCallback(async () => {
+    if (!attestation) {
+      throw new Error('no attestation found');
     }
-  }, [attester, db.message, notifyError, relationMessage, request]);
+
+    if (!(attester instanceof Did.FullDidDetails)) {
+      throw new Error('The DID with the given identifier is not on chain.');
+    }
+
+    const tx = await attestation.getStoreTx();
+    const extrinsic = await attester.authorizeExtrinsic(tx, keyring, attester.identifier);
+
+    return extrinsic;
+  }, [attestation, attester, keyring]);
+
+  const message = useMemo(() => {
+    if (!didUri) {
+      return null;
+    }
+
+    if (!attestation) {
+      return null;
+    }
+
+    const message = new Message(
+      {
+        content: { attestation },
+        type: Message.BodyType.SUBMIT_ATTESTATION
+      },
+      didUri,
+      request.claim.owner
+    );
+
+    message.references = messageLinked?.map((message) => message.messageId);
+
+    return message;
+  }, [attestation, didUri, messageLinked, request.claim.owner]);
+
+  const claimer = useDidDetails(request.claim.owner);
+
+  const onDone = useCallback(() => {
+    parseMessageBody();
+    toggleOpen();
+  }, [parseMessageBody, toggleOpen]);
 
   return (
-    <ButtonUnlock
-      loading={loading}
-      onClick={approve}
-      sx={({ palette }) => ({
-        background: alpha(palette.success.main, 0.1),
-        borderColor: palette.success.main,
-        color: palette.success.main,
-        ':hover': {
-          borderColor: palette.success.main
-        }
-      })}
-      variant="outlined"
-    >
-      Approve
-    </ButtonUnlock>
+    <>
+      <Button
+        onClick={toggleOpen}
+        sx={({ palette }) => ({
+          background: alpha(palette.success.main, 0.1),
+          borderColor: palette.success.main,
+          color: palette.success.main,
+          ':hover': {
+            borderColor: palette.success.main
+          }
+        })}
+        variant="outlined"
+      >
+        Approve
+      </Button>
+      <DidsModal
+        onClose={toggleOpen}
+        onDone={onDone}
+        open={open}
+        steps={(prevStep, nextStep, reportError, reportStatus) => [
+          {
+            label: 'Sign and submit attestation',
+            content: (
+              <ExtrinsicStep
+                getExtrinsic={getExtrinsic}
+                isFirst
+                nextStep={nextStep}
+                prevStep={prevStep}
+                reportError={reportError}
+                reportStatus={reportStatus}
+                sender={attester?.authenticationKey.publicKey}
+              />
+            )
+          },
+          {
+            label: 'Encrypt message',
+            content: (
+              <EncryptMessageStep
+                handleEncrypted={setEncryptedMessage}
+                message={message}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                receiver={claimer}
+                reportError={reportError}
+                reportStatus={reportStatus}
+                sender={attester}
+              />
+            )
+          },
+          {
+            label: 'Send and save message',
+            content: (
+              <SendMessageStep
+                encryptedMessage={encryptedMessage}
+                isLast
+                message={message}
+                nextStep={nextStep}
+                prevStep={prevStep}
+                reportError={reportError}
+                reportStatus={reportStatus}
+              />
+            )
+          }
+        ]}
+        title="Approve the request"
+      />
+    </>
   );
 };
 
