@@ -4,6 +4,7 @@ import React from 'react';
 import { LogoCircleIcon } from '@credential/app-config/icons';
 import { ICTypeMetadata } from '@credential/react-components/CTypeProvider/types';
 import { ellipsisMixin } from '@credential/react-components/utils';
+import { DidName } from '@credential/react-dids';
 
 import CreateCType from './CreateCType';
 
@@ -44,7 +45,7 @@ const CTypes: React.FC<{ list: ICTypeMetadata[] }> = ({ list }) => {
                 Attested by
               </Typography>
               <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
-                {cType.owner}
+                <DidName shorten={false} value={cType.owner} />
               </Typography>
             </Stack>
             <Stack spacing={0.5} width="40%">

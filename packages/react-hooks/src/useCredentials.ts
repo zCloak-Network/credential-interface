@@ -1,8 +1,7 @@
-import type { DidUri } from '@kiltprotocol/types';
+import type { DidUri, ISubmitAttestation } from '@kiltprotocol/types';
+import type { Attestation, Request } from './types';
 
-import type { Attestation } from '@credential/app-db/attestation/Attestation';
-import type { RequestForAttestation } from '@credential/app-db/requestForAttestation';
-
+import { MessageBodyType } from '@kiltprotocol/sdk-js';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useCallback } from 'react';
 
@@ -17,22 +16,37 @@ export function useCredentials(db: CredentialData, owner?: DidUri) {
   const getCredential = useCallback(async () => {
     if (!requests) return [];
 
-    const attestations = await Promise.all(
-      (requests ?? []).map((request) =>
-        db.attestation.get({
-          claimHash: request.rootHash
-        })
+    const messages = await Promise.all(
+      requests.map((request) =>
+        db.message
+          .orderBy('createdAt')
+          .reverse()
+          .filter(
+            (message) =>
+              message.body.type === MessageBodyType.SUBMIT_ATTESTATION &&
+              message.body.content.attestation.claimHash === request.rootHash
+          )
+          .first()
       )
     );
 
-    const credentials: { attestation?: Attestation; request: RequestForAttestation }[] =
-      attestations.map((attestation, index) => ({
+    const credentials: { attestation?: Attestation; request: Request }[] = messages.map(
+      (message, index) => ({
         request: requests[index],
-        attestation
-      }));
+        attestation: message
+          ? {
+              ...(message.body as ISubmitAttestation).content.attestation,
+              messageId: message.messageId,
+              createdAt: message.createdAt,
+              receivedAt: message.receivedAt,
+              isRead: !!message.isRead
+            }
+          : undefined
+      })
+    );
 
     return credentials;
-  }, [db.attestation, requests]);
+  }, [db.message, requests]);
 
   const data = useLiveQuery(async () => {
     return getCredential();

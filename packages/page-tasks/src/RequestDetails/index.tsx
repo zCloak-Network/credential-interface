@@ -1,9 +1,9 @@
+import type { Attestation, Request } from '@credential/react-hooks/types';
+
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import React from 'react';
 
 import { credentialDb } from '@credential/app-db';
-import { Attestation } from '@credential/app-db/attestation/Attestation';
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
 import { DialogHeader } from '@credential/react-components';
 import { useRequestMessages } from '@credential/react-hooks';
 
@@ -11,7 +11,7 @@ import ClaimInfo from './ClaimInfo';
 import Details from './Details';
 
 const RequestDetails: React.FC<{
-  request: RequestForAttestation;
+  request: Request;
   attestation?: Attestation;
   open: boolean;
   onClose?: () => void;

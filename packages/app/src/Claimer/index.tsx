@@ -48,7 +48,7 @@ const Claimer: React.FC = () => {
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
-      <Header account={didDetails?.identifier} open={open} toggleOpen={toggleOpen} />
+      <Header did={didDetails?.uri} open={open} toggleOpen={toggleOpen} />
       <Sidebar accountType="claimer" items={items} open={open} />
       <Box
         minHeight="100vh"

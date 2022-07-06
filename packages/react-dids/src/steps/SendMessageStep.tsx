@@ -32,7 +32,7 @@ const SendMessage: React.FC<Props> = ({
       assert(encryptedMessage, 'Not encrypted message found');
       assert(message, 'Not message found');
 
-      await credentialDb.message.add({ ...message, deal: 0 });
+      await credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
       await credentialApi.addMessage({
         receiverKeyId: encryptedMessage.receiverKeyUri,
         senderKeyId: encryptedMessage.senderKeyUri,

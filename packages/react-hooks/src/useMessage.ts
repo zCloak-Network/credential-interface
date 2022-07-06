@@ -40,27 +40,31 @@ export function useRequestMessages(db: CredentialData, rootHash: string) {
 
 export function useMessages(
   db: CredentialData,
-  filter?: { sender?: DidUri; receiver?: DidUri; bodyTypes: MessageBodyType[] }
+  filter?: { sender?: DidUri; receiver?: DidUri; bodyTypes?: MessageBodyType[] }
 ) {
   const getMessages = useCallback(async () => {
+    if (!filter) return [];
+
     const wheres: Partial<Pick<Message, 'sender' | 'receiver'>> = {};
 
-    if (filter?.sender) {
+    if (filter.sender) {
       wheres.sender = filter.sender;
     }
 
-    if (filter?.receiver) {
+    if (filter.receiver) {
       wheres.receiver = filter.receiver;
     }
 
     return db.message
       .where(wheres)
       .filter((message) => {
-        if (filter?.bodyTypes) {
-          return filter.bodyTypes.includes(message.body.type);
+        let flag = true;
+
+        if (filter.bodyTypes) {
+          flag = flag && filter.bodyTypes.includes(message.body.type);
         }
 
-        return true;
+        return flag;
       })
       .sortBy('createdAt', (messages) => messages.reverse());
   }, [db, filter]);

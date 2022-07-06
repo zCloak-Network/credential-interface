@@ -47,8 +47,6 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
     toggleOpen();
   }, [parseMessageBody, toggleOpen]);
 
-  console.log(receiver);
-
   return (
     <>
       <Tooltip title="Share to other">

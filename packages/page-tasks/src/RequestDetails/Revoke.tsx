@@ -1,10 +1,11 @@
 import type { IAttestation, IEncryptedMessage, IMessage } from '@kiltprotocol/types';
 
+import type { Request } from '@credential/react-hooks/types';
+
 import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
 import { alpha, Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { RequestForAttestation } from '@credential/app-db/requestForAttestation';
 import { AppContext } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, ExtrinsicStep, SendMessageStep } from '@credential/react-dids/steps';
@@ -12,7 +13,7 @@ import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 const Revoke: React.FC<{
-  request: RequestForAttestation;
+  request: Request;
   attestation: IAttestation;
   messageLinked?: IMessage[];
 }> = ({ attestation: _attestation, messageLinked, request }) => {

@@ -9,7 +9,7 @@ import {
   InputLabel,
   OutlinedInput
 } from '@mui/material';
-import React, { useEffect, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 function validateDidUri(uri: string): uri is DidUri {
   try {
@@ -53,6 +53,20 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
     onChange?.(didDetails);
   }, [didDetails, onChange]);
 
+  const fetchDid = useCallback((didUri: DidUri) => {
+    return Did.FullDidDetails.fromChainInfo(didUri).then((didDetails) => {
+      setDidDetails(didDetails);
+
+      if (!didDetails) {
+        setWarn(new Error("Can't found full did on chain, please make sure it is trusted"));
+      } else if (!didDetails.encryptionKey) {
+        setWarn(new Error('Input did does not set encryptionKey, you cannot send message to it'));
+      } else {
+        setWarn(null);
+      }
+    });
+  }, []);
+
   useEffect(() => {
     if (!didOrAddress) return;
 
@@ -60,27 +74,26 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
 
     if (uri) {
       setError(null);
-
       setFetching(true);
-      Did.FullDidDetails.fromChainInfo(uri)
-        .then((didDetails) => {
-          setDidDetails(didDetails);
+      fetchDid(uri).finally(() => setFetching(false));
+    } else {
+      setFetching(true);
+      Did.Web3Names.queryDidForWeb3Name(didOrAddress)
+        .then((did) => {
+          if (did) {
+            setError(null);
 
-          if (!didDetails) {
-            setWarn(new Error("Can't found full did on chain, please make sure it is trusted"));
-          } else if (!didDetails.encryptionKey) {
-            setWarn(
-              new Error('Input did does not set encryptionKey, you cannot send message to it')
-            );
+            return fetchDid(did);
           } else {
-            setWarn(null);
+            throw new Error("Can't found web3Name on chain");
           }
         })
+        .catch((error: Error) => {
+          setError(error);
+        })
         .finally(() => setFetching(false));
-    } else {
-      setError(new Error('Input is not a validate didUri or address'));
     }
-  }, [didOrAddress]);
+  }, [didOrAddress, fetchDid]);
 
   return (
     <FormControl
@@ -90,7 +103,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
       fullWidth
       variant="outlined"
     >
-      <InputLabel>Receipt address</InputLabel>
+      <InputLabel>Receiver</InputLabel>
       <OutlinedInput
         {...props}
         defaultValue={didOrAddress}
@@ -102,7 +115,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
           ) : null
         }
         onChange={(e) => setDidOrAddress(e.target.value)}
-        placeholder="Please input did"
+        placeholder="Did or address or web3Name"
       />
       {error ? (
         <FormHelperText>{error.message}</FormHelperText>

@@ -1,19 +1,14 @@
-import type { Attestation } from '@credential/app-db/attestation/Attestation';
-
 import { CType } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
 import { credentialDb } from '@credential/app-db';
-import {
-  RequestForAttestation,
-  RequestForAttestationStatus
-} from '@credential/app-db/requestForAttestation';
 import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useRequestMessages, useToggle } from '@credential/react-hooks';
+import { Attestation, Request, RequestStatus } from '@credential/react-hooks/types';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -93,7 +88,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: Attestation }> = ({
+const CredentialCell: React.FC<{ request: Request; attestation?: Attestation }> = ({
   attestation,
   request
 }) => {
@@ -122,11 +117,11 @@ const CredentialCell: React.FC<{ request: RequestForAttestation; attestation?: A
             borderTopRightRadius: 4,
             borderBottomRightRadius: 4,
             background:
-              request.status === RequestForAttestationStatus.SUBMIT
+              request.status === RequestStatus.SUBMIT
                 ? attestation?.revoked
                   ? palette.error.main
                   : palette.success.main
-                : request.status === RequestForAttestationStatus.REJECT
+                : request.status === RequestStatus.REJECT
                 ? palette.error.main
                 : palette.warning.main
           })}
