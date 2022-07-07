@@ -25,6 +25,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
   const { addKeystore, keyring, queueUnlock, restoreKeystore, setQueueUnlock } = useKeystore();
   const [didUri, setDidUri] = useLocalStorage<DidUri>(storageKey);
+  const [isLocked, setIsLocked] = useState(true);
 
   const generateDid = useCallback(
     async (mnemonic: string, password: string, didRole: DidRole): Promise<DidKeys$Json> => {
@@ -103,16 +104,24 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       isReady,
       blockchain,
       didUri,
+      isLocked,
       generateDid,
       restoreDid
     }),
-    [didUri, generateDid, isReady, restoreDid]
+    [didUri, generateDid, isLocked, isReady, restoreDid]
   );
+
+  useEffect(() => {
+    if (!isLocked && queueUnlock.length > 0) {
+      queueUnlock.forEach((queue) => queue.callback(null));
+      setQueueUnlock([]);
+    }
+  }, [isLocked, queueUnlock, setQueueUnlock]);
 
   return (
     <DidsContext.Provider value={value}>
       {children}
-      {queueUnlock.length > 0 && (
+      {isLocked && queueUnlock.length > 0 && (
         <UnlockModal
           did={didUri}
           onClose={() => {
@@ -122,6 +131,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           onUnlock={() => {
             setQueueUnlock(queueUnlock.slice(1));
             queueUnlock[0].callback(null);
+            setIsLocked(false);
           }}
           open
         />

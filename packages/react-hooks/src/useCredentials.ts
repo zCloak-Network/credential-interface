@@ -1,11 +1,11 @@
 import type { DidUri } from '@kiltprotocol/types';
-import type { Request } from './types';
 
 import { Attestation } from '@kiltprotocol/sdk-js';
 import { useMemo } from 'react';
 
 import { CredentialData } from '@credential/app-db';
 
+import { Request, RequestStatus } from './types';
 import { useAttestationBatch } from './useAttestation';
 import { useRequestForAttestation } from './useRequestForAttestation';
 
@@ -21,7 +21,10 @@ export function useCredentials(
   return useMemo(() => {
     if (requests && attestations && requests.length === attestations.length) {
       return requests.map((request, index) => ({
-        request,
+        request: {
+          ...request,
+          status: attestations[index] ? RequestStatus.SUBMIT : request.status
+        },
         attestation: attestations[index]
       }));
     } else {

@@ -21,7 +21,7 @@ export type ACCOUNT_TYPE = 'attester' | 'claimer';
 
 let queueCallback: (input: QueueCallbackInput) => void;
 
-function unlock(): Promise<void> {
+export function unlock(): Promise<void> {
   return new Promise((resolve, reject) => {
     queueCallback({
       callback: (error: Error | null) => {

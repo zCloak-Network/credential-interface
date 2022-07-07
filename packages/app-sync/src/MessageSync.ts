@@ -9,7 +9,6 @@ import {
 } from '@kiltprotocol/sdk-js';
 
 import { CredentialData } from '@credential/app-db';
-import { Message as MessageDb } from '@credential/app-db/message';
 
 import { IDataSource } from './type';
 
@@ -67,20 +66,21 @@ export class MessageSync {
   }
 
   public async parse(keystore: Pick<NaclBoxCapable, 'decrypt'>, receiverDetails: Did.DidDetails) {
-    const messages: MessageDb[] = [];
+    const promises: Promise<void>[] = [];
 
     for (const [key, encrypted] of this.encryptMessages) {
-      const message = await Message.decrypt(encrypted, keystore, receiverDetails);
-
-      messages.push({
-        ...message,
-        syncId: key,
-        deal: 0
-      });
-
-      this.encryptMessages.delete(key);
+      promises.push(
+        Message.decrypt(encrypted, keystore, receiverDetails).then(async (message) => {
+          await this.db.message.add({
+            ...message,
+            syncId: key,
+            deal: 0
+          });
+          this.encryptMessages.delete(key);
+        })
+      );
     }
 
-    await this.db.message.bulkAdd(messages);
+    await Promise.all(promises);
   }
 }

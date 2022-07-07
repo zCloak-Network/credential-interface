@@ -46,9 +46,7 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
   }: KeystoreSigningData<A>): Promise<ResponseData<A>> {
     const pair = this.getPair(publicKey);
 
-    if (pair.isLocked) {
-      await this.#unlock();
-    }
+    await this.#unlock();
 
     const signature = pair.sign(data, { withType: false });
 
@@ -65,9 +63,7 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
   > {
     const pair = this.getPair(publicKey);
 
-    if (pair.isLocked) {
-      await this.#unlock();
-    }
+    await this.#unlock();
 
     const nonce = randomAsU8a(24);
     const sealed = pair.encryptMessage(data, peerPublicKey, nonce);
@@ -88,9 +84,7 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
     assert(nonce.length === 24, 'Nonce length error, expect to 24');
     const pair = this.getPair(publicKey);
 
-    if (pair.isLocked) {
-      await this.#unlock();
-    }
+    await this.#unlock();
 
     const decrypted = pair.decryptMessage(data, peerPublicKey);
 
