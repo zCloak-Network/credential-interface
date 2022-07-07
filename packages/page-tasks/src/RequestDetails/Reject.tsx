@@ -6,7 +6,7 @@ import { Message } from '@kiltprotocol/sdk-js';
 import { alpha, Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { AppContext } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -19,7 +19,6 @@ const Reject: React.FC<{
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
-  const { parseMessageBody } = useContext(AppContext);
 
   const message = useMemo(() => {
     if (!didUri) {
@@ -42,9 +41,12 @@ const Reject: React.FC<{
   const claimer = useDidDetails(request.claim.owner);
 
   const onDone = useCallback(() => {
-    parseMessageBody();
+    if (message) {
+      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+    }
+
     toggleOpen();
-  }, [parseMessageBody, toggleOpen]);
+  }, [message, toggleOpen]);
 
   return (
     <>
@@ -63,14 +65,16 @@ const Reject: React.FC<{
         Reject
       </Button>
       <DidsModal
+        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus) => [
+        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
           {
             label: 'Encrypt message',
             content: (
               <EncryptMessageStep
+                execFunc={execFunc}
                 handleEncrypted={setEncryptedMessage}
                 message={message}
                 nextStep={nextStep}
@@ -79,20 +83,23 @@ const Reject: React.FC<{
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester}
+                step={0}
               />
             )
           },
           {
-            label: 'Send and save message',
+            label: 'Send message',
             content: (
               <SendMessageStep
                 encryptedMessage={encryptedMessage}
+                execFunc={execFunc}
                 isLast
                 message={message}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                step={1}
               />
             )
           }

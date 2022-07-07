@@ -1,7 +1,7 @@
 import { BlockchainUtils, SubmittableExtrinsic } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useKeystore } from '@credential/react-keystore';
 
@@ -13,13 +13,15 @@ interface Props extends DidsStepProps {
 }
 
 const ExtrinsicStep: React.FC<Props> = ({
+  execFunc,
   getExtrinsic,
   isFirst,
   nextStep,
   prevStep,
   reportError,
   reportStatus,
-  sender
+  sender,
+  step
 }) => {
   const { keyring } = useKeystore();
   const [disabled, setDisabled] = useState(false);
@@ -56,6 +58,10 @@ const ExtrinsicStep: React.FC<Props> = ({
       setDisabled(false);
     }
   }, [getExtrinsic, keyring, nextStep, reportError, reportStatus, sender]);
+
+  useEffect(() => {
+    execFunc(step, handleNext);
+  }, [execFunc, handleNext, step]);
 
   return (
     <Stack spacing={3}>

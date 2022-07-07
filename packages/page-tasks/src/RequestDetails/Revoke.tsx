@@ -6,7 +6,7 @@ import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
 import { alpha, Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { AppContext } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, ExtrinsicStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -22,7 +22,6 @@ const Revoke: React.FC<{
   const attester = useDidDetails(didUri);
   const { keyring } = useKeystore();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
-  const { parseMessageBody } = useContext(AppContext);
 
   const attestation = useMemo(() => {
     if (didUri) {
@@ -45,7 +44,7 @@ const Revoke: React.FC<{
       throw new Error('The DID with the given identifier is not on chain.');
     }
 
-    const tx = await attestation.getStoreTx();
+    const tx = await attestation.getRevokeTx(0);
     const extrinsic = await attester.authorizeExtrinsic(tx, keyring, attester.identifier);
 
     return extrinsic;
@@ -77,9 +76,12 @@ const Revoke: React.FC<{
   const claimer = useDidDetails(request.claim.owner);
 
   const onDone = useCallback(() => {
-    parseMessageBody();
+    if (message) {
+      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+    }
+
     toggleOpen();
-  }, [parseMessageBody, toggleOpen]);
+  }, [message, toggleOpen]);
 
   return (
     <>
@@ -98,14 +100,16 @@ const Revoke: React.FC<{
         Revoke
       </Button>
       <DidsModal
+        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus) => [
+        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
           {
             label: 'Sign and submit attestation',
             content: (
               <ExtrinsicStep
+                execFunc={execFunc}
                 getExtrinsic={getExtrinsic}
                 isFirst
                 nextStep={nextStep}
@@ -113,6 +117,7 @@ const Revoke: React.FC<{
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester?.authenticationKey.publicKey}
+                step={0}
               />
             )
           },
@@ -120,6 +125,7 @@ const Revoke: React.FC<{
             label: 'Encrypt message',
             content: (
               <EncryptMessageStep
+                execFunc={execFunc}
                 handleEncrypted={setEncryptedMessage}
                 message={message}
                 nextStep={nextStep}
@@ -128,20 +134,23 @@ const Revoke: React.FC<{
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester}
+                step={1}
               />
             )
           },
           {
-            label: 'Send and save message',
+            label: 'Send message',
             content: (
               <SendMessageStep
                 encryptedMessage={encryptedMessage}
+                execFunc={execFunc}
                 isLast
                 message={message}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                step={2}
               />
             )
           }

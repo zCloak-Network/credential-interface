@@ -82,17 +82,5 @@ export class MessageSync {
     }
 
     await this.db.message.bulkAdd(messages);
-
-    await this.parseMessageBody();
-  }
-
-  public async parseMessageBody(): Promise<void> {
-    const messages = await this.db.message.where('deal').equals(0).sortBy('createdAt');
-
-    for (const message of messages) {
-      await this.db.transaction('rw', this.db.message, () => {
-        return this.db.message.update(message.id!, { deal: 1 });
-      });
-    }
   }
 }

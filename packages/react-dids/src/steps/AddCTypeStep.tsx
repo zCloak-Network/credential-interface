@@ -1,7 +1,7 @@
 import { CType, DidUri } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { credentialApi } from '@credential/react-hooks/api';
 
@@ -14,12 +14,14 @@ interface Props extends DidsStepProps {
 
 const AddCTypeStep: React.FC<Props> = ({
   ctype,
+  execFunc,
   isFirst,
   nextStep,
   prevStep,
   reportError,
   reportStatus,
-  sender
+  sender,
+  step
 }) => {
   const [disabled, setDisabled] = useState(false);
 
@@ -44,6 +46,10 @@ const AddCTypeStep: React.FC<Props> = ({
       setDisabled(false);
     }
   }, [ctype, nextStep, reportError, reportStatus, sender]);
+
+  useEffect(() => {
+    execFunc(step, handleNext);
+  }, [execFunc, handleNext, step]);
 
   return (
     <Stack spacing={3}>
