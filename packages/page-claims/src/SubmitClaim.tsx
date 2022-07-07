@@ -8,7 +8,7 @@ import {
 import { Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { AppContext } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import {
   EncryptMessageStep,
@@ -28,7 +28,6 @@ const SubmitClaim: React.FC<{
   const sender = useDidDetails(didUri);
   const [request, setRequest] = useState<RequestForAttestation>();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
-  const { parseMessageBody } = useContext(AppContext);
 
   const message = useMemo(
     () =>
@@ -46,9 +45,12 @@ const SubmitClaim: React.FC<{
   );
 
   const _onDone = useCallback(() => {
-    parseMessageBody();
+    if (message) {
+      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+    }
+
     onDone?.();
-  }, [onDone, parseMessageBody]);
+  }, [message, onDone]);
 
   return (
     <>
@@ -56,16 +58,18 @@ const SubmitClaim: React.FC<{
         Submit
       </Button>
       <DidsModal
+        autoExec
         onClose={toggleOpen}
         onDone={_onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus) => [
+        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
           {
             label: 'Request for attestation and sign',
             content: (
               <RequestAttestationStep
                 contents={contents as Record<string, any>}
                 ctype={ctype}
+                execFunc={execFunc}
                 handleRequest={setRequest}
                 isFirst
                 nextStep={nextStep}
@@ -73,6 +77,7 @@ const SubmitClaim: React.FC<{
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={sender}
+                step={0}
               />
             )
           },
@@ -80,6 +85,7 @@ const SubmitClaim: React.FC<{
             label: 'Encrypt message',
             content: (
               <EncryptMessageStep
+                execFunc={execFunc}
                 handleEncrypted={setEncryptedMessage}
                 message={message}
                 nextStep={nextStep}
@@ -88,25 +94,28 @@ const SubmitClaim: React.FC<{
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={sender}
+                step={1}
               />
             )
           },
           {
-            label: 'Send and save message',
+            label: 'Send message',
             content: (
               <SendMessageStep
                 encryptedMessage={encryptedMessage}
+                execFunc={execFunc}
                 isLast
                 message={message}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                step={2}
               />
             )
           }
         ]}
-        title="Share this with others"
+        title="Submit claim"
       />
     </>
   );

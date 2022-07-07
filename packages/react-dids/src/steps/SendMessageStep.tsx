@@ -1,9 +1,8 @@
 import { IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
-import { credentialDb } from '@credential/app-db';
 import { credentialApi } from '@credential/react-hooks/api';
 
 import { DidsStepProps } from './types';
@@ -15,12 +14,14 @@ interface Props extends DidsStepProps {
 
 const SendMessage: React.FC<Props> = ({
   encryptedMessage,
+  execFunc,
   isFirst,
   message,
   nextStep,
   prevStep,
   reportError,
-  reportStatus
+  reportStatus,
+  step
 }) => {
   const [disabled, setDisabled] = useState(false);
 
@@ -32,7 +33,6 @@ const SendMessage: React.FC<Props> = ({
       assert(encryptedMessage, 'Not encrypted message found');
       assert(message, 'Not message found');
 
-      await credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
       await credentialApi.addMessage({
         receiverKeyId: encryptedMessage.receiverKeyUri,
         senderKeyId: encryptedMessage.senderKeyUri,
@@ -47,6 +47,10 @@ const SendMessage: React.FC<Props> = ({
       setDisabled(false);
     }
   }, [encryptedMessage, message, nextStep, reportError, reportStatus]);
+
+  useEffect(() => {
+    execFunc(step, handleNext);
+  }, [execFunc, handleNext, step]);
 
   return (
     <Stack spacing={3}>

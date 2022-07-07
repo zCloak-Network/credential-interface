@@ -3,7 +3,7 @@ import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { IconForward } from '@credential/app-config/icons';
-import { AppContext } from '@credential/react-components';
+import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { EncryptMessageStep, InputDidStep, SendMessageStep } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -17,7 +17,6 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
   const [receiver, setReceiver] = useState<Did.FullDidDetails | null>(null);
   const sender = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
-  const { parseMessageBody } = useContext(AppContext);
 
   const _toggleOpen: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
@@ -43,9 +42,12 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
   );
 
   const onDone = useCallback(() => {
-    parseMessageBody();
+    if (message) {
+      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+    }
+
     toggleOpen();
-  }, [parseMessageBody, toggleOpen]);
+  }, [message, toggleOpen]);
 
   return (
     <>
@@ -62,20 +64,23 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
         </Stack>
       </Tooltip>
       <DidsModal
+        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus) => [
+        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
           {
             label: 'Input receiver',
             content: (
               <InputDidStep
+                execFunc={execFunc}
                 isFirst
                 nextStep={nextStep}
                 onChange={setReceiver}
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                step={0}
               />
             )
           },
@@ -83,6 +88,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
             label: 'Encrypt message',
             content: (
               <EncryptMessageStep
+                execFunc={execFunc}
                 handleEncrypted={setEncryptedMessage}
                 message={message}
                 nextStep={nextStep}
@@ -91,20 +97,23 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={sender}
+                step={1}
               />
             )
           },
           {
-            label: 'Send and save message',
+            label: 'Send message',
             content: (
               <SendMessageStep
                 encryptedMessage={encryptedMessage}
+                execFunc={execFunc}
                 isLast
                 message={message}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
+                step={2}
               />
             )
           }

@@ -43,7 +43,7 @@ const ClaimInfo: React.FC<{
             {request.status === RequestStatus.INIT && (
               <Reject messageLinked={messageLinked} request={request} />
             )}
-            {request.status === RequestStatus.SUBMIT && attestation && (
+            {request.status === RequestStatus.SUBMIT && attestation && !attestation.revoked && (
               <Revoke attestation={attestation} messageLinked={messageLinked} request={request} />
             )}
           </Stack>

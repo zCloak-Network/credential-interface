@@ -6,11 +6,11 @@ import { IDataSource } from '@credential/app-sync/type';
 import { DidsContext, useDidDetails } from '@credential/react-dids';
 import { credentialApi } from '@credential/react-hooks/api';
 import { useKeystore } from '@credential/react-keystore';
+import { unlock } from '@credential/react-keystore/KeystoreProvider';
 
 interface State {
   unParsed: number;
   parse: () => Promise<void>;
-  parseMessageBody: () => Promise<void>;
 }
 
 export const AppContext = createContext({} as State);
@@ -46,7 +46,7 @@ async function syncMessage(onDone: (count: number) => void) {
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { keyring } = useKeystore();
-  const { didUri } = useContext(DidsContext);
+  const { didUri, isLocked } = useContext(DidsContext);
   const didDetails = useDidDetails(didUri);
   const [unParsed, setUnParsed] = useState(0);
 
@@ -66,20 +66,13 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
   const parse = useCallback(async () => {
     if (didDetails && messageSync) {
+      isLocked && (await unlock());
       await messageSync.parse(keyring, didDetails);
       setUnParsed(messageSync.encryptMessages.size);
     }
-  }, [didDetails, keyring]);
+  }, [didDetails, isLocked, keyring]);
 
-  const parseMessageBody = useCallback(async () => {
-    await messageSync?.parseMessageBody();
-  }, []);
-
-  return (
-    <AppContext.Provider value={{ unParsed, parse, parseMessageBody }}>
-      {children}
-    </AppContext.Provider>
-  );
+  return <AppContext.Provider value={{ unParsed, parse }}>{children}</AppContext.Provider>;
 };
 
 export default AppProvider;

@@ -1,7 +1,7 @@
 import { Did, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useKeystore } from '@credential/react-keystore';
 
@@ -15,6 +15,7 @@ interface Props extends DidsStepProps {
 }
 
 const EncryptMessageStep: React.FC<Props> = ({
+  execFunc,
   handleEncrypted,
   isFirst,
   message,
@@ -23,7 +24,8 @@ const EncryptMessageStep: React.FC<Props> = ({
   receiver,
   reportError,
   reportStatus,
-  sender
+  sender,
+  step
 }) => {
   const { keyring } = useKeystore();
   const [disabled, setDisabled] = useState(false);
@@ -55,6 +57,10 @@ const EncryptMessageStep: React.FC<Props> = ({
       setDisabled(false);
     }
   }, [handleEncrypted, keyring, message, nextStep, receiver, reportError, reportStatus, sender]);
+
+  useEffect(() => {
+    execFunc(step, handleNext);
+  }, [execFunc, handleNext, step]);
 
   return (
     <Stack spacing={3}>

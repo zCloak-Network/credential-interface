@@ -1,7 +1,7 @@
 import { Claim, CType, Did, IClaimContents, RequestForAttestation } from '@kiltprotocol/sdk-js';
 import { Button, Stack } from '@mui/material';
 import { assert } from '@polkadot/util';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useEffect, useState } from 'react';
 
 import { useKeystore } from '@credential/react-keystore';
 
@@ -17,13 +17,15 @@ interface Props extends DidsStepProps {
 const RequestAttestationStep: React.FC<Props> = ({
   contents,
   ctype,
+  execFunc,
   handleRequest,
   isFirst,
   nextStep,
   prevStep,
   reportError,
   reportStatus,
-  sender
+  sender,
+  step
 }) => {
   const { keyring } = useKeystore();
   const [disabled, setDisabled] = useState(false);
@@ -54,6 +56,10 @@ const RequestAttestationStep: React.FC<Props> = ({
       setDisabled(false);
     }
   }, [contents, ctype, handleRequest, keyring, nextStep, reportError, reportStatus, sender]);
+
+  useEffect(() => {
+    execFunc(step, handleNext);
+  }, [execFunc, handleNext, step]);
 
   return (
     <Stack spacing={3}>

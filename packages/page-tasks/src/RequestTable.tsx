@@ -35,8 +35,8 @@ const RequestTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list?.map(({ attestation, request }) => (
-            <TableRow key={request.rootHash}>
+          {list?.map(({ attestation, request }, index) => (
+            <TableRow key={index}>
               <TableCell>
                 <Box sx={{ width: 200, ...ellipsisMixin() }}>
                   <DidName value={request.claim.owner} />

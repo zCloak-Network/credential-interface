@@ -16,7 +16,7 @@ const Claims: React.FC = () => {
   const list = useMemo(() => {
     return type === 0
       ? credentials ?? []
-      : credentials?.filter(({ attestation }) => !!attestation) ?? [];
+      : credentials?.filter(({ attestation }) => !!attestation && !attestation.revoked) ?? [];
   }, [credentials, type]);
 
   return (

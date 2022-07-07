@@ -51,14 +51,16 @@ const SubmitCType: React.FC<{
         Submit
       </Button>
       <DidsModal
+        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus) => [
+        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
           {
             label: 'Sign and submit ctype',
             content: (
               <ExtrinsicStep
+                execFunc={execFunc}
                 getExtrinsic={getExtrinsic}
                 isFirst
                 nextStep={nextStep}
@@ -66,6 +68,7 @@ const SubmitCType: React.FC<{
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester?.authenticationKey.publicKey}
+                step={0}
               />
             )
           },
@@ -74,11 +77,13 @@ const SubmitCType: React.FC<{
             content: (
               <AddCTypeStep
                 ctype={ctype}
+                execFunc={execFunc}
                 nextStep={nextStep}
                 prevStep={prevStep}
                 reportError={reportError}
                 reportStatus={reportStatus}
                 sender={attester?.uri}
+                step={1}
               />
             )
           }

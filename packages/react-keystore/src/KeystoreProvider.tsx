@@ -5,11 +5,12 @@ import React, { createContext, useCallback, useContext, useEffect, useState } fr
 
 import { Keyring } from './Keyring';
 import { QueueCallbackInput } from './types';
-import UnlockModal from './UnlockModal';
 
 interface KeystoreState {
   keyring: Keyring;
   allAccounts: KeyringAddress[];
+  queueUnlock: QueueCallbackInput[];
+  setQueueUnlock: (queue: QueueCallbackInput[]) => void;
   addKeystore: (mnemonic: string, password: string) => Promise<KeyringPairs$Json>;
   restoreKeystore: (json: EncryptedJson, password: string) => void;
 }
@@ -20,10 +21,9 @@ export type ACCOUNT_TYPE = 'attester' | 'claimer';
 
 let queueCallback: (input: QueueCallbackInput) => void;
 
-function unlock(publicKey: Uint8Array): Promise<void> {
+export function unlock(): Promise<void> {
   return new Promise((resolve, reject) => {
     queueCallback({
-      publicKey,
       callback: (error: Error | null) => {
         if (error) {
           reject(error);
@@ -74,25 +74,13 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
       value={{
         allAccounts,
         keyring,
+        queueUnlock,
+        setQueueUnlock,
         addKeystore,
         restoreKeystore
       }}
     >
       {children}
-      {queueUnlock.length > 0 && (
-        <UnlockModal
-          onClose={() => {
-            setQueueUnlock((queue) => queue.slice(1));
-            queueUnlock[0].callback(new Error('User reject'));
-          }}
-          onUnlock={() => {
-            setQueueUnlock((queue) => queue.slice(1));
-            queueUnlock[0].callback(null);
-          }}
-          open
-          publicKey={queueUnlock[0].publicKey}
-        />
-      )}
     </KeystoreContext.Provider>
   );
 };

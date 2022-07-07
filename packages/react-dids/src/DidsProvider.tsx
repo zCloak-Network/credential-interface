@@ -5,6 +5,7 @@ import { assert } from '@polkadot/util';
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
 import { KILT_PEREGRINE_ENDPOINT } from '@credential/app-config/constants';
+import UnlockModal from '@credential/react-dids/UnlockModal';
 import { useLocalStorage } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -22,8 +23,9 @@ init({
 
 const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
-  const { addKeystore, keyring, restoreKeystore } = useKeystore();
+  const { addKeystore, keyring, queueUnlock, restoreKeystore, setQueueUnlock } = useKeystore();
   const [didUri, setDidUri] = useLocalStorage<DidUri>(storageKey);
+  const [isLocked, setIsLocked] = useState(true);
 
   const generateDid = useCallback(
     async (mnemonic: string, password: string, didRole: DidRole): Promise<DidKeys$Json> => {
@@ -102,13 +104,40 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       isReady,
       blockchain,
       didUri,
+      isLocked,
       generateDid,
       restoreDid
     }),
-    [didUri, generateDid, isReady, restoreDid]
+    [didUri, generateDid, isLocked, isReady, restoreDid]
   );
 
-  return <DidsContext.Provider value={value}>{children}</DidsContext.Provider>;
+  useEffect(() => {
+    if (!isLocked && queueUnlock.length > 0) {
+      queueUnlock.forEach((queue) => queue.callback(null));
+      setQueueUnlock([]);
+    }
+  }, [isLocked, queueUnlock, setQueueUnlock]);
+
+  return (
+    <DidsContext.Provider value={value}>
+      {children}
+      {isLocked && queueUnlock.length > 0 && (
+        <UnlockModal
+          did={didUri}
+          onClose={() => {
+            setQueueUnlock(queueUnlock.slice(1));
+            queueUnlock[0].callback(new Error('User reject'));
+          }}
+          onUnlock={() => {
+            setQueueUnlock(queueUnlock.slice(1));
+            queueUnlock[0].callback(null);
+            setIsLocked(false);
+          }}
+          open
+        />
+      )}
+    </DidsContext.Provider>
+  );
 };
 
 export default React.memo<typeof DidsProvider>(DidsProvider);

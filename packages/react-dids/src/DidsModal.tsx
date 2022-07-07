@@ -1,45 +1,58 @@
 import {
+  Button,
   CircularProgress,
   Dialog,
   DialogContent,
+  Paper,
   Step,
   StepContent,
   StepLabel,
-  Stepper
+  Stepper,
+  Typography
 } from '@mui/material';
-import React, { useCallback, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useMemo, useRef, useState } from 'react';
 
 import { DialogHeader } from '@credential/react-components';
 
 const DidsModal: React.FC<{
   title: React.ReactNode;
   open: boolean;
+  autoExec?: boolean;
   onDone?: () => void;
   onClose?: () => void;
   steps: (
     prevStep: () => void,
     nextStep: () => void,
     reportError: (error: Error | null) => void,
-    reportStatus: (message?: string, loading?: boolean) => void
+    reportStatus: (message?: string, loading?: boolean) => void,
+    execFunc: (step: number, func: () => void) => void
   ) => {
     label: React.ReactNode;
     optional?: React.ReactNode;
     content: React.ReactNode;
   }[];
-}> = ({ onClose, onDone, open, steps, title }) => {
+}> = ({ autoExec, onClose, onDone, open, steps, title }) => {
   const [activeStep, setActiveStep] = useState(0);
   const [error, setError] = useState<Record<number, Error | null | undefined>>({});
   const [status, setStatus] = useState<
     Record<number, { message?: string; loading?: boolean } | undefined>
   >({});
+  const execFuncRef = useRef<Record<number, Function | null | undefined>>({});
 
   const prevStep = useCallback(() => {
     setActiveStep((step) => Math.max(0, step - 1));
   }, []);
 
   const nextStep = useCallback(() => {
+    setError({ [activeStep]: null });
     setActiveStep(activeStep + 1);
-  }, [activeStep]);
+
+    if (autoExec) {
+      setTimeout(() => {
+        execFuncRef.current?.[activeStep + 1]?.();
+      }, 0);
+    }
+  }, [activeStep, autoExec]);
 
   const reportError = useCallback(
     (error: Error | null) => setError((_error) => ({ ..._error, [activeStep]: error })),
@@ -52,16 +65,14 @@ const DidsModal: React.FC<{
     [activeStep]
   );
 
-  const children = useMemo(
-    () => steps(prevStep, nextStep, reportError, reportStatus),
-    [nextStep, prevStep, reportError, reportStatus, steps]
-  );
+  const execFunc = useCallback((step: number, func: () => void) => {
+    execFuncRef.current[step] = func;
+  }, []);
 
-  useEffect(() => {
-    if (activeStep >= children.length) {
-      onDone?.();
-    }
-  }, [activeStep, onDone, children.length]);
+  const children = useMemo(
+    () => steps(prevStep, nextStep, reportError, reportStatus, execFunc),
+    [execFunc, nextStep, prevStep, reportError, reportStatus, steps]
+  );
 
   return (
     <Dialog maxWidth="sm" open={open}>
@@ -91,6 +102,12 @@ const DidsModal: React.FC<{
             </Step>
           ))}
         </Stepper>
+        {activeStep === children.length && (
+          <Paper elevation={0} square sx={{ p: 3 }}>
+            <Typography>All steps finished</Typography>
+            <Button onClick={onDone}>Finish</Button>
+          </Paper>
+        )}
       </DialogContent>
     </Dialog>
   );

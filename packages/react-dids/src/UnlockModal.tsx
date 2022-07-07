@@ -1,3 +1,4 @@
+import { DidUri } from '@kiltprotocol/sdk-js';
 import { LoadingButton } from '@mui/lab';
 import {
   Dialog,
@@ -8,32 +9,41 @@ import {
   InputLabel,
   Typography
 } from '@mui/material';
-import React, { useCallback, useMemo, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
 import { DialogHeader, InputPassword } from '@credential/react-components';
+import { useKeystore } from '@credential/react-keystore';
 
-import { useKeystore } from './KeystoreProvider';
+import DidName from './DidName';
+import { getDidDetails } from './useDidDetails';
 
 const UnlockModal: React.FC<{
   open: boolean;
-  publicKey: Uint8Array;
+  did?: DidUri;
   onClose?: () => void;
   onUnlock: () => void;
-}> = ({ onClose, onUnlock, open, publicKey }) => {
+}> = ({ did, onClose, onUnlock, open }) => {
   const [password, setPassword] = useState<string>();
   const { keyring } = useKeystore();
   const [error, setError] = useState<Error>();
 
-  const _onUnlock = useCallback(() => {
+  const _onUnlock = useCallback(async () => {
+    if (!did) return;
+
     try {
-      keyring.getPair(publicKey).unlock(password);
+      const didDetails = await getDidDetails(did);
+
+      if (!didDetails) throw new Error("Can't find did details");
+
+      keyring.getPair(didDetails.authenticationKey.publicKey).unlock(password);
+      didDetails.encryptionKey &&
+        keyring.getPair(didDetails.encryptionKey.publicKey).unlock(password);
+
       onUnlock();
     } catch (error) {
       setError(error as Error);
     }
-  }, [keyring, onUnlock, password, publicKey]);
-
-  const account = useMemo(() => keyring.getAccount(publicKey)?.address, [keyring, publicKey]);
+  }, [did, keyring, onUnlock, password]);
 
   return (
     <Dialog maxWidth="md" onClose={onClose} open={open}>
@@ -43,7 +53,7 @@ const UnlockModal: React.FC<{
           Please input password unlock
         </Typography>
         <Typography mb={4} variant="inherit">
-          Account: {account}
+          <DidName shorten={false} value={did} />
         </Typography>
         <FormControl error={!!error} fullWidth variant="outlined">
           <InputLabel shrink>Please input password</InputLabel>

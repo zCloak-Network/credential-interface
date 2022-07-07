@@ -12,6 +12,7 @@ export interface DidsState {
   isReady: boolean;
   blockchain: Blockchain;
   didUri?: DidUri;
+  isLocked: boolean;
   generateDid: (mnemonic: string, password: string, didRole: DidRole) => Promise<DidKeys$Json>;
   restoreDid: (text: string, password: string, didRole: DidRole) => void;
 }

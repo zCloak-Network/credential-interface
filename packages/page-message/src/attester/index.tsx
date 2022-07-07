@@ -13,7 +13,7 @@ const AttesterMessage: React.FC = () => {
   const filter = useMemo(
     () => ({
       receiver: didUri,
-      bodyTypes: [MessageBodyType.REQUEST_ATTESTATION, MessageBodyType.SUBMIT_CREDENTIAL]
+      bodyTypes: [MessageBodyType.SUBMIT_CREDENTIAL]
     }),
     [didUri]
   );
