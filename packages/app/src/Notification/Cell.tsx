@@ -16,9 +16,10 @@ interface Props {
   time: number;
   isRead: boolean;
   onRead: () => void;
+  handleClick: () => void;
 }
 
-const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
+const Cell: React.FC<Props> = ({ body, handleClick, isRead, onRead, sender, time }) => {
   const desc = useMemo(() => {
     if (body.type === MessageBodyType.REQUEST_ATTESTATION) {
       return (
@@ -67,6 +68,7 @@ const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
       alignItems="flex-start"
       direction="row"
       justifyContent="space-between"
+      onClick={handleClick}
       paddingX={2}
       paddingY={1.5}
       spacing={2.5}

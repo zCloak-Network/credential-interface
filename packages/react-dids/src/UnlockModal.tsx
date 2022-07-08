@@ -12,38 +12,31 @@ import {
 import React, { useCallback, useState } from 'react';
 
 import { DialogHeader, InputPassword } from '@credential/react-components';
-import { useKeystore } from '@credential/react-keystore';
 
 import DidName from './DidName';
-import { getDidDetails } from './useDidDetails';
 
 const UnlockModal: React.FC<{
   open: boolean;
   did?: DidUri;
+  unlockDid: (didUri: DidUri, password: string) => Promise<void>;
   onClose?: () => void;
   onUnlock: () => void;
-}> = ({ did, onClose, onUnlock, open }) => {
+}> = ({ did, onClose, onUnlock, open, unlockDid }) => {
   const [password, setPassword] = useState<string>();
-  const { keyring } = useKeystore();
   const [error, setError] = useState<Error>();
 
   const _onUnlock = useCallback(async () => {
     if (!did) return;
+    if (!password) return;
 
     try {
-      const didDetails = await getDidDetails(did);
-
-      if (!didDetails) throw new Error("Can't find did details");
-
-      keyring.getPair(didDetails.authenticationKey.publicKey).unlock(password);
-      didDetails.encryptionKey &&
-        keyring.getPair(didDetails.encryptionKey.publicKey).unlock(password);
+      await unlockDid(did, password);
 
       onUnlock();
     } catch (error) {
       setError(error as Error);
     }
-  }, [did, keyring, onUnlock, password]);
+  }, [did, onUnlock, password, unlockDid]);
 
   return (
     <Dialog maxWidth="md" onClose={onClose} open={open}>

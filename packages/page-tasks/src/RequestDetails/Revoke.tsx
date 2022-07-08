@@ -8,7 +8,7 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import { EncryptMessageStep, ExtrinsicStep, SendMessageStep } from '@credential/react-dids/steps';
+import { encryptMessage, sendMessage, signAndSend } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -100,61 +100,26 @@ const Revoke: React.FC<{
         Revoke
       </Button>
       <DidsModal
-        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
+        steps={[
           {
             label: 'Sign and submit attestation',
-            content: (
-              <ExtrinsicStep
-                execFunc={execFunc}
-                getExtrinsic={getExtrinsic}
-                isFirst
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={attester?.authenticationKey.publicKey}
-                step={0}
-              />
-            )
+            exec: (report) =>
+              signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
           },
           {
             label: 'Encrypt message',
-            content: (
-              <EncryptMessageStep
-                execFunc={execFunc}
-                handleEncrypted={setEncryptedMessage}
-                message={message}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                receiver={claimer}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={attester}
-                step={1}
-              />
-            )
+            exec: () =>
+              encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
           },
           {
             label: 'Send message',
-            content: (
-              <SendMessageStep
-                encryptedMessage={encryptedMessage}
-                execFunc={execFunc}
-                isLast
-                message={message}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                step={2}
-              />
-            )
+            exec: () => sendMessage(encryptedMessage)
           }
         ]}
+        submitText="Revoke"
         title="Approve the request"
       />
     </>

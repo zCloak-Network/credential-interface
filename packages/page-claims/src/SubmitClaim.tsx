@@ -10,12 +10,9 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import {
-  EncryptMessageStep,
-  RequestAttestationStep,
-  SendMessageStep
-} from '@credential/react-dids/steps';
+import { encryptMessage, requestAttestation, sendMessage } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
+import { useKeystore } from '@credential/react-keystore';
 
 const SubmitClaim: React.FC<{
   contents: Record<string, unknown>;
@@ -23,6 +20,7 @@ const SubmitClaim: React.FC<{
   ctype?: CType;
   onDone?: () => void;
 }> = ({ attester, contents, ctype, onDone }) => {
+  const { keyring } = useKeystore();
   const { didUri } = useContext(DidsContext);
   const [open, toggleOpen] = useToggle();
   const sender = useDidDetails(didUri);
@@ -58,63 +56,27 @@ const SubmitClaim: React.FC<{
         Submit
       </Button>
       <DidsModal
-        autoExec
         onClose={toggleOpen}
         onDone={_onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
+        steps={[
           {
             label: 'Request for attestation and sign',
-            content: (
-              <RequestAttestationStep
-                contents={contents as Record<string, any>}
-                ctype={ctype}
-                execFunc={execFunc}
-                handleRequest={setRequest}
-                isFirst
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={sender}
-                step={0}
-              />
-            )
+            exec: () =>
+              requestAttestation(keyring, sender, ctype, contents as Record<string, any>).then(
+                setRequest
+              )
           },
           {
             label: 'Encrypt message',
-            content: (
-              <EncryptMessageStep
-                execFunc={execFunc}
-                handleEncrypted={setEncryptedMessage}
-                message={message}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                receiver={attester}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={sender}
-                step={1}
-              />
-            )
+            exec: () => encryptMessage(keyring, message, sender, attester).then(setEncryptedMessage)
           },
           {
             label: 'Send message',
-            content: (
-              <SendMessageStep
-                encryptedMessage={encryptedMessage}
-                execFunc={execFunc}
-                isLast
-                message={message}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                step={2}
-              />
-            )
+            exec: () => sendMessage(encryptedMessage)
           }
         ]}
+        submitText="Submit claim"
         title="Submit claim"
       />
     </>

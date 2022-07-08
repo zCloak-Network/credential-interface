@@ -10,6 +10,7 @@ import { useLocalStorage } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 import { DidKeys$Json, DidRole, DidsState } from './types';
+import { getDidDetails } from './useDidDetails';
 
 export const DidsContext = createContext({} as DidsState);
 
@@ -92,6 +93,21 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     [restoreKeystore, setDidUri]
   );
 
+  const unlockDid = useCallback(
+    async (didUri: DidUri, password: string) => {
+      const didDetails = await getDidDetails(didUri);
+
+      if (!didDetails) throw new Error("Can't find did details");
+
+      keyring.getPair(didDetails.authenticationKey.publicKey).unlock(password);
+      didDetails.encryptionKey &&
+        keyring.getPair(didDetails.encryptionKey.publicKey).unlock(password);
+
+      setIsLocked(false);
+    },
+    [keyring]
+  );
+
   useEffect(() => {
     connect().then((_blockchain) => {
       blockchain = _blockchain;
@@ -106,9 +122,10 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       didUri,
       isLocked,
       generateDid,
-      restoreDid
+      restoreDid,
+      unlockDid
     }),
-    [didUri, generateDid, isLocked, isReady, restoreDid]
+    [didUri, generateDid, isLocked, isReady, restoreDid, unlockDid]
   );
 
   useEffect(() => {
@@ -131,9 +148,9 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           onUnlock={() => {
             setQueueUnlock(queueUnlock.slice(1));
             queueUnlock[0].callback(null);
-            setIsLocked(false);
           }}
           open
+          unlockDid={unlockDid}
         />
       )}
     </DidsContext.Provider>

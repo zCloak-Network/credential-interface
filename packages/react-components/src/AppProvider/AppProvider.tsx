@@ -65,7 +65,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [didDetails]);
 
   const parse = useCallback(async () => {
-    if (didDetails && messageSync) {
+    if (didDetails && messageSync && messageSync.encryptMessages.size > 0) {
       isLocked && (await unlock());
       await messageSync.parse(keyring, didDetails);
       setUnParsed(messageSync.encryptMessages.size);
