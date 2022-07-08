@@ -76,6 +76,7 @@ const SubmitClaim: React.FC<{
             exec: () => sendMessage(encryptedMessage)
           }
         ]}
+        submitText="Submit claim"
         title="Submit claim"
       />
     </>

@@ -1,4 +1,4 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
+import { DidUri, Hash } from '@kiltprotocol/sdk-js';
 import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
 import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
@@ -35,11 +35,12 @@ const Logo: React.FC = () => {
   );
 };
 
-const Header: React.FC<{ did?: DidUri; open: boolean; toggleOpen: () => void }> = ({
-  did,
-  open,
-  toggleOpen
-}) => {
+const Header: React.FC<{
+  did?: DidUri;
+  open: boolean;
+  toggleOpen: () => void;
+  handleRequest?: (rootHash: Hash, isRequst: boolean) => void;
+}> = ({ did, handleRequest, open, toggleOpen }) => {
   const { parse, unParsed } = useContext(AppContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
   const { allUnread } = useUnread(credentialDb, did);
@@ -82,7 +83,7 @@ const Header: React.FC<{ did?: DidUri; open: boolean; toggleOpen: () => void }> 
           {did && <AccountInfo did={did} />}
         </Stack>
       </Stack>
-      <Notification onClose={toggleNotiOpen} open={notiOpen} />
+      <Notification handleRequest={handleRequest} onClose={toggleNotiOpen} open={notiOpen} />
     </>
   );
 };

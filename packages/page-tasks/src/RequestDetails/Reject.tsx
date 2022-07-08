@@ -81,6 +81,7 @@ const Reject: React.FC<{
             exec: () => sendMessage(encryptedMessage)
           }
         ]}
+        submitText="Reject"
         title="Reject the request"
       />
     </>

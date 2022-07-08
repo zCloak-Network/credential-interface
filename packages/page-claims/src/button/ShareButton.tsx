@@ -84,6 +84,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
               ]
             : undefined
         }
+        submitText="Share"
         title="Share this with others"
       >
         <InputDid onChange={setReceiver} />

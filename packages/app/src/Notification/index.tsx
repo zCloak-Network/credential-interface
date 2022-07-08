@@ -1,4 +1,4 @@
-import { MessageBodyType } from '@kiltprotocol/sdk-js';
+import { Hash, MessageBodyType } from '@kiltprotocol/sdk-js';
 import { Badge, Box, Drawer, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
@@ -12,9 +12,10 @@ import { useUnread } from './useUnread';
 interface Props {
   open: boolean;
   onClose: () => void;
+  handleRequest?: (rootHash: Hash, isRequest: boolean) => void;
 }
 
-const Notification: React.FC<Props> = ({ onClose, open }) => {
+const Notification: React.FC<Props> = ({ handleRequest, onClose, open }) => {
   const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
   const { allUnread, messageUnread, taskUnread } = useUnread(credentialDb, didUri);
@@ -83,6 +84,22 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
       {messages?.map((message, index) => (
         <Cell
           body={message.body}
+          handleClick={() => {
+            if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
+              handleRequest?.(message.body.content.requestForAttestation.rootHash, true);
+            } else if (message.body.type === MessageBodyType.SUBMIT_ATTESTATION) {
+              handleRequest?.(message.body.content.attestation.claimHash, false);
+            } else if (message.body.type === MessageBodyType.REJECT_ATTESTATION) {
+              handleRequest?.(message.body.content, false);
+            } else if (message.body.type === MessageBodyType.SUBMIT_CREDENTIAL) {
+              handleRequest?.(message.body.content[0].request.rootHash, false);
+            }
+
+            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
+            credentialDb.message.update(message.id!, {
+              isRead: 1
+            });
+          }}
           isRead={!!message.isRead}
           key={index}
           onRead={() => {

@@ -119,6 +119,7 @@ const Revoke: React.FC<{
             exec: () => sendMessage(encryptedMessage)
           }
         ]}
+        submitText="Revoke"
         title="Approve the request"
       />
     </>
