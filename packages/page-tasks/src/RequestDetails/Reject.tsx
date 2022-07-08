@@ -8,13 +8,15 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import { EncryptMessageStep, SendMessageStep } from '@credential/react-dids/steps';
+import { encryptMessage, sendMessage } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
+import { useKeystore } from '@credential/react-keystore';
 
 const Reject: React.FC<{
   request: Request;
   messageLinked?: IMessage[];
 }> = ({ messageLinked, request }) => {
+  const { keyring } = useKeystore();
   const [open, toggleOpen] = useToggle();
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
@@ -65,43 +67,18 @@ const Reject: React.FC<{
         Reject
       </Button>
       <DidsModal
-        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
+        steps={[
           {
             label: 'Encrypt message',
-            content: (
-              <EncryptMessageStep
-                execFunc={execFunc}
-                handleEncrypted={setEncryptedMessage}
-                message={message}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                receiver={claimer}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={attester}
-                step={0}
-              />
-            )
+            exec: () =>
+              encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
           },
           {
             label: 'Send message',
-            content: (
-              <SendMessageStep
-                encryptedMessage={encryptedMessage}
-                execFunc={execFunc}
-                isLast
-                message={message}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                step={1}
-              />
-            )
+            exec: () => sendMessage(encryptedMessage)
           }
         ]}
         title="Reject the request"

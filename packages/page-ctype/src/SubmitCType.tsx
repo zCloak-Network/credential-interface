@@ -3,7 +3,7 @@ import { Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo } from 'react';
 
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import { AddCTypeStep, ExtrinsicStep } from '@credential/react-dids/steps';
+import { addCtype, signAndSend } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -51,41 +51,18 @@ const SubmitCType: React.FC<{
         Submit
       </Button>
       <DidsModal
-        autoExec
         onClose={toggleOpen}
         onDone={onDone}
         open={open}
-        steps={(prevStep, nextStep, reportError, reportStatus, execFunc) => [
+        steps={[
           {
             label: 'Sign and submit ctype',
-            content: (
-              <ExtrinsicStep
-                execFunc={execFunc}
-                getExtrinsic={getExtrinsic}
-                isFirst
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={attester?.authenticationKey.publicKey}
-                step={0}
-              />
-            )
+            exec: (report) =>
+              signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
           },
           {
             label: 'Upload ctype',
-            content: (
-              <AddCTypeStep
-                ctype={ctype}
-                execFunc={execFunc}
-                nextStep={nextStep}
-                prevStep={prevStep}
-                reportError={reportError}
-                reportStatus={reportStatus}
-                sender={attester?.uri}
-                step={1}
-              />
-            )
+            exec: () => addCtype(ctype, attester?.uri)
           }
         ]}
         title="Submit ctype"

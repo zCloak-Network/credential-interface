@@ -1,10 +1,11 @@
+import React from 'react';
+
+export interface Report {
+  (error: Error | null, loading?: boolean, message?: string): void;
+}
+
 export interface DidsStepProps {
-  isFirst?: boolean;
-  isLast?: boolean;
-  step: number;
-  execFunc: (step: number, func: () => void) => void;
-  prevStep: () => void;
-  nextStep: () => void;
-  reportError: (error: Error | null) => void;
-  reportStatus: (message?: string, loading?: boolean) => void;
+  label: React.ReactNode;
+  optional?: React.ReactNode;
+  exec: (report: Report) => Promise<any>;
 }

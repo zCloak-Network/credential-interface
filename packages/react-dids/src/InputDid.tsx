@@ -103,7 +103,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
       fullWidth
       variant="outlined"
     >
-      <InputLabel>Receiver</InputLabel>
+      <InputLabel shrink>Receiver</InputLabel>
       <OutlinedInput
         {...props}
         defaultValue={didOrAddress}

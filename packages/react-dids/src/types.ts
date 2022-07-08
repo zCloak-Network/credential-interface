@@ -15,4 +15,5 @@ export interface DidsState {
   isLocked: boolean;
   generateDid: (mnemonic: string, password: string, didRole: DidRole) => Promise<DidKeys$Json>;
   restoreDid: (text: string, password: string, didRole: DidRole) => void;
+  unlockDid: (didUri: DidUri, password: string) => Promise<void>;
 }
