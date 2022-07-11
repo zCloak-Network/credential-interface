@@ -37,7 +37,7 @@ const Recaptcha: React.FunctionComponent<Props> = ({ onCallback }) => {
     document.body.appendChild(script);
   }, [onCallback]);
 
-  return <Box ref={container} sx={{ display: 'flex', justifyContent: 'center' }} />;
+  return <Box ref={container} />;
 };
 
 export default React.memo(Recaptcha);

@@ -1,5 +1,5 @@
 import { Did, ICredential, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
-import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
+import { IconButton, lighten, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { IconForward } from '@credential/app-config/icons';
@@ -93,7 +93,18 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
         }
         title="Share this with others"
       >
-        <InputDid onChange={setReceiver} />
+        <InputDid
+          inputProps={{
+            sx: ({ palette }) => ({
+              '.MuiOutlinedInput-notchedOutline': {
+                borderColor: 'transparent'
+              },
+              border: 'none',
+              background: lighten(palette.primary.main, 0.94)
+            })
+          }}
+          onChange={setReceiver}
+        />
       </DidsModal>
     </>
   );

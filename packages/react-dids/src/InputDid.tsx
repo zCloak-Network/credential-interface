@@ -7,7 +7,8 @@ import {
   FormHelperText,
   InputAdornment,
   InputLabel,
-  OutlinedInput
+  OutlinedInput,
+  OutlinedInputProps
 } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
@@ -39,10 +40,11 @@ export function getDidUri(uriOrAddress: string, didType: 'full' | 'light'): DidU
 
 interface Props {
   defaultValue?: string;
+  inputProps?: OutlinedInputProps;
   onChange?: (value: Did.FullDidDetails | null) => void;
 }
 
-const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
+const InputDid: React.FC<Props> = ({ defaultValue, inputProps, onChange }) => {
   const [didOrAddress, setDidOrAddress] = useState(defaultValue);
   const [fetching, setFetching] = useState(false);
   const [didDetails, setDidDetails] = useState<Did.FullDidDetails | null>(null);
@@ -99,13 +101,12 @@ const InputDid: React.FC<Props> = ({ defaultValue, onChange, ...props }) => {
     <FormControl
       color={error ? 'error' : warn ? 'warning' : undefined}
       error={!!error}
-      focused={!!error || !!warn}
       fullWidth
       variant="outlined"
     >
       <InputLabel shrink>Receiver</InputLabel>
       <OutlinedInput
-        {...props}
+        {...inputProps}
         defaultValue={didOrAddress}
         endAdornment={
           fetching ? (

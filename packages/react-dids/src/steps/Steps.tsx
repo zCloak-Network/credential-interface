@@ -1,6 +1,14 @@
 import type { DidsStepProps } from './types';
 
-import { Button, CircularProgress, Step, StepContent, StepLabel, Stepper } from '@mui/material';
+import {
+  Button,
+  CircularProgress,
+  lighten,
+  Step,
+  StepContent,
+  StepLabel,
+  Stepper
+} from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 
 const DidsModal: React.FC<{
@@ -79,7 +87,15 @@ const DidsModal: React.FC<{
 
   return (
     <>
-      <Stepper activeStep={activeStep} orientation="vertical">
+      <Stepper
+        activeStep={activeStep}
+        orientation="vertical"
+        sx={({ palette }) => ({
+          padding: 4.5,
+          borderRadius: 2.5,
+          background: lighten(palette.primary.main, 0.94)
+        })}
+      >
         {steps.map(({ content, label, optional }, index) => (
           <Step key={index}>
             <StepLabel

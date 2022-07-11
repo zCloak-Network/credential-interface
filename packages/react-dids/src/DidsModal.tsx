@@ -1,5 +1,5 @@
 import LockIcon from '@mui/icons-material/Lock';
-import { Button, Dialog, DialogContent, InputAdornment, Stack } from '@mui/material';
+import { Button, Dialog, DialogContent, InputAdornment, lighten, Stack } from '@mui/material';
 import React, { useCallback, useContext, useState } from 'react';
 
 import { DialogHeader, InputPassword } from '@credential/react-components';
@@ -39,6 +39,13 @@ const DidsModal: React.FC<
                     <LockIcon color="primary" />
                   </InputAdornment>
                 }
+                sx={({ palette }) => ({
+                  '.MuiOutlinedInput-notchedOutline': {
+                    borderColor: 'transparent'
+                  },
+                  border: 'none',
+                  background: lighten(palette.primary.main, 0.94)
+                })}
               />
               <Button fullWidth onClick={unlock} variant="contained">
                 Unlock
