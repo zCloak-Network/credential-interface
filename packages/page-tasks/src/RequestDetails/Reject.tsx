@@ -3,7 +3,7 @@ import type { IEncryptedMessage, IMessage } from '@kiltprotocol/types';
 import type { Request } from '@credential/react-hooks/types';
 
 import { Message } from '@kiltprotocol/sdk-js';
-import { alpha, Button } from '@mui/material';
+import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
@@ -12,10 +12,13 @@ import { encryptMessage, sendMessage } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
+import IconReject from '../icons/icon_reject.svg';
+
 const Reject: React.FC<{
+  type?: 'button' | 'menu';
   request: Request;
   messageLinked?: IMessage[];
-}> = ({ messageLinked, request }) => {
+}> = ({ messageLinked, request, type = 'button' }) => {
   const { keyring } = useKeystore();
   const [open, toggleOpen] = useToggle();
   const { didUri } = useContext(DidsContext);
@@ -52,20 +55,30 @@ const Reject: React.FC<{
 
   return (
     <>
-      <Button
-        onClick={toggleOpen}
-        sx={({ palette }) => ({
-          background: alpha(palette.error.main, 0),
-          borderColor: palette.error.main,
-          color: palette.error.main,
-          ':hover': {
-            borderColor: palette.error.main
-          }
-        })}
-        variant="outlined"
-      >
-        Reject
-      </Button>
+      {type === 'button' ? (
+        <Button
+          onClick={toggleOpen}
+          startIcon={<IconReject />}
+          sx={({ palette }) => ({
+            background: alpha(palette.error.main, 0),
+            borderColor: palette.error.main,
+            color: palette.error.main,
+            ':hover': {
+              borderColor: palette.error.main
+            }
+          })}
+          variant="outlined"
+        >
+          Reject
+        </Button>
+      ) : (
+        <MenuItem onClick={toggleOpen} sx={({ palette }) => ({ color: palette.error.main })}>
+          <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
+            <IconReject />
+          </ListItemIcon>
+          <ListItemText>Reject</ListItemText>
+        </MenuItem>
+      )}
       <DidsModal
         onClose={toggleOpen}
         onDone={onDone}
