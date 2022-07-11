@@ -1,5 +1,5 @@
 import { Hash } from '@kiltprotocol/sdk-js';
-import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/material';
+import { Box, CircularProgress, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -9,6 +9,9 @@ import { DidsContext } from '@credential/react-dids';
 import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
+import IconMessage from '../icon_message.svg';
+import IconCtype from '../icon_myctype.svg';
+import IconTask from '../icon_task.svg';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
 import { useUnread } from '../Notification/useUnread';
 import Sidebar from '../Sidebar';
@@ -51,7 +54,12 @@ const Attester: React.FC = () => {
         to: '/my-ctype',
         active: pathname.startsWith('/my-ctype'),
         svgIcon: (
-          <CTypeIcon color={pathname.startsWith('/my-ctype') ? palette.common.white : undefined} />
+          <SvgIcon
+            component={IconCtype}
+            fontSize="inherit"
+            // sx={{ color: pathname.startsWith('/my-ctype') ? palette.common.white : undefined }}
+            viewBox="0 0 15.502 15.502"
+          />
         ),
         text: 'My ctypes'
       },
@@ -59,7 +67,12 @@ const Attester: React.FC = () => {
         to: '/tasks',
         active: pathname.startsWith('/tasks'),
         svgIcon: (
-          <ClaimsIcon color={pathname.startsWith('/tasks') ? palette.common.white : undefined} />
+          <SvgIcon
+            component={IconTask}
+            fontSize="inherit"
+            // sx={{ color: pathname.startsWith('/tasks') ? palette.common.white : undefined }}
+            viewBox="0 0 16 12.799"
+          />
         ),
         text: 'Tasks',
         extra: taskUnread ? <Badge value={taskUnread} /> : undefined
@@ -68,13 +81,18 @@ const Attester: React.FC = () => {
         to: '/message',
         active: pathname.startsWith('/message'),
         svgIcon: (
-          <MessageIcon color={pathname.startsWith('/message') ? palette.common.white : undefined} />
+          <SvgIcon
+            component={IconMessage}
+            fontSize="inherit"
+            // sx={{ color: pathname.startsWith('/messages') ? palette.common.white : undefined }}
+            viewBox="0 0 14 14.22"
+          />
         ),
         text: 'Message',
         extra: messageUnread ? <Badge value={messageUnread} /> : undefined
       }
     ],
-    [messageUnread, palette.common.white, pathname, taskUnread]
+    [messageUnread, pathname, taskUnread]
   );
 
   return (

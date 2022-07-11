@@ -102,17 +102,26 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
           >
             <ListItemButton
               onClick={() => navigate(to)}
-              sx={{
+              sx={({ palette }) => ({
                 minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
-                px: 2.5
-              }}
+                px: 2.5,
+                color:
+                  accountType === 'attester'
+                    ? active
+                      ? palette.common.white
+                      : palette.grey[500]
+                    : active
+                    ? palette.primary.main
+                    : palette.common.black
+              })}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
                   mr: open ? 3 : 'auto',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  color: 'inherit'
                 }}
               >
                 {svgIcon}
@@ -124,16 +133,8 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
                     {extra}
                   </Stack>
                 }
-                sx={({ palette }) => ({
-                  opacity: open ? 1 : 0,
-                  color:
-                    accountType === 'attester'
-                      ? active
-                        ? palette.common.white
-                        : palette.grey[500]
-                      : active
-                      ? palette.primary.main
-                      : palette.common.black
+                sx={() => ({
+                  opacity: open ? 1 : 0
                 })}
               />
             </ListItemButton>
