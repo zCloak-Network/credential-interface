@@ -1,6 +1,4 @@
 import { DidUri, Hash } from '@kiltprotocol/sdk-js';
-import FormatAlignJustifyIcon from '@mui/icons-material/FormatAlignJustify';
-import FormatIndentDecreaseIcon from '@mui/icons-material/FormatIndentDecrease';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { alpha, Badge, Box, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
@@ -37,10 +35,8 @@ const Logo: React.FC = () => {
 
 const Header: React.FC<{
   did?: DidUri;
-  open: boolean;
-  toggleOpen: () => void;
   handleRequest?: (rootHash: Hash, isRequst: boolean) => void;
-}> = ({ did, handleRequest, open, toggleOpen }) => {
+}> = ({ did, handleRequest }) => {
   const { parse, unParsed } = useContext(AppContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
   const { allUnread } = useUnread(credentialDb, did);
@@ -68,9 +64,6 @@ const Header: React.FC<{
         zIndex={999}
       >
         <Stack alignItems="center" direction="row" spacing={2}>
-          <IconButton color="inherit" edge="start" onClick={toggleOpen}>
-            {open ? <FormatIndentDecreaseIcon /> : <FormatAlignJustifyIcon />}
-          </IconButton>
           <Logo />
         </Stack>
         <Stack alignItems="center" direction="row" spacing={2}>

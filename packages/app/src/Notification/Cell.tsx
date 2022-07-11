@@ -1,11 +1,10 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
+import { DidUri, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
 import { alpha, Box, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 
 import { IconNewMessage, IconNewTask } from '@credential/app-config/icons';
-import { MessageBody, MessageBodyType } from '@credential/app-db/message';
 import { CTypeName } from '@credential/react-components';
 import { DidName } from '@credential/react-dids';
 

@@ -87,10 +87,8 @@ const Attester: React.FC = () => {
             setShowActions(isRequst);
             toggleRequestOpen();
           }}
-          open={open}
-          toggleOpen={toggleOpen}
         />
-        <Sidebar accountType="attester" items={items} open={open} />
+        <Sidebar accountType="attester" items={items} open={open} toggleOpen={toggleOpen} />
         <Box
           minHeight="100vh"
           pl={open ? '220px' : '93px'}

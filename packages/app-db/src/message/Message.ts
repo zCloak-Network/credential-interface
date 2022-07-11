@@ -1,27 +1,8 @@
-import type {
-  IAttestation,
-  IMessage,
-  IRejectAttestation,
-  IRequestAttestation,
-  ISubmitAttestation
-} from '@kiltprotocol/types';
-
-import { MessageBodyType } from '@kiltprotocol/types';
-
-type MessageBody = IMessage['body'];
-
-export {
-  MessageBodyType,
-  IMessage,
-  MessageBody,
-  IRequestAttestation,
-  ISubmitAttestation,
-  IRejectAttestation,
-  IAttestation
-};
+import type { IMessage } from '@kiltprotocol/types';
 
 export interface Message extends IMessage {
   id?: number;
+  messageId: string;
   syncId?: number;
   deal: 0 | 1;
   isRead?: 0 | 1;
