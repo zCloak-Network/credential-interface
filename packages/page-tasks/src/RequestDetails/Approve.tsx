@@ -3,7 +3,7 @@ import type { IMessage } from '@kiltprotocol/types';
 import type { Request } from '@credential/react-hooks/types';
 
 import { Attestation, Did, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
-import { alpha, Button } from '@mui/material';
+import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
@@ -12,10 +12,13 @@ import { encryptMessage, sendMessage, signAndSend } from '@credential/react-dids
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
+import IconApprove from '../icons/icon_approve.svg';
+
 const Approve: React.FC<{
+  type?: 'button' | 'menu';
   request: Request;
   messageLinked?: IMessage[];
-}> = ({ messageLinked, request }) => {
+}> = ({ messageLinked, request, type = 'button' }) => {
   const [open, toggleOpen] = useToggle();
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
@@ -77,20 +80,30 @@ const Approve: React.FC<{
 
   return (
     <>
-      <Button
-        onClick={toggleOpen}
-        sx={({ palette }) => ({
-          background: alpha(palette.success.main, 0.1),
-          borderColor: palette.success.main,
-          color: palette.success.main,
-          ':hover': {
-            borderColor: palette.success.main
-          }
-        })}
-        variant="outlined"
-      >
-        Approve
-      </Button>
+      {type === 'button' ? (
+        <Button
+          onClick={toggleOpen}
+          startIcon={<IconApprove />}
+          sx={({ palette }) => ({
+            background: alpha(palette.success.main, 0.1),
+            borderColor: palette.success.main,
+            color: palette.success.main,
+            ':hover': {
+              borderColor: palette.success.main
+            }
+          })}
+          variant="outlined"
+        >
+          Approve
+        </Button>
+      ) : (
+        <MenuItem onClick={toggleOpen} sx={({ palette }) => ({ color: palette.success.main })}>
+          <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
+            <IconApprove />
+          </ListItemIcon>
+          <ListItemText>Approve</ListItemText>
+        </MenuItem>
+      )}
       <DidsModal
         onClose={toggleOpen}
         onDone={onDone}

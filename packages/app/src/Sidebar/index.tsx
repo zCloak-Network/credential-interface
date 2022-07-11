@@ -1,7 +1,11 @@
+import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
+import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import {
   alpha,
   CSSObject,
   Drawer as MuiDrawer,
+  Fab,
+  lighten,
   List,
   ListItem,
   ListItemButton,
@@ -26,8 +30,9 @@ interface Item {
 
 interface Props {
   accountType: ACCOUNT_TYPE;
-  open: boolean;
   items: Item[];
+  open: boolean;
+  toggleOpen: () => void;
 }
 
 const drawerWidth = '220px';
@@ -38,7 +43,7 @@ const openedMixin = (theme: Theme): CSSObject => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.enteringScreen
   }),
-  overflowX: 'hidden'
+  overflow: 'visible'
 });
 
 const closedMixin = (theme: Theme): CSSObject => ({
@@ -46,11 +51,11 @@ const closedMixin = (theme: Theme): CSSObject => ({
     easing: theme.transitions.easing.sharp,
     duration: theme.transitions.duration.leavingScreen
   }),
-  overflowX: 'hidden',
   width: `calc(${theme.spacing(10.5)} + 1px)`,
   [theme.breakpoints.up('sm')]: {
     width: `calc(${theme.spacing(11.5)} + 1px)`
-  }
+  },
+  overflow: 'visible'
 });
 
 const Drawer = styled(MuiDrawer, {
@@ -77,7 +82,7 @@ const Drawer = styled(MuiDrawer, {
   })
 }));
 
-const Sidebar: React.FC<Props> = ({ accountType, items, open }) => {
+const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
   const navigate = useNavigate();
 
   return (
@@ -97,17 +102,26 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open }) => {
           >
             <ListItemButton
               onClick={() => navigate(to)}
-              sx={{
+              sx={({ palette }) => ({
                 minHeight: 48,
                 justifyContent: open ? 'initial' : 'center',
-                px: 2.5
-              }}
+                px: 2.5,
+                color:
+                  accountType === 'attester'
+                    ? active
+                      ? palette.common.white
+                      : palette.grey[500]
+                    : active
+                    ? palette.primary.main
+                    : palette.common.black
+              })}
             >
               <ListItemIcon
                 sx={{
                   minWidth: 0,
                   mr: open ? 3 : 'auto',
-                  justifyContent: 'center'
+                  justifyContent: 'center',
+                  color: 'inherit'
                 }}
               >
                 {svgIcon}
@@ -119,22 +133,31 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open }) => {
                     {extra}
                   </Stack>
                 }
-                sx={({ palette }) => ({
-                  opacity: open ? 1 : 0,
-                  color:
-                    accountType === 'attester'
-                      ? active
-                        ? palette.common.white
-                        : palette.grey[500]
-                      : active
-                      ? palette.primary.main
-                      : palette.common.black
+                sx={() => ({
+                  opacity: open ? 1 : 0
                 })}
               />
             </ListItemButton>
           </ListItem>
         ))}
       </List>
+      <Fab
+        color="primary"
+        onClick={toggleOpen}
+        size="small"
+        sx={({ palette }) => ({
+          display: 'flex',
+          position: 'absolute',
+          marginTop: -3,
+          right: -15,
+          width: 30,
+          height: 30,
+          minHeight: 30,
+          background: lighten(palette.primary.main, 0.15)
+        })}
+      >
+        {open ? <KeyboardArrowLeftRoundedIcon /> : <KeyboardArrowRightRoundedIcon />}
+      </Fab>
     </Drawer>
   );
 };

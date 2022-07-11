@@ -134,7 +134,7 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               status={request.status}
             />
             <Typography className="CredentialCell_Time" variant="inherit">
-              {moment(request.createdAt).format('YYYY:MM:DD HH:mm:ss')}
+              {moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}
             </Typography>
           </Box>
           <Typography className="CredentialCell_title" mt={2} variant="h3">

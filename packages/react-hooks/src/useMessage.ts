@@ -1,10 +1,9 @@
-import type { DidUri } from '@kiltprotocol/types';
-
+import { DidUri, MessageBodyType } from '@kiltprotocol/types';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useCallback } from 'react';
 
 import { CredentialData } from '@credential/app-db';
-import { Message, MessageBodyType } from '@credential/app-db/message';
+import { Message } from '@credential/app-db/message';
 
 import { useDebounce } from '.';
 

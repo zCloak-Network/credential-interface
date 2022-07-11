@@ -4,9 +4,8 @@ import { IAttestation } from '@kiltprotocol/sdk-js';
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import React from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { Message } from '@credential/app-db/message';
 import { DialogHeader } from '@credential/react-components';
-import { useRequestMessages } from '@credential/react-hooks';
 
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
@@ -15,11 +14,10 @@ const RequestDetails: React.FC<{
   request: Request;
   attestation?: IAttestation | null;
   open: boolean;
+  messageLinked?: Message[];
   onClose?: () => void;
   showActions?: boolean;
-}> = ({ attestation, onClose, open, request, showActions = true }) => {
-  const messageLinked = useRequestMessages(credentialDb, request.rootHash);
-
+}> = ({ attestation, messageLinked, onClose, open, request, showActions = true }) => {
   return (
     <Dialog fullScreen open={open}>
       <DialogHeader onClose={onClose}>{request.rootHash}</DialogHeader>
