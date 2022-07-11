@@ -4,8 +4,9 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { IconForward } from '@credential/app-config/icons';
 import { credentialDb } from '@credential/app-db';
+import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, InputDid, useDidDetails } from '@credential/react-dids';
-import { encryptMessage, sendMessage } from '@credential/react-dids/steps';
+import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -19,6 +20,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
   const [receiver, setReceiver] = useState<Did.FullDidDetails | null>(null);
   const sender = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const _toggleOpen: React.MouseEventHandler<HTMLButtonElement> = useCallback(
     (e) => {
@@ -67,11 +69,12 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
       </Tooltip>
       <DidsModal
         onClose={toggleOpen}
-        onDone={onDone}
         open={open}
         steps={
-          receiver
-            ? [
+          receiver ? (
+            <Steps
+              onDone={onDone}
+              steps={[
                 {
                   label: 'Encrypt message',
                   exec: () =>
@@ -79,12 +82,15 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
                 },
                 {
                   label: 'Send message',
-                  exec: () => sendMessage(encryptedMessage)
+                  paused: true,
+                  content: <Recaptcha onCallback={setRecaptchaToken} />,
+                  exec: () => sendMessage(encryptedMessage, recaptchaToken)
                 }
-              ]
-            : undefined
+              ]}
+              submitText="Share"
+            />
+          ) : null
         }
-        submitText="Share"
         title="Share this with others"
       >
         <InputDid onChange={setReceiver} />

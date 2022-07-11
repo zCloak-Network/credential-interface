@@ -12,7 +12,6 @@ import Header from '../Header';
 import IconMessage from '../icon_message.svg';
 import IconCtype from '../icon_myctype.svg';
 import IconTask from '../icon_task.svg';
-import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
 import { useUnread } from '../Notification/useUnread';
 import Sidebar from '../Sidebar';
 
@@ -39,7 +38,7 @@ const Badge: React.FC<{ value: number }> = ({ value }) => {
 const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
   const { pathname } = useLocation();
-  const { palette, transitions } = useTheme();
+  const { transitions } = useTheme();
   const { didUri, isReady } = useContext(DidsContext);
   const { messageUnread, taskUnread } = useUnread(credentialDb, didUri);
   const [requestOpen, toggleRequestOpen] = useToggle();

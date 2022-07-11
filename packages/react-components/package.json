@@ -26,6 +26,6 @@
     "@mui/lab": "^5.0.0-alpha.88",
     "@mui/material": "^5.8.6",
     "@mui/x-date-pickers": "^5.0.0-alpha.7",
-    "@zcloak/extension-core": "^0.0.2-22"
+    "@zcloak/extension-core": "^0.0.2-25"
   }
 }
