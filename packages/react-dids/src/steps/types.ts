@@ -6,6 +6,8 @@ export interface Report {
 
 export interface DidsStepProps {
   label: React.ReactNode;
+  content?: React.ReactNode;
+  paused?: boolean;
   optional?: React.ReactNode;
   exec: (report: Report) => Promise<any>;
 }

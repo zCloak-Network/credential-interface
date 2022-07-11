@@ -15,4 +15,5 @@ export { default as FullScreenDialogHeader } from './FullScreenDialogHeader';
 export { default as ImportCTypeModal } from './ImportCTypeModal';
 export { default as MnemonicCell } from './MnemonicCell';
 export { default as InputPassword } from './InputPassword';
+export { default as Recaptcha } from './Recaptcha';
 export { default as StepIcon } from './StepIcon';

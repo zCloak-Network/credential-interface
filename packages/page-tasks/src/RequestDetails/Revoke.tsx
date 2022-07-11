@@ -7,8 +7,9 @@ import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/materi
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
+import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import { encryptMessage, sendMessage, signAndSend } from '@credential/react-dids/steps';
+import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -25,6 +26,7 @@ const Revoke: React.FC<{
   const attester = useDidDetails(didUri);
   const { keyring } = useKeystore();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const attestation = useMemo(() => {
     if (didUri) {
@@ -114,25 +116,32 @@ const Revoke: React.FC<{
       )}
       <DidsModal
         onClose={toggleOpen}
-        onDone={onDone}
         open={open}
-        steps={[
-          {
-            label: 'Sign and submit attestation',
-            exec: (report) =>
-              signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
-          },
-          {
-            label: 'Encrypt message',
-            exec: () =>
-              encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
-          },
-          {
-            label: 'Send message',
-            exec: () => sendMessage(encryptedMessage)
-          }
-        ]}
-        submitText="Revoke"
+        steps={
+          <Steps
+            onDone={onDone}
+            steps={[
+              {
+                label: 'Sign and submit attestation',
+                paused: true,
+                exec: (report) =>
+                  signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
+              },
+              {
+                label: 'Encrypt message',
+                exec: () =>
+                  encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
+              },
+              {
+                label: 'Send message',
+                paused: true,
+                content: <Recaptcha onCallback={setRecaptchaToken} />,
+                exec: () => sendMessage(encryptedMessage, recaptchaToken)
+              }
+            ]}
+            submitText="Revoke"
+          />
+        }
         title="Approve the request"
       />
     </>

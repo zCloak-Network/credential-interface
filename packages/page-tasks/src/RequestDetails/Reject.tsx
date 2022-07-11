@@ -7,8 +7,9 @@ import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/materi
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
+import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import { encryptMessage, sendMessage } from '@credential/react-dids/steps';
+import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -24,6 +25,7 @@ const Reject: React.FC<{
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const message = useMemo(() => {
     if (!didUri) {
@@ -81,20 +83,26 @@ const Reject: React.FC<{
       )}
       <DidsModal
         onClose={toggleOpen}
-        onDone={onDone}
         open={open}
-        steps={[
-          {
-            label: 'Encrypt message',
-            exec: () =>
-              encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
-          },
-          {
-            label: 'Send message',
-            exec: () => sendMessage(encryptedMessage)
-          }
-        ]}
-        submitText="Reject"
+        steps={
+          <Steps
+            onDone={onDone}
+            steps={[
+              {
+                label: 'Encrypt message',
+                exec: () =>
+                  encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
+              },
+              {
+                label: 'Send message',
+                paused: true,
+                content: <Recaptcha onCallback={setRecaptchaToken} />,
+                exec: () => sendMessage(encryptedMessage, recaptchaToken)
+              }
+            ]}
+            submitText="Reject"
+          />
+        }
         title="Reject the request"
       />
     </>

@@ -9,8 +9,14 @@ import { Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { credentialDb } from '@credential/app-db';
+import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
-import { encryptMessage, requestAttestation, sendMessage } from '@credential/react-dids/steps';
+import {
+  encryptMessage,
+  requestAttestation,
+  sendMessage,
+  Steps
+} from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
@@ -26,6 +32,7 @@ const SubmitClaim: React.FC<{
   const sender = useDidDetails(didUri);
   const [request, setRequest] = useState<RequestForAttestation>();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
+  const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const message = useMemo(
     () =>
@@ -57,26 +64,34 @@ const SubmitClaim: React.FC<{
       </Button>
       <DidsModal
         onClose={toggleOpen}
-        onDone={_onDone}
         open={open}
-        steps={[
-          {
-            label: 'Request for attestation and sign',
-            exec: () =>
-              requestAttestation(keyring, sender, ctype, contents as Record<string, any>).then(
-                setRequest
-              )
-          },
-          {
-            label: 'Encrypt message',
-            exec: () => encryptMessage(keyring, message, sender, attester).then(setEncryptedMessage)
-          },
-          {
-            label: 'Send message',
-            exec: () => sendMessage(encryptedMessage)
-          }
-        ]}
-        submitText="Submit claim"
+        steps={
+          <Steps
+            onDone={_onDone}
+            steps={[
+              {
+                label: 'Request for attestation and sign',
+                paused: true,
+                exec: () =>
+                  requestAttestation(keyring, sender, ctype, contents as Record<string, any>).then(
+                    setRequest
+                  )
+              },
+              {
+                label: 'Encrypt message',
+                exec: () =>
+                  encryptMessage(keyring, message, sender, attester).then(setEncryptedMessage)
+              },
+              {
+                label: 'Send message',
+                paused: true,
+                content: <Recaptcha onCallback={setRecaptchaToken} />,
+                exec: () => sendMessage(encryptedMessage, recaptchaToken)
+              }
+            ]}
+            submitText="Submit claim"
+          />
+        }
         title="Submit claim"
       />
     </>
