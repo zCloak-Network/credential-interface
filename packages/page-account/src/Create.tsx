@@ -39,7 +39,7 @@ const Create: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
         <Success
           desc="Remember to keep your secret recovery phrase safe, it’s your responsibility."
           title="Your account has been restored account!"
-          toggleStart={() => navigate('/')}
+          toggleStart={() => navigate(`/${didRole}`)}
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>

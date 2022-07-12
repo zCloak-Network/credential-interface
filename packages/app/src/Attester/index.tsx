@@ -50,43 +50,22 @@ const Attester: React.FC = () => {
   const items = useMemo(
     () => [
       {
-        to: '/my-ctype',
-        active: pathname.startsWith('/my-ctype'),
-        svgIcon: (
-          <SvgIcon
-            component={IconCtype}
-            fontSize="inherit"
-            // sx={{ color: pathname.startsWith('/my-ctype') ? palette.common.white : undefined }}
-            viewBox="0 0 15.502 15.502"
-          />
-        ),
+        to: '/attester/my-ctype',
+        active: pathname.startsWith('/attester/my-ctype'),
+        svgIcon: <SvgIcon component={IconCtype} fontSize="inherit" viewBox="0 0 15.502 15.502" />,
         text: 'My ctypes'
       },
       {
-        to: '/tasks',
-        active: pathname.startsWith('/tasks'),
-        svgIcon: (
-          <SvgIcon
-            component={IconTask}
-            fontSize="inherit"
-            // sx={{ color: pathname.startsWith('/tasks') ? palette.common.white : undefined }}
-            viewBox="0 0 16 12.799"
-          />
-        ),
+        to: '/attester/tasks',
+        active: pathname.startsWith('/attester/tasks'),
+        svgIcon: <SvgIcon component={IconTask} fontSize="inherit" viewBox="0 0 16 12.799" />,
         text: 'Tasks',
         extra: taskUnread ? <Badge value={taskUnread} /> : undefined
       },
       {
-        to: '/message',
-        active: pathname.startsWith('/message'),
-        svgIcon: (
-          <SvgIcon
-            component={IconMessage}
-            fontSize="inherit"
-            // sx={{ color: pathname.startsWith('/messages') ? palette.common.white : undefined }}
-            viewBox="0 0 14 14.22"
-          />
-        ),
+        to: '/attester/message',
+        active: pathname.startsWith('/attester/message'),
+        svgIcon: <SvgIcon component={IconMessage} fontSize="inherit" viewBox="0 0 14 14.22" />,
         text: 'Message',
         extra: messageUnread ? <Badge value={messageUnread} /> : undefined
       }
