@@ -1,5 +1,3 @@
-import type { DidRole } from '@credential/react-dids/types';
-
 import {
   Container,
   Stack,
@@ -13,6 +11,7 @@ import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { StepIcon } from '@credential/react-components';
+import { useQueryParam } from '@credential/react-hooks';
 import { generateMnemonic } from '@credential/react-keystore';
 
 import Step1 from './create/Step1';
@@ -20,11 +19,12 @@ import Step2 from './create/Step2';
 import Step3 from './create/Step3';
 import Success from './Success';
 
-const Create: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
+const Create: React.FC = () => {
   const [step, setStep] = useState(0);
   const [password, setPassword] = useState<string>();
   const mnemonic = useMemo(() => generateMnemonic(), []);
   const navigate = useNavigate();
+  const [redirect] = useQueryParam<string>('redirect');
 
   const nextStep = useCallback(() => {
     setStep((step) => step + 1);
@@ -39,7 +39,7 @@ const Create: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
         <Success
           desc="Remember to keep your secret recovery phrase safe, it’s your responsibility."
           title="Your account has been restored account!"
-          toggleStart={() => navigate('/')}
+          toggleStart={() => navigate(`/${redirect ?? 'claimer'}`)}
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>
@@ -80,7 +80,6 @@ const Create: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
           {step === 1 && <Step2 mnemonic={mnemonic} nextStep={nextStep} prevStep={prevStep} />}
           {step === 2 && (
             <Step3
-              didRole={didRole}
               mnemonic={mnemonic}
               nextStep={nextStep}
               password={password}

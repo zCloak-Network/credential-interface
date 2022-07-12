@@ -33,7 +33,9 @@ const SubmitCType: React.FC<{
   }, [properties, title]);
 
   const getExtrinsic = useCallback(async () => {
-    if (!ctype) return null;
+    if (!ctype) {
+      throw new Error('Ctype generate failed');
+    }
 
     if (!(attester instanceof Did.FullDidDetails)) {
       throw new Error('The DID with the given identifier is not on chain.');
@@ -59,6 +61,7 @@ const SubmitCType: React.FC<{
             steps={[
               {
                 label: 'Sign and submit ctype',
+                paused: true,
                 exec: (report) =>
                   signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
               },

@@ -71,7 +71,6 @@ const SubmitClaim: React.FC<{
             steps={[
               {
                 label: 'Request for attestation and sign',
-                paused: true,
                 exec: () =>
                   requestAttestation(keyring, sender, ctype, contents as Record<string, any>).then(
                     setRequest

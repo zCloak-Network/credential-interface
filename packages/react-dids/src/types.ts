@@ -13,7 +13,9 @@ export interface DidsState {
   blockchain: Blockchain;
   didUri?: DidUri;
   isLocked: boolean;
-  generateDid: (mnemonic: string, password: string, didRole: DidRole) => Promise<DidKeys$Json>;
-  restoreDid: (text: string, password: string, didRole: DidRole) => void;
+  isFullDid: boolean;
+  needUpgrade: boolean; // if the did is full did, should it to upgrade
+  generateDid: (mnemonic: string, password: string) => Promise<DidKeys$Json>;
+  restoreDid: (text: string, password: string) => void;
   unlockDid: (didUri: DidUri, password: string) => Promise<void>;
 }

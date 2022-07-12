@@ -15,7 +15,7 @@ interface Props {
   messageLinked?: Message[];
 }
 
-const Contents: React.FC<Props> = ({ contents, messageLinked }) => {
+const Details: React.FC<Props> = ({ contents, messageLinked }) => {
   const [active, setActive] = useState<number>(0);
   const sortedMessageLinked = useMemo(
     () => messageLinked?.sort((l, r) => (l.createdAt < r.createdAt ? 1 : -1)),
@@ -72,4 +72,4 @@ const Contents: React.FC<Props> = ({ contents, messageLinked }) => {
   );
 };
 
-export default React.memo(Contents);
+export default React.memo(Details);

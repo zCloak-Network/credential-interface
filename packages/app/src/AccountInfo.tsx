@@ -1,8 +1,8 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
-import Circle from '@mui/icons-material/Circle';
 import { alpha, Button } from '@mui/material';
 import React from 'react';
 
+import { IdentityIcon } from '@credential/react-components';
 import { DidName } from '@credential/react-dids';
 
 interface Props {
@@ -12,7 +12,7 @@ interface Props {
 const AccountInfo: React.FC<Props> = ({ did }) => {
   return (
     <Button
-      endIcon={<Circle />}
+      endIcon={<IdentityIcon value={did} />}
       sx={({ palette }) => ({
         border: '1px solid',
         borderColor: alpha(palette.primary.main, 0.12),

@@ -1,5 +1,3 @@
-import type { DidRole } from '@credential/react-dids/types';
-
 import { LoadingButton } from '@mui/lab';
 import {
   Button,
@@ -16,10 +14,11 @@ import { useNavigate } from 'react-router-dom';
 
 import { InputPassword, NotificationContext } from '@credential/react-components';
 import { DidsContext } from '@credential/react-dids';
+import { useQueryParam } from '@credential/react-hooks';
 
 import Success from './Success';
 
-const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
+const Restore: React.FC = () => {
   const [success, setSuccess] = useState(false);
   const [password, setPassword] = useState<string>();
   const [loading, setLoading] = useState(false);
@@ -27,6 +26,7 @@ const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
   const [file, setFile] = useState<File>();
   const { notifyError } = useContext(NotificationContext);
   const { restoreDid } = useContext(DidsContext);
+  const [redirect] = useQueryParam<string>('redirect');
 
   const restore = useCallback(() => {
     if (file && password) {
@@ -34,7 +34,7 @@ const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
       file
         .text()
         .then((text) => {
-          restoreDid(text, password, didRole);
+          restoreDid(text, password);
         })
         .then(() => setSuccess(true))
         .catch((error) => {
@@ -42,7 +42,7 @@ const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
         })
         .finally(() => setLoading(false));
     }
-  }, [didRole, file, notifyError, password, restoreDid]);
+  }, [file, notifyError, password, restoreDid]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -50,7 +50,7 @@ const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
         <Success
           desc="Remember to keep your secret recovery phrase safe, it’s your responsibility."
           title="Your account has been restored account!"
-          toggleStart={() => navigate('/')}
+          toggleStart={() => navigate(`/${redirect ?? 'claimer'}`)}
         />
       ) : (
         <Stack alignItems="center" spacing={5.5}>
@@ -68,6 +68,7 @@ const Restore: React.FC<{ didRole: DidRole }> = ({ didRole }) => {
                   <Button component="label" variant="contained">
                     Select keystore file
                     <input
+                      accept="application/json"
                       hidden
                       onChange={(e) => {
                         setFile(e.target.files?.[0]);

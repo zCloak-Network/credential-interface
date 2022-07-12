@@ -8,7 +8,8 @@ const CredentialStatus: React.FC<{
   role: 'attester' | 'claimer';
   status?: RequestStatus;
   revoked?: boolean;
-}> = ({ role, revoked, status = RequestStatus.INIT }) => {
+  showText?: boolean;
+}> = ({ role, revoked, status = RequestStatus.INIT, showText }) => {
   const theme = useTheme();
   const initText = useMemo(() => (role === 'attester' ? 'Pending' : 'Verifying'), [role]);
   const submitText = useMemo(
@@ -53,13 +54,15 @@ const CredentialStatus: React.FC<{
       })}
     >
       <Circle sx={{ width: 10, height: 10 }} />
-      <Typography variant="inherit">
-        {status === RequestStatus.SUBMIT
-          ? submitText
-          : status === RequestStatus.REJECT
-          ? rejectText
-          : initText}
-      </Typography>
+      {showText && (
+        <Typography variant="inherit">
+          {status === RequestStatus.SUBMIT
+            ? submitText
+            : status === RequestStatus.REJECT
+            ? rejectText
+            : initText}
+        </Typography>
+      )}
     </Stack>
   );
 };

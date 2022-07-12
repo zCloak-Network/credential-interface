@@ -131,6 +131,7 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
             <CredentialStatus
               revoked={attestation?.revoked}
               role="claimer"
+              showText
               status={request.status}
             />
             <Typography className="CredentialCell_Time" variant="inherit">

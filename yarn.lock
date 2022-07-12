@@ -1576,6 +1576,14 @@ __metadata:
   languageName: unknown
   linkType: soft
 
+"@credential/page-did@workspace:packages/page-did":
+  version: 0.0.0-use.local
+  resolution: "@credential/page-did@workspace:packages/page-did"
+  dependencies:
+    "@credential/react-keystore": 0.0.0
+  languageName: unknown
+  linkType: soft
+
 "@credential/page-message@workspace:packages/page-message":
   version: 0.0.0-use.local
   resolution: "@credential/page-message@workspace:packages/page-message"
@@ -1640,6 +1648,7 @@ __metadata:
     "@zcloak/service": ^0.0.2-25
     copy-to-clipboard: ^3.3.1
     dexie-react-hooks: ^1.1.1
+    search-query-parser: ^1.6.0
   languageName: unknown
   linkType: soft
 
@@ -13881,6 +13890,13 @@ __metadata:
     ajv-formats: ^2.1.1
     ajv-keywords: ^5.0.0
   checksum: c843e92fdd1a5c145dbb6ffdae33e501867f9703afac67bdf35a685e49f85b1dcc10ea250033175a64bd9d31f0555bc6785b8359da0c90bcea30cf6dfbb55a8f
+  languageName: node
+  linkType: hard
+
+"search-query-parser@npm:^1.6.0":
+  version: 1.6.0
+  resolution: "search-query-parser@npm:1.6.0"
+  checksum: 6ce290e1d1602401ab5e4561f2a9744d1ffd75da5759cc8ead162153258d8470dd86757a3be577772e883d48673dec42b26843fc4aa5155f1ec902112ce92225
   languageName: node
   linkType: hard
 
