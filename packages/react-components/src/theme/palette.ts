@@ -41,14 +41,14 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     300: '#e0e0e0',
     400: '#bdbdbd',
     500: '#9e9e9e',
-    600: '#757575',
-    700: '#616161',
+    600: '#777777',
+    700: '#666666',
     800: '#424242',
     900: '#3a3a3a',
     A100: '#f5f5f5',
     A200: '#eeeeee',
     A400: '#bdbdbd',
-    A700: '#616161'
+    A700: '#666666'
   },
   common: { black: '#1C1D21', white: '#fff' },
   secondary: { main: '#9c27b0', light: '#ba68c8', dark: '#7b1fa2', contrastText: '#fff' },

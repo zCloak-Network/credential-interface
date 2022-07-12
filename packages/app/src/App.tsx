@@ -7,6 +7,7 @@ import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
+import PageUpgradeFullDid from '@credential/page-did/UpgradeFullDid';
 import PageMessage from '@credential/page-message';
 import PageAttesterMessage from '@credential/page-message/attester';
 import PageTasks from '@credential/page-tasks';
@@ -23,7 +24,7 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
 const createClaimerApp = () => (
   <Route
     element={
-      <AccountAuth>
+      <AccountAuth didRole="claimer">
         <Claimer />
       </AccountAuth>
     }
@@ -40,12 +41,15 @@ const createClaimerApp = () => (
 const createAttesterApp = () => (
   <Route
     element={
-      <AccountAuth>
+      <AccountAuth didRole="attester">
         <Attester />
       </AccountAuth>
     }
     path="attester"
   >
+    <Route path="did">
+      <Route element={<PageUpgradeFullDid />} path="upgrade" />
+    </Route>
     <Route element={<PageOwnerCType />} path="my-ctype" />
     <Route element={<PageTasks />} path="tasks" />
     <Route element={<PageAttesterMessage />} path="message" />
@@ -64,8 +68,8 @@ const App: React.FC = () => {
         {AppClaimer}
         {AppAttester}
         <Route element={<Account />} path="account">
-          <Route element={<PageCreateAccount didRole="attester" />} path="create" />
-          <Route element={<PageRestoreAccount didRole="attester" />} path="restore" />
+          <Route element={<PageCreateAccount />} path="create" />
+          <Route element={<PageRestoreAccount />} path="restore" />
           <Route element={<PageAccount />} index />
         </Route>
         <Route element={<NoMatch to="/claimer" />} path="*" />

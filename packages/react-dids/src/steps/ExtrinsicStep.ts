@@ -9,7 +9,7 @@ export async function signAndSend(
   report: Report,
   keyring: Keyring,
   sender?: string | Uint8Array | null,
-  getExtrinsic?: () => Promise<SubmittableExtrinsic | null>
+  getExtrinsic?: () => Promise<SubmittableExtrinsic>
 ): Promise<void> {
   if (!getExtrinsic) return;
 

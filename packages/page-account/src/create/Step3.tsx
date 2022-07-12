@@ -1,5 +1,3 @@
-import type { DidRole } from '@credential/react-dids/types';
-
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Box, Button, FormControl, Grid, InputLabel, OutlinedInput } from '@mui/material';
 import FileSaver from 'file-saver';
@@ -16,8 +14,7 @@ const Step3: React.FC<{
   nextStep: () => void;
   mnemonic: string;
   password?: string;
-  didRole: DidRole;
-}> = ({ didRole, mnemonic, nextStep, password, prevStep }) => {
+}> = ({ mnemonic, nextStep, password, prevStep }) => {
   const [keyWordsIndex, setKeyWordsIndex] = useState<number[]>([]);
   const [keyWords, setKeyWords] = useState<string[]>([]);
   const { generateDid } = useContext(DidsContext);
@@ -48,7 +45,7 @@ const Step3: React.FC<{
   const toggleContinue = useCallback(async () => {
     if (!password) return;
 
-    const json = await generateDid(mnemonic, password, didRole);
+    const json = await generateDid(mnemonic, password);
     const blobSiningJson = new Blob([JSON.stringify(json)], {
       type: 'text/plain;charset=utf-8'
     });
@@ -56,7 +53,7 @@ const Step3: React.FC<{
     FileSaver.saveAs(blobSiningJson, `${json.didUri}.did`);
 
     nextStep();
-  }, [didRole, generateDid, mnemonic, nextStep, password]);
+  }, [generateDid, mnemonic, nextStep, password]);
 
   return (
     <>

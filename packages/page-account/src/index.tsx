@@ -2,8 +2,11 @@ import { Box, Button, Container, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { useQueryParam } from '@credential/react-hooks';
+
 const Account: React.FC = () => {
   const navigate = useNavigate();
+  const [redirect] = useQueryParam<string>('redirect');
 
   return (
     <Container maxWidth="lg">
@@ -15,10 +18,28 @@ const Account: React.FC = () => {
             zCloak Credential Center
           </Typography>
           <Typography>Create a New Credential account.</Typography>
-          <Button onClick={() => navigate('/account/create')} size="large" variant="contained">
+          <Button
+            onClick={() =>
+              navigate({
+                pathname: '/account/create',
+                search: redirect ? `?redirect=${redirect}` : undefined
+              })
+            }
+            size="large"
+            variant="contained"
+          >
             Create account
           </Button>
-          <Button onClick={() => navigate('/account/restore')} size="large" variant="outlined">
+          <Button
+            onClick={() =>
+              navigate({
+                pathname: '/account/restore',
+                search: redirect ? `?redirect=${redirect}` : undefined
+              })
+            }
+            size="large"
+            variant="outlined"
+          >
             Restore account
           </Button>
         </Stack>

@@ -9,7 +9,7 @@ import UnlockModal from '@credential/react-dids/UnlockModal';
 import { useLocalStorage } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
-import { DidKeys$Json, DidRole, DidsState } from './types';
+import { DidKeys$Json, DidsState } from './types';
 import { getDidDetails } from './useDidDetails';
 
 export const DidsContext = createContext({} as DidsState);
@@ -27,50 +27,83 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { addKeystore, keyring, queueUnlock, restoreKeystore, setQueueUnlock } = useKeystore();
   const [didUri, setDidUri] = useLocalStorage<DidUri>(storageKey);
   const [isLocked, setIsLocked] = useState(true);
+  const [needUpgrade, setNeedUpgrade] = useState(false);
+
+  useEffect(() => {
+    try {
+      if (didUri) {
+        const { identifier, type } = Did.Utils.parseDidUri(didUri);
+
+        Did.FullDidDetails.fromChainInfo(
+          type === 'light'
+            ? Did.Utils.getKiltDidFromIdentifier(identifier.slice(2), 'full')
+            : didUri
+        ).then((data) => {
+          if (data !== null) {
+            setDidUri(data.uri);
+            setNeedUpgrade(
+              !(
+                keyring.getPair(data.authenticationKey.publicKey) &&
+                data.encryptionKey &&
+                keyring.getPair(data.encryptionKey.publicKey) &&
+                data.attestationKey &&
+                keyring.getPair(data.attestationKey.publicKey) &&
+                data.delegationKey &&
+                keyring.getPair(data.delegationKey.publicKey)
+              )
+            );
+          }
+        });
+      }
+    } catch {}
+  }, [didUri, keyring, setDidUri]);
+
+  const isFullDid = useMemo(() => {
+    try {
+      if (didUri) {
+        const { type } = Did.Utils.parseDidUri(didUri);
+
+        if (type === 'full') {
+          return true;
+        }
+      }
+    } catch {}
+
+    return false;
+  }, [didUri]);
 
   const generateDid = useCallback(
-    async (mnemonic: string, password: string, didRole: DidRole): Promise<DidKeys$Json> => {
+    async (mnemonic: string, password: string): Promise<DidKeys$Json> => {
       const json = await addKeystore(mnemonic, password);
       const authenticationAccount = json.accounts[0];
       const encryptionAccount = json.accounts[1];
 
-      if (didRole === 'claimer') {
-        const uri = Did.LightDidDetails.fromDetails({
-          authenticationKey: {
-            publicKey: keyring.getPair(authenticationAccount.address).publicKey,
-            type:
-              keyring.getPair(authenticationAccount.address).type === 'sr25519'
-                ? VerificationKeyType.Sr25519
-                : VerificationKeyType.Ed25519
-          },
-          encryptionKey: {
-            publicKey: keyring.getPair(encryptionAccount.address).publicKey,
-            type: EncryptionKeyType.X25519
-          }
-        }).uri;
+      const uri = Did.LightDidDetails.fromDetails({
+        authenticationKey: {
+          publicKey: keyring.getPair(authenticationAccount.address).publicKey,
+          type:
+            keyring.getPair(authenticationAccount.address).type === 'sr25519'
+              ? VerificationKeyType.Sr25519
+              : VerificationKeyType.Ed25519
+        },
+        encryptionKey: {
+          publicKey: keyring.getPair(encryptionAccount.address).publicKey,
+          type: EncryptionKeyType.X25519
+        }
+      }).uri;
 
-        setDidUri(uri);
+      setDidUri(uri);
 
-        return {
-          didUri: uri,
-          ...json
-        };
-      } else {
-        const uri = Did.Utils.getKiltDidFromIdentifier(authenticationAccount.address, 'full');
-
-        setDidUri(uri);
-
-        return {
-          didUri: uri,
-          ...json
-        };
-      }
+      return {
+        didUri: uri,
+        ...json
+      };
     },
     [addKeystore, keyring, setDidUri]
   );
 
   const restoreDid = useCallback(
-    (text: string, password: string, didRole: DidRole): void => {
+    (text: string, password: string): void => {
       const json = JSON.parse(text) as DidKeys$Json;
 
       assert(
@@ -82,10 +115,6 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
           json.encoding,
         'did file format error'
       );
-
-      const { type } = Did.Utils.parseDidUri(json.didUri);
-
-      assert(didRole === 'attester' ? type === 'full' : type === 'light', 'did uri type error');
 
       restoreKeystore(json, password);
       setDidUri(json.didUri);
@@ -115,17 +144,19 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     });
   }, []);
 
-  const value = useMemo(
-    () => ({
+  const value: DidsState = useMemo(
+    (): DidsState => ({
       isReady,
       blockchain,
       didUri,
       isLocked,
+      isFullDid,
+      needUpgrade,
       generateDid,
       restoreDid,
       unlockDid
     }),
-    [didUri, generateDid, isLocked, isReady, restoreDid, unlockDid]
+    [didUri, generateDid, isFullDid, isLocked, isReady, needUpgrade, restoreDid, unlockDid]
   );
 
   useEffect(() => {

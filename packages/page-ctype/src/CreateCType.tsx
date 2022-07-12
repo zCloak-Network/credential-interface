@@ -37,7 +37,7 @@ const CreateCType: React.FC = () => {
     properties?: Record<string, string>;
   }>(key);
   const properties = useMemo(() => {
-    if (cTypeContent?.title && cTypeContent?.description && cTypeContent?.properties) {
+    if (cTypeContent?.title && cTypeContent?.properties) {
       return Object.entries(cTypeContent.properties)
         .map(([name, property]) => ({
           [name]: {

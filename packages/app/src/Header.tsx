@@ -6,12 +6,14 @@ import React, { useCallback, useContext } from 'react';
 import { LogoBlackIcon } from '@credential/app-config/icons';
 import { credentialDb } from '@credential/app-db';
 import { AppContext } from '@credential/react-components';
+import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import { useUnread } from './Notification/useUnread';
 import AccountInfo from './AccountInfo';
 import Network from './Network';
 import Notification from './Notification';
+import UpgradeFullDid from './UpgradeFullDid';
 
 const Logo: React.FC = () => {
   return (
@@ -35,9 +37,11 @@ const Logo: React.FC = () => {
 
 const Header: React.FC<{
   did?: DidUri;
+  showUpgrade?: boolean;
   handleRequest?: (rootHash: Hash, isRequst: boolean) => void;
-}> = ({ did, handleRequest }) => {
+}> = ({ did, handleRequest, showUpgrade = false }) => {
   const { parse, unParsed } = useContext(AppContext);
+  const { isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
   const { allUnread } = useUnread(credentialDb, did);
 
@@ -74,6 +78,7 @@ const Header: React.FC<{
           </IconButton>
           <Network />
           {did && <AccountInfo did={did} />}
+          {showUpgrade && !isFullDid && <UpgradeFullDid />}
         </Stack>
       </Stack>
       <Notification handleRequest={handleRequest} onClose={toggleNotiOpen} open={notiOpen} />

@@ -83,6 +83,7 @@ const Attester: React.FC = () => {
             setShowActions(isRequst);
             toggleRequestOpen();
           }}
+          showUpgrade
         />
         <Sidebar accountType="attester" items={items} open={open} toggleOpen={toggleOpen} />
         <Box

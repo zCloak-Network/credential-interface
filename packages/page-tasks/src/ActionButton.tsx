@@ -73,6 +73,7 @@ const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | nu
       {detailsOpen && (
         <RequestDetails
           attestation={attestation}
+          messageLinked={messageLinked}
           onClose={toggleDetailsOpen}
           open={detailsOpen}
           request={request}

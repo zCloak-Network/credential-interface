@@ -14,9 +14,6 @@ interface State {
 }
 
 export const AppContext = createContext({} as State);
-
-let messageSync: MessageSync | null = null;
-
 const dataSource: IDataSource = {
   async getMessage(id, uri, length?) {
     const receiverRes = await credentialApi.getMessages({
@@ -30,19 +27,7 @@ const dataSource: IDataSource = {
     return data.map((d) => ({ ...d, id: Number(d.id) }));
   }
 };
-
-const sleep = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms));
-
-async function syncMessage(onDone: (count: number) => void) {
-  while (true) {
-    if (messageSync) {
-      await messageSync.syncMessage();
-      onDone(messageSync.encryptMessages.size);
-    }
-
-    await sleep(30000);
-  }
-}
+const messageSync: MessageSync = new MessageSync(dataSource, credentialDb);
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { keyring } = useKeystore();
@@ -51,24 +36,28 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [unParsed, setUnParsed] = useState(0);
 
   useEffect(() => {
-    syncMessage(setUnParsed);
-  }, []);
+    const interval = setInterval(() => {
+      if (didDetails) {
+        messageSync.syncMessage(didDetails).finally(() => {
+          setUnParsed(messageSync.getEncryptMessages(didDetails).length);
+        });
+      }
+    }, 30000);
 
-  useEffect(() => {
-    if (didDetails && didDetails.encryptionKey && messageSync === null) {
-      messageSync = new MessageSync(
-        dataSource,
-        credentialDb,
-        didDetails.assembleKeyUri(didDetails.encryptionKey.id)
-      );
+    if (didDetails) {
+      messageSync.syncMessage(didDetails).finally(() => {
+        setUnParsed(messageSync.getEncryptMessages(didDetails).length);
+      });
     }
+
+    return () => clearInterval(interval);
   }, [didDetails]);
 
   const parse = useCallback(async () => {
-    if (didDetails && messageSync && messageSync.encryptMessages.size > 0) {
+    if (didDetails) {
       isLocked && (await unlock());
       await messageSync.parse(keyring, didDetails);
-      setUnParsed(messageSync.encryptMessages.size);
+      setUnParsed(messageSync.getEncryptMessages(didDetails).length);
     }
   }, [didDetails, isLocked, keyring]);
 

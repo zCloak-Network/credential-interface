@@ -59,6 +59,7 @@ const DidsModal: React.FC<{
       .then(() => {
         nextStep();
       })
+      .catch(report)
       .finally(() => {
         setStatus({ loading: false });
       });
@@ -74,6 +75,7 @@ const DidsModal: React.FC<{
       .then(() => {
         nextStep();
       })
+      .catch(report)
       .finally(() => {
         setLoading(false);
         setStatus({ loading: false });
