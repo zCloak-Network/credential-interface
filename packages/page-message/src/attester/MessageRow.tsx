@@ -53,6 +53,7 @@ const MessageRow: React.FC<{
           <CredentialStatus
             revoked={attestation?.revoked}
             role="attester"
+            showText
             status={request?.status}
           />
         </TableCell>

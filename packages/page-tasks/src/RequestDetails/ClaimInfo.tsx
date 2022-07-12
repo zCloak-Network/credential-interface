@@ -2,7 +2,7 @@ import type { IAttestation } from '@kiltprotocol/sdk-js';
 
 import type { Request } from '@credential/react-hooks/types';
 
-import { Box, Grid, Link, Stack, Typography } from '@mui/material';
+import { Box, Grid, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
@@ -71,19 +71,19 @@ const ClaimInfo: React.FC<{
             </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
-            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Status</Typography>
-            <Stack direction="row" spacing={2}>
+            <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>
+              {attestation?.owner ? 'Status' : 'Attested by'}
+            </Typography>
+            <Stack alignItems="center" direction="row" spacing={0.75}>
               <CredentialStatus
                 revoked={attestation?.revoked}
                 role="attester"
+                showText={!attestation?.owner}
                 status={request.status}
               />
               {attestation?.owner && (
                 <Typography sx={({ palette }) => ({ color: palette.grey[700] })} variant="inherit">
-                  By{' '}
-                  <Link>
-                    <DidName value={attestation.owner} />
-                  </Link>
+                  <DidName value={attestation.owner} />
                 </Typography>
               )}
             </Stack>
