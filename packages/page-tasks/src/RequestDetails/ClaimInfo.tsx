@@ -2,13 +2,12 @@ import type { IAttestation } from '@kiltprotocol/sdk-js';
 
 import type { Request } from '@credential/react-hooks/types';
 
-import Circle from '@mui/icons-material/Circle';
 import { Box, Grid, Link, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
 import { Message } from '@credential/app-db/message';
-import { CredentialStatus, CTypeName } from '@credential/react-components';
+import { CredentialStatus, CTypeName, IdentityIcon } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { RequestStatus } from '@credential/react-hooks/types';
@@ -27,7 +26,7 @@ const ClaimInfo: React.FC<{
     <Box sx={({ palette }) => ({ background: palette.common.white, paddingX: 8, paddingY: 4 })}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Stack alignItems="center" direction="row" spacing={3} sx={{ width: '60%' }}>
-          <Circle sx={{ width: 70, height: 70 }} />
+          <IdentityIcon diameter={70} value={request.claim.owner} />
           <Box sx={{ width: 300 }}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claimer</Typography>
             <Typography sx={{ ...ellipsisMixin() }} variant="h4">
