@@ -77,7 +77,6 @@ const Attester: React.FC = () => {
     <>
       <Box bgcolor="#fff" minHeight="100vh">
         <Header
-          did={didUri}
           handleRequest={(rootHash, isRequst) => {
             setRootHash(rootHash);
             setShowActions(isRequst);

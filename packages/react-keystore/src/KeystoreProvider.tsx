@@ -1,4 +1,5 @@
-import type { KeyringAddress, KeyringPairs$Json } from '@polkadot/ui-keyring/types';
+import type { KeyringPair$Json } from '@polkadot/keyring/types';
+import type { KeyringAddress } from '@polkadot/ui-keyring/types';
 
 import { EncryptedJson } from '@polkadot/util-crypto/types';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
@@ -11,8 +12,8 @@ interface KeystoreState {
   allAccounts: KeyringAddress[];
   queueUnlock: QueueCallbackInput[];
   setQueueUnlock: (queue: QueueCallbackInput[]) => void;
-  addKeystore: (mnemonic: string, password: string) => Promise<KeyringPairs$Json>;
-  restoreKeystore: (json: EncryptedJson, password: string) => void;
+  addKeystore: (mnemonic: string, password: string) => [KeyringPair$Json, KeyringPair$Json];
+  restoreKeystore: (json: EncryptedJson | KeyringPair$Json[], password: string) => void;
 }
 
 export const KeystoreContext = createContext<KeystoreState>({} as KeystoreState);
@@ -56,18 +57,31 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
   }, []);
 
   const addKeystore = useCallback(
-    (mnemonic: string, password: string): Promise<KeyringPairs$Json> => {
+    (mnemonic: string, password: string): [KeyringPair$Json, KeyringPair$Json] => {
       const result1 = keyring.addUri(mnemonic, password, {}, 'sr25519');
       const result2 = keyring.addUri(mnemonic, password, {}, 'ed25519');
 
-      return keyring.backupAccounts([result1.pair.address, result2.pair.address], password);
+      return [result1.json, result2.json];
     },
     []
   );
 
-  const restoreKeystore = useCallback((json: EncryptedJson, password: string) => {
-    keyring.restoreAccounts(json, password);
-  }, []);
+  const restoreKeystore = useCallback(
+    (json: EncryptedJson | KeyringPair$Json[], password: string) => {
+      if (Array.isArray(json)) {
+        json.forEach((j) => {
+          const pair = keyring.createFromJson(j);
+
+          pair.unlock(password);
+          pair.lock();
+          keyring.addPair(pair, password);
+        });
+      } else {
+        keyring.restoreAccounts(json, password);
+      }
+    },
+    []
+  );
 
   return (
     <KeystoreContext.Provider

@@ -13,7 +13,7 @@ const Claimer: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
-  const { didUri, isReady } = useContext(DidsContext);
+  const { isReady } = useContext(DidsContext);
 
   const items = useMemo(
     () => [
@@ -53,7 +53,7 @@ const Claimer: React.FC = () => {
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
-      <Header did={didUri} />
+      <Header />
       <Sidebar accountType="claimer" items={items} open={open} toggleOpen={toggleOpen} />
       <Box
         minHeight="100vh"
