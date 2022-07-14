@@ -1,4 +1,4 @@
-import { DidUri, Hash } from '@kiltprotocol/sdk-js';
+import { Hash } from '@kiltprotocol/sdk-js';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { alpha, Badge, Box, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
@@ -10,7 +10,7 @@ import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import { useUnread } from './Notification/useUnread';
-import AccountInfo from './AccountInfo';
+import DidInfo from './DidInfo';
 import Network from './Network';
 import Notification from './Notification';
 import UpgradeFullDid from './UpgradeFullDid';
@@ -36,14 +36,13 @@ const Logo: React.FC = () => {
 };
 
 const Header: React.FC<{
-  did?: DidUri;
   showUpgrade?: boolean;
   handleRequest?: (rootHash: Hash, isRequst: boolean) => void;
-}> = ({ did, handleRequest, showUpgrade = false }) => {
+}> = ({ handleRequest, showUpgrade = false }) => {
   const { parse, unParsed } = useContext(AppContext);
-  const { isFullDid } = useContext(DidsContext);
+  const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
-  const { allUnread } = useUnread(credentialDb, did);
+  const { allUnread } = useUnread(credentialDb, didUri);
 
   const handleNotification = useCallback(() => {
     toggleNotiOpen();
@@ -77,7 +76,7 @@ const Header: React.FC<{
             </Badge>
           </IconButton>
           <Network />
-          {did && <AccountInfo did={did} />}
+          {didUri && <DidInfo did={didUri} />}
           {showUpgrade && !isFullDid && <UpgradeFullDid />}
         </Stack>
       </Stack>

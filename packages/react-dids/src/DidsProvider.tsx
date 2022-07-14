@@ -10,7 +10,7 @@ import { useLocalStorage } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 import { DidKeys$Json, DidsState } from './types';
-import { getDidDetails } from './useDidDetails';
+import { getDidDetails, useDidDetails } from './useDidDetails';
 
 export const DidsContext = createContext({} as DidsState);
 
@@ -25,9 +25,10 @@ init({
 const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
   const { addKeystore, keyring, queueUnlock, restoreKeystore, setQueueUnlock } = useKeystore();
-  const [didUri, setDidUri] = useLocalStorage<DidUri>(storageKey);
+  const [didUri, setDidUri, removeDidUri] = useLocalStorage<DidUri>(storageKey);
   const [isLocked, setIsLocked] = useState(true);
   const [needUpgrade, setNeedUpgrade] = useState(false);
+  const didDetails = useDidDetails(didUri);
 
   useEffect(() => {
     try {
@@ -73,21 +74,21 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [didUri]);
 
   const generateDid = useCallback(
-    async (mnemonic: string, password: string): Promise<DidKeys$Json> => {
-      const json = await addKeystore(mnemonic, password);
-      const authenticationAccount = json.accounts[0];
-      const encryptionAccount = json.accounts[1];
+    (mnemonic: string, password: string): DidKeys$Json => {
+      const json = addKeystore(mnemonic, password);
+      const authenticationAccount = json[0].address;
+      const encryptionAccount = json[1].address;
 
       const uri = Did.LightDidDetails.fromDetails({
         authenticationKey: {
-          publicKey: keyring.getPair(authenticationAccount.address).publicKey,
+          publicKey: keyring.getPair(authenticationAccount).publicKey,
           type:
-            keyring.getPair(authenticationAccount.address).type === 'sr25519'
+            keyring.getPair(authenticationAccount).type === 'sr25519'
               ? VerificationKeyType.Sr25519
               : VerificationKeyType.Ed25519
         },
         encryptionKey: {
-          publicKey: keyring.getPair(encryptionAccount.address).publicKey,
+          publicKey: keyring.getPair(encryptionAccount).publicKey,
           type: EncryptionKeyType.X25519
         }
       }).uri;
@@ -96,7 +97,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
       return {
         didUri: uri,
-        ...json
+        keys: json
       };
     },
     [addKeystore, keyring, setDidUri]
@@ -106,21 +107,49 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     (text: string, password: string): void => {
       const json = JSON.parse(text) as DidKeys$Json;
 
-      assert(
-        json.didUri &&
-          json.accounts &&
-          typeof json.accounts === 'object' &&
-          json.accounts.length > 0 &&
-          json.encoded &&
-          json.encoding,
-        'did file format error'
-      );
+      assert(json.didUri, 'not didUri key');
 
-      restoreKeystore(json, password);
+      if (json.keys) {
+        restoreKeystore(json.keys, password);
+      } else {
+        const encoded = json.encoded;
+        const encoding = json.encoding;
+
+        assert(encoded && encoding, 'did file format error');
+
+        restoreKeystore({ encoded, encoding }, password);
+      }
+
       setDidUri(json.didUri);
     },
     [restoreKeystore, setDidUri]
   );
+
+  const backupDid = useCallback(
+    (password: string): DidKeys$Json | null => {
+      if (didDetails) {
+        return {
+          didUri: didDetails.uri,
+          keys: didDetails.getKeys().map((key) => keyring.getPair(key.publicKey).toJson(password))
+        };
+      }
+
+      return null;
+    },
+    [didDetails, keyring]
+  );
+
+  const logout = useCallback(() => {
+    if (didDetails) {
+      didDetails.getKeys().forEach((key) => {
+        const account = keyring.getAccount(key.publicKey);
+
+        account && keyring.forgetAccount(account.address);
+      });
+    }
+
+    removeDidUri();
+  }, [didDetails, keyring, removeDidUri]);
 
   const unlockDid = useCallback(
     async (didUri: DidUri, password: string) => {
@@ -154,9 +183,22 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       needUpgrade,
       generateDid,
       restoreDid,
+      backupDid,
+      logout,
       unlockDid
     }),
-    [didUri, generateDid, isFullDid, isLocked, isReady, needUpgrade, restoreDid, unlockDid]
+    [
+      backupDid,
+      didUri,
+      generateDid,
+      isFullDid,
+      isLocked,
+      isReady,
+      logout,
+      needUpgrade,
+      restoreDid,
+      unlockDid
+    ]
   );
 
   useEffect(() => {

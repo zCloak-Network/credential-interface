@@ -42,15 +42,15 @@ const Step3: React.FC<{
     }
   }, [keyWords, keyWordsIndex, mnemonic]);
 
-  const toggleContinue = useCallback(async () => {
+  const toggleContinue = useCallback(() => {
     if (!password) return;
 
-    const json = await generateDid(mnemonic, password);
+    const json = generateDid(mnemonic, password);
     const blobSiningJson = new Blob([JSON.stringify(json)], {
       type: 'text/plain;charset=utf-8'
     });
 
-    FileSaver.saveAs(blobSiningJson, `${json.didUri}.did`);
+    FileSaver.saveAs(blobSiningJson, `${json.didUri}.json`);
 
     nextStep();
   }, [generateDid, mnemonic, nextStep, password]);
