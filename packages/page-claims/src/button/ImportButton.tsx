@@ -1,10 +1,15 @@
+import type { ICredential } from '@kiltprotocol/sdk-js';
+
 import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
 import { IconImport } from '@credential/app-config/icons';
 import { NotificationContext, ZkidExtensionContext } from '@credential/react-components';
 
-const ImportButton: React.FC<{ withText?: boolean }> = ({ withText = false }) => {
+const ImportButton: React.FC<{ withText?: boolean; credential: ICredential }> = ({
+  credential,
+  withText = false
+}) => {
   const { notifyError } = useContext(NotificationContext);
   const { isInstall, zkidExtension } = useContext(ZkidExtensionContext);
 
@@ -13,12 +18,12 @@ const ImportButton: React.FC<{ withText?: boolean }> = ({ withText = false }) =>
       e.stopPropagation();
 
       if (isInstall) {
-        zkidExtension.openzkIDPopup('OPEN_IMPORT_CREDENTIAL', undefined);
+        zkidExtension.importCredential(credential);
       } else {
         notifyError(new Error('zkID Wallet extension not install'));
       }
     },
-    [isInstall, notifyError, zkidExtension]
+    [credential, isInstall, notifyError, zkidExtension]
   );
 
   return (

@@ -178,7 +178,7 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               onClick={(e) => e.stopPropagation()}
               spacing={1}
             >
-              <ImportButton />
+              <ImportButton credential={{ attestation, request }} />
               <ShareButton credential={{ attestation, request }} />
               <DownloadButton credential={{ attestation, request }} />
             </Stack>

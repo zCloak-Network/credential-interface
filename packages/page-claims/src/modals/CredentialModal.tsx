@@ -45,7 +45,7 @@ const CredentialModal: React.FC<Props> = ({ cType, credential, onClose, open }) 
           })}
         >
           <ShareButton credential={credential} withText />
-          <ImportButton withText />
+          <ImportButton credential={credential} withText />
           <DownloadButton credential={credential} withText />
         </Stack>
         <Typography mb={5} textAlign="center" variant="h2">
