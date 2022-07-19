@@ -33,10 +33,12 @@ const MessageRow: React.FC<{
   const handleClick = useCallback(() => {
     if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
       request && toggleRequest();
+      credentialDb.readMessage(message.messageId);
     } else {
       credential && toggleCredential();
+      credentialDb.readMessage(message.messageId);
     }
-  }, [credential, message.body.type, request, toggleCredential, toggleRequest]);
+  }, [credential, message.body.type, message.messageId, request, toggleCredential, toggleRequest]);
 
   return (
     <>

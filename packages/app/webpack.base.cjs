@@ -163,7 +163,8 @@ function createWebpack(context, mode = 'production') {
           NODE_ENV: JSON.stringify(mode),
           VERSION: JSON.stringify(pkgJson.version),
           CREDENTIAL_SERVICE: JSON.stringify(process.env.CREDENTIAL_SERVICE),
-          ZKID_SERVICE: JSON.stringify(process.env.ZKID_SERVICE)
+          ZKID_SERVICE: JSON.stringify(process.env.ZKID_SERVICE),
+          MESSAGE_WS_URL: JSON.stringify(process.env.MESSAGE_WS_URL)
         }
       }),
       new webpack.optimize.SplitChunksPlugin(),

@@ -87,9 +87,7 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
           key={index}
           onRead={() => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            credentialDb.message.update(message.id!, {
-              isRead: 1
-            });
+            credentialDb.readMessage(message.messageId);
           }}
           receiver={message.receiver}
           sender={message.sender}
