@@ -1,5 +1,5 @@
 import { type PaletteMode, alpha } from '@mui/material';
-import { type ThemeOptions } from '@mui/material/styles';
+import { type ThemeOptions, lighten } from '@mui/material/styles';
 
 type Func = (mode: PaletteMode) => NonNullable<ThemeOptions['components']>;
 
@@ -206,9 +206,9 @@ const createComponents: Func = () => ({
       root: ({ theme: { palette } }) => ({
         borderRadius: '10px',
         '&.Mui-disabled': {
-          backgroundColor: palette.background.default,
+          backgroundColor: lighten(palette.primary.main, 0.92),
           '.MuiOutlinedInput-notchedOutline': {
-            border: 'none'
+            borderColor: palette.grey[300]
           }
         }
       })

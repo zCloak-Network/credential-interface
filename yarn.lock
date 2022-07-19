@@ -1610,8 +1610,8 @@ __metadata:
     "@date-io/moment": ^2.14.0
     "@emotion/react": ^11.9.0
     "@emotion/styled": ^11.8.1
+    "@icon-park/react": ^1.4.2
     "@metamask/jazzicon": ^2.0.0
-    "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.88
     "@mui/material": ^5.8.6
     "@mui/x-date-pickers": ^5.0.0-alpha.7
@@ -1928,6 +1928,16 @@ __metadata:
   version: 1.2.1
   resolution: "@humanwhocodes/object-schema@npm:1.2.1"
   checksum: a824a1ec31591231e4bad5787641f59e9633827d0a2eaae131a288d33c9ef0290bd16fda8da6f7c0fcb014147865d12118df10db57f27f41e20da92369fcb3f1
+  languageName: node
+  linkType: hard
+
+"@icon-park/react@npm:^1.4.2":
+  version: 1.4.2
+  resolution: "@icon-park/react@npm:1.4.2"
+  peerDependencies:
+    react: ">=16.9"
+    react-dom: ">=16.9"
+  checksum: 808dcd2d2667b7b590879c054ba2693ee09b81cc7a20d0fcc2175825e6eb2d3214d90eed602c9b6c0715e740cc775f97cc69ca83a38d5b6d2475c75ea0187ea5
   languageName: node
   linkType: hard
 
@@ -2431,22 +2441,6 @@ __metadata:
     "@types/react":
       optional: true
   checksum: ec6ce5f710a7073115043997fd1bbe4dc2b15a4d9211485969bfb2eb79c45b9c5c95018754346730892971f737a89aca89c564dbd08f4eb4635f4fed6047f2da
-  languageName: node
-  linkType: hard
-
-"@mui/icons-material@npm:^5.8.4":
-  version: 5.8.4
-  resolution: "@mui/icons-material@npm:5.8.4"
-  dependencies:
-    "@babel/runtime": ^7.17.2
-  peerDependencies:
-    "@mui/material": ^5.0.0
-    "@types/react": ^17.0.0 || ^18.0.0
-    react: ^17.0.0 || ^18.0.0
-  peerDependenciesMeta:
-    "@types/react":
-      optional: true
-  checksum: 1df0ffb08670628968b803c7048fc645df5e2870860759626d80a355fdef62498e60e4ebed2d47ca8b3600e6ecb6db1829bec5acf3a766ff41e518007c7e2f5b
   languageName: node
   linkType: hard
 
@@ -13786,8 +13780,8 @@ __metadata:
     "@babel/runtime": ^7.18.0
     "@emotion/react": ^11.9.0
     "@emotion/styled": ^11.8.1
+    "@icon-park/react": ^1.4.2
     "@kiltprotocol/sdk-js": ^0.28.0
-    "@mui/icons-material": ^5.8.4
     "@mui/lab": ^5.0.0-alpha.88
     "@mui/material": ^5.8.6
     "@types/file-saver": ^2.0.5
