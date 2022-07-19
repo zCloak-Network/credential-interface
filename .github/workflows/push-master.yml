@@ -49,7 +49,6 @@ jobs:
     - name: Deploy release
       if: "! contains(steps.version.outputs.current-version, '-')"
       uses: appleboy/scp-action@master
-      environment: master
       with:
         username: ubuntu
         host: ${{ secrets.HOST }}
