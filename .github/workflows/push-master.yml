@@ -38,6 +38,8 @@ jobs:
 
   release:
     needs: prerelease
+    if: "! startsWith(github.event.head_commit.message, '[CI Skip]')"
+    runs-on: ubuntu-latest
     environment: master
     steps:
     - uses: actions/checkout@v2
