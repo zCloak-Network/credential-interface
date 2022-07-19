@@ -1,7 +1,7 @@
 import { Message } from '@kiltprotocol/sdk-js';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
-import { env } from '@credential/app-config/constants/env';
+import { endpoint } from '@credential/app-config/endpoints';
 import { credentialDb } from '@credential/app-db';
 import { SyncProvider } from '@credential/app-sync';
 import { MessageType } from '@credential/app-sync/type';
@@ -16,7 +16,7 @@ interface State {
 
 export const AppContext = createContext({} as State);
 
-const syncProvider = new SyncProvider(env.MESSAGE_WS_URL);
+const syncProvider = new SyncProvider(endpoint.messageWs);
 
 const encryptedMessages = new Map<number, MessageType>();
 
