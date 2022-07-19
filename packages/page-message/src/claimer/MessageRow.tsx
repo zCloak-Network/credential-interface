@@ -1,4 +1,3 @@
-import { CType } from '@kiltprotocol/sdk-js';
 import {
   IRejectAttestation,
   IRequestAttestation,
@@ -7,12 +6,11 @@ import {
 } from '@kiltprotocol/types';
 import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useMemo } from 'react';
+import React, { useMemo } from 'react';
 
 import { credentialDb } from '@credential/app-db';
 import { Message } from '@credential/app-db/message';
-import CredentialModal from '@credential/page-claims/modals/CredentialModal';
-import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-components';
+import { CredentialModal, CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
@@ -20,7 +18,6 @@ import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
 const MessageRow: React.FC<{
   message: Message & { body: ISubmitAttestation | IRejectAttestation | IRequestAttestation };
 }> = ({ message }) => {
-  const { cTypeList } = useContext(CTypeContext);
   const [open, toggleOpen] = useToggle();
 
   const rootHash = useMemo(() => {
@@ -39,11 +36,11 @@ const MessageRow: React.FC<{
   }, [message]);
   const request = useRequest(credentialDb, rootHash);
   const attestation = useAttestation(rootHash);
-  const cType = useMemo(() => {
-    return cTypeList.find((cType) =>
-      [cTypeHash].includes(CType.fromSchema(cType.schema, cType.owner).hash)
-    );
-  }, [cTypeHash, cTypeList]);
+
+  const credential = useMemo(
+    () => (attestation && request ? { request, attestation } : null),
+    [attestation, request]
+  );
 
   return (
     <>
@@ -92,14 +89,7 @@ const MessageRow: React.FC<{
           />
         </TableCell>
       </TableRow>
-      {cType && request && attestation && (
-        <CredentialModal
-          cType={cType}
-          credential={{ request, attestation }}
-          onClose={toggleOpen}
-          open={open}
-        />
-      )}
+      {credential && open && <CredentialModal credential={credential} onClose={toggleOpen} />}
     </>
   );
 };

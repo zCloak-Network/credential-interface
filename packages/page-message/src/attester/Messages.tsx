@@ -1,4 +1,4 @@
-import { IRequestAttestation, ISubmitCredential } from '@kiltprotocol/types';
+import { ISubmitCredential } from '@kiltprotocol/types';
 import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
 import React from 'react';
 
@@ -7,7 +7,7 @@ import { Message } from '@credential/app-db/message';
 import MessageRow from './MessageRow';
 
 const Messages: React.FC<{
-  messages?: (Message & { body: IRequestAttestation | ISubmitCredential })[];
+  messages?: (Message & { body: ISubmitCredential })[];
 }> = ({ messages }) => {
   return (
     <TableContainer>

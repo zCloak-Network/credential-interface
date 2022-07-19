@@ -1,12 +1,10 @@
-import { Hash } from '@kiltprotocol/sdk-js';
 import { Box, CircularProgress, Stack, SvgIcon, Typography, useTheme } from '@mui/material';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
 import { credentialDb } from '@credential/app-db';
-import RequestDetails from '@credential/page-tasks/RequestDetails';
 import { DidsContext } from '@credential/react-dids';
-import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
+import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
 import IconMessage from '../icon_message.svg';
@@ -41,11 +39,6 @@ const Attester: React.FC = () => {
   const { transitions } = useTheme();
   const { didUri, isReady } = useContext(DidsContext);
   const { messageUnread, taskUnread } = useUnread(credentialDb, didUri);
-  const [requestOpen, toggleRequestOpen] = useToggle();
-  const [rootHash, setRootHash] = useState<Hash>();
-  const [showActions, setShowActions] = useState(false);
-  const request = useRequest(credentialDb, rootHash);
-  const attestation = useAttestation(rootHash);
 
   const items = useMemo(
     () => [
@@ -76,14 +69,7 @@ const Attester: React.FC = () => {
   return (
     <>
       <Box bgcolor="#fff" minHeight="100vh">
-        <Header
-          handleRequest={(rootHash, isRequst) => {
-            setRootHash(rootHash);
-            setShowActions(isRequst);
-            toggleRequestOpen();
-          }}
-          showUpgrade
-        />
+        <Header showUpgrade />
         <Sidebar accountType="attester" items={items} open={open} toggleOpen={toggleOpen} />
         <Box
           minHeight="100vh"
@@ -124,15 +110,6 @@ const Attester: React.FC = () => {
           )}
         </Box>
       </Box>
-      {requestOpen && request && (
-        <RequestDetails
-          attestation={attestation}
-          onClose={toggleRequestOpen}
-          open={requestOpen}
-          request={request}
-          showActions={showActions}
-        />
-      )}
     </>
   );
 };

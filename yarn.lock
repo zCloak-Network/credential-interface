@@ -1614,7 +1614,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.88
     "@mui/material": ^5.8.6
     "@mui/x-date-pickers": ^5.0.0-alpha.7
-    "@zcloak/extension-core": ^0.0.2-25
+    "@zcloak/extension-core": ^0.0.2-26
   languageName: unknown
   linkType: soft
 
@@ -1645,7 +1645,7 @@ __metadata:
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
     "@credential/app-db": 0.0.0
-    "@zcloak/service": ^0.0.2-25
+    "@zcloak/service": ^0.0.2-26
     copy-to-clipboard: ^3.3.1
     dexie-react-hooks: ^1.1.1
     search-query-parser: ^1.6.0
@@ -4717,19 +4717,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/extension-core@npm:^0.0.2-25":
-  version: 0.0.2-25
-  resolution: "@zcloak/extension-core@npm:0.0.2-25"
+"@zcloak/extension-core@npm:^0.0.2-26":
+  version: 0.0.2-26
+  resolution: "@zcloak/extension-core@npm:0.0.2-26"
   dependencies:
     eventemitter3: ^4.0.7
-  checksum: fd9f6409ae18df34c01e593c9204c408097f25ad4694881c61ab7ec85c7a6224ee517b05bdd9b32a7f846f64a81b24a64643348120be7dbea59249cffc3c1d36
+  checksum: 4cd28ee71d6d0c2aebfd2be0ce8f03e33dcf78d0a7afe1fab280ef552580506b0772510d8a5ed6cb494932a8eac3ae6b7ed6a4a5cde87df12cf7c4ac2eb5b76d
   languageName: node
   linkType: hard
 
-"@zcloak/service@npm:^0.0.2-25":
-  version: 0.0.2-25
-  resolution: "@zcloak/service@npm:0.0.2-25"
-  checksum: a77cd64ecb83dc7a673e4b6d4f0ebe9e76192837b47a8297108d9b4b85573b2e3c502a0befa5d07ad9623bc024ffafd5e29092aad9b033591e070f21a01bdda3
+"@zcloak/service@npm:^0.0.2-26":
+  version: 0.0.2-26
+  resolution: "@zcloak/service@npm:0.0.2-26"
+  checksum: 6047041d6d9beb0e7e9cbaa51284631a5d12c3b295c167512c8e32cd560683f03a93c779d53ea3717a6a5d9a209496428b8233d8b530bc9e9b143ee58e900b6d
   languageName: node
   linkType: hard
 
@@ -13769,7 +13769,7 @@ __metadata:
     "@types/react-dom": ^18.0.5
     "@types/react-slick": ^0.23.8
     "@zcloak/dev": ^0.1.1
-    "@zcloak/service": ^0.0.2-25
+    "@zcloak/service": ^0.0.2-26
     babel-plugin-import: ^1.13.5
     concurrently: ^7.2.1
     devtron: ^1.4.0

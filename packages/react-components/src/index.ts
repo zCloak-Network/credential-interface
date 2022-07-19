@@ -6,6 +6,7 @@ export { default as ZkidExtensionProvider, ZkidExtensionContext } from './ZkidEx
 export { default as Address } from './Address';
 export { default as ButtonWithError } from './ButtonWithError';
 export { default as ClaimDisplay } from './ClaimDisplay';
+export { default as CredentialModal } from './CredentialModal';
 export { default as CredentialStatus } from './CredentialStatus';
 export { default as CTypeName } from './CTypeName';
 export { default as DialogHeader } from './DialogHeader';
