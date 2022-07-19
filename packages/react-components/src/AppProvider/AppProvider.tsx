@@ -1,10 +1,11 @@
+import { Message } from '@kiltprotocol/sdk-js';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
+import { endpoint } from '@credential/app-config/endpoints';
 import { credentialDb } from '@credential/app-db';
-import { MessageSync } from '@credential/app-sync';
-import { IDataSource } from '@credential/app-sync/type';
+import { SyncProvider } from '@credential/app-sync';
+import { MessageType } from '@credential/app-sync/type';
 import { DidsContext, useDidDetails } from '@credential/react-dids';
-import { credentialApi } from '@credential/react-hooks/api';
 import { useKeystore } from '@credential/react-keystore';
 import { unlock } from '@credential/react-keystore/KeystoreProvider';
 
@@ -14,20 +15,10 @@ interface State {
 }
 
 export const AppContext = createContext({} as State);
-const dataSource: IDataSource = {
-  async getMessage(id, uri, length?) {
-    const receiverRes = await credentialApi.getMessages({
-      receiverKeyId: uri,
-      size: length,
-      start_id: String(id)
-    });
 
-    const data = receiverRes.data ?? [];
+const syncProvider = new SyncProvider(endpoint.messageWs);
 
-    return data.map((d) => ({ ...d, id: Number(d.id) }));
-  }
-};
-const messageSync: MessageSync = new MessageSync(dataSource, credentialDb);
+const encryptedMessages = new Map<number, MessageType>();
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { keyring } = useKeystore();
@@ -36,28 +27,66 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [unParsed, setUnParsed] = useState(0);
 
   useEffect(() => {
-    const interval = setInterval(() => {
-      if (didDetails) {
-        messageSync.syncMessage(didDetails).finally(() => {
-          setUnParsed(messageSync.getEncryptMessages(didDetails).length);
-        });
-      }
-    }, 30000);
-
     if (didDetails) {
-      messageSync.syncMessage(didDetails).finally(() => {
-        setUnParsed(messageSync.getEncryptMessages(didDetails).length);
-      });
+      credentialDb.message
+        .orderBy('syncId')
+        .reverse()
+        .filter((data) => {
+          return didDetails.uri === data.receiver;
+        })
+        .first()
+        .then((message) => {
+          let startId: number;
+
+          if (!message?.syncId) {
+            startId = 0;
+          } else {
+            startId = message.syncId;
+          }
+
+          syncProvider.subscribe(didDetails, startId, (messages) => {
+            messages.forEach((message) => encryptedMessages.set(message.id, message));
+            setUnParsed(encryptedMessages.size);
+          });
+        });
     }
 
-    return () => clearInterval(interval);
+    return () => encryptedMessages.clear();
   }, [didDetails]);
 
   const parse = useCallback(async () => {
-    if (didDetails) {
+    if (didDetails && encryptedMessages.size > 0) {
       isLocked && (await unlock());
-      await messageSync.parse(keyring, didDetails);
-      setUnParsed(messageSync.getEncryptMessages(didDetails).length);
+      const promises: Promise<void>[] = [];
+
+      encryptedMessages.forEach((encryptedMessage) => {
+        promises.push(
+          Message.decrypt(
+            {
+              receiverKeyUri: encryptedMessage.receiverKeyId as any,
+              senderKeyUri: encryptedMessage.senderKeyId as any,
+              ciphertext: encryptedMessage.ciphertext,
+              nonce: encryptedMessage.nonce
+            },
+            keyring,
+            didDetails
+          ).then((message) => {
+            return credentialDb.message
+              .add({
+                ...message,
+                syncId: encryptedMessage.id,
+                deal: 0
+              })
+              .then(() => {
+                encryptedMessages.delete(encryptedMessage.id);
+              });
+          })
+        );
+      });
+
+      Promise.all(promises).finally(() => {
+        setUnParsed(encryptedMessages.size);
+      });
     }
   }, [didDetails, isLocked, keyring]);
 

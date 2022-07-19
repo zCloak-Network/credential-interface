@@ -1,1 +1,1 @@
-export * from './MessageSync';
+export * from './SyncProvider';

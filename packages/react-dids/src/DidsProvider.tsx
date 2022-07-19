@@ -4,7 +4,7 @@ import { EncryptionKeyType, VerificationKeyType } from '@kiltprotocol/types';
 import { assert } from '@polkadot/util';
 import React, { createContext, useCallback, useEffect, useMemo, useState } from 'react';
 
-import { KILT_PEREGRINE_ENDPOINT } from '@credential/app-config/constants';
+import { endpoint } from '@credential/app-config/endpoints';
 import UnlockModal from '@credential/react-dids/UnlockModal';
 import { useLocalStorage } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
@@ -19,7 +19,7 @@ let blockchain: Blockchain;
 const storageKey = 'credential:didUri';
 
 init({
-  address: KILT_PEREGRINE_ENDPOINT
+  address: endpoint.endpoint
 });
 
 const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
