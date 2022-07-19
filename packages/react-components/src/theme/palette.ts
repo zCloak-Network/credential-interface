@@ -38,7 +38,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     50: '#fafafa',
     100: '#f5f5f5',
     200: '#eeeeee',
-    300: '#e0e0e0',
+    300: '#d5d5d5',
     400: '#bdbdbd',
     500: '#9e9e9e',
     600: '#777777',

@@ -1,4 +1,3 @@
-import { Hash } from '@kiltprotocol/sdk-js';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import { alpha, Badge, Box, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
@@ -37,8 +36,7 @@ const Logo: React.FC = () => {
 
 const Header: React.FC<{
   showUpgrade?: boolean;
-  handleRequest?: (rootHash: Hash, isRequst: boolean) => void;
-}> = ({ handleRequest, showUpgrade = false }) => {
+}> = ({ showUpgrade = false }) => {
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
@@ -80,7 +78,7 @@ const Header: React.FC<{
           {showUpgrade && !isFullDid && <UpgradeFullDid />}
         </Stack>
       </Stack>
-      <Notification handleRequest={handleRequest} onClose={toggleNotiOpen} open={notiOpen} />
+      <Notification onClose={toggleNotiOpen} open={notiOpen} />
     </>
   );
 };

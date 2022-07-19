@@ -1,10 +1,15 @@
 import { CType, IAttestation } from '@kiltprotocol/sdk-js';
-import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
+import { alpha, Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
 import { credentialDb } from '@credential/app-db';
-import { CredentialStatus, CTypeContext, CTypeName } from '@credential/react-components';
+import {
+  CredentialModal,
+  CredentialStatus,
+  CTypeContext,
+  CTypeName
+} from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useRequestMessages, useToggle } from '@credential/react-hooks';
@@ -13,7 +18,6 @@ import { Request, RequestStatus } from '@credential/react-hooks/types';
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
 import ShareButton from './button/ShareButton';
-import CredentialModal from './modals/CredentialModal';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
   position: 'relative',
@@ -101,6 +105,11 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
   }, [cTypeList, request.claim.cTypeHash]);
   const requestMessages = useRequestMessages(credentialDb, request.rootHash);
 
+  const credential = useMemo(
+    () => (attestation ? { attestation, request } : null),
+    [attestation, request]
+  );
+
   return (
     <>
       <Box position="relative">
@@ -185,12 +194,34 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
           )}
         </Wrapper>
       </Box>
-      {cType && attestation && (
+      {cType && credential && open && (
         <CredentialModal
-          cType={cType}
-          credential={{ request, attestation }}
+          actions={
+            <Stack
+              alignItems="center"
+              spacing={2}
+              sx={({ palette }) => ({
+                position: 'absolute',
+                left: 'calc(100% + 32px)',
+                top: 0,
+
+                '.MuiButtonBase-root': {
+                  width: 44,
+                  height: 44,
+                  background: palette.common.white,
+                  border: '1px solid',
+                  borderColor: alpha(palette.primary.main, 0.38),
+                  borderRadius: 2.5
+                }
+              })}
+            >
+              <ShareButton credential={credential} withText />
+              <ImportButton credential={credential} withText />
+              <DownloadButton credential={credential} withText />
+            </Stack>
+          }
+          credential={credential}
           onClose={toggleOpen}
-          open={open}
         />
       )}
     </>
