@@ -289,22 +289,12 @@ const createComponents: Func = () => ({
 
   MuiDialog: {
     styleOverrides: {
-      root: ({ theme: { breakpoints, spacing } }) => ({
-        '.MuiDialogTitle-root': {
-          textAlign: 'center',
-          fontSize: '18px',
-          fontWeight: 500,
-          padding: spacing(3),
-          [breakpoints.down('md')]: {
-            padding: spacing(2)
-          }
-        }
-      }),
       paperFullScreen: ({ theme: { palette, spacing } }) => ({
         margin: 0,
         background: palette.grey[100],
         borderRadius: 0,
         '& .MuiDialogTitle-root': {
+          paddingTop: spacing(3),
           background: palette.common.white
         },
         '& .MuiDialogContent-root': {
@@ -320,7 +310,7 @@ const createComponents: Func = () => ({
         }
       }),
       paper: ({ theme: { breakpoints, spacing } }) => ({
-        borderRadius: '24px',
+        borderRadius: '10px',
         margin: spacing(3),
         [breakpoints.down('md')]: {
           margin: spacing(2)
@@ -331,17 +321,25 @@ const createComponents: Func = () => ({
 
   MuiDialogTitle: {
     styleOverrides: {
-      root: {
-        fontSize: '1.125rem'
-      }
+      root: ({ theme: { breakpoints, spacing } }) => ({
+        fontSize: '1.25rem',
+        textAlign: 'center',
+        fontWeight: 600,
+        padding: spacing(3),
+        paddingTop: spacing(7.5),
+        paddingBottom: spacing(7.5),
+        [breakpoints.down('md')]: {
+          padding: spacing(2)
+        }
+      })
     }
   },
   MuiDialogContent: {
     styleOverrides: {
       root: ({ theme: { breakpoints, spacing } }) => ({
-        padding: spacing(3),
+        padding: spacing(7.5),
         [breakpoints.down('md')]: {
-          padding: spacing(2)
+          padding: spacing(3)
         }
       })
     }
