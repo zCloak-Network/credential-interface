@@ -36,16 +36,11 @@ jobs:
         rm: true
 
   release:
-    needs: prerelease
-    if: "! startsWith(github.event.head_commit.message, '[CI Skip]')"
+    if: "startsWith(github.event.head_commit.message, '[CI Skip] release/stable')"
     runs-on: ubuntu-latest
     environment: master
     steps:
     - uses: actions/checkout@v2
-
-    - name: Get version
-      id: version
-      uses: martinbeentjes/npm-get-version-action@master
 
     - name: install deps
       run: |
@@ -59,7 +54,6 @@ jobs:
         yarn build
 
     - name: Deploy release
-      if: "! contains(steps.version.outputs.current-version, '-')"
       uses: appleboy/scp-action@master
       with:
         username: ubuntu
