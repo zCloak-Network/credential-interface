@@ -177,6 +177,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     (): DidsState => ({
       isReady,
       blockchain,
+      identifier: didDetails?.identifier,
       didUri,
       isLocked,
       isFullDid,
@@ -189,6 +190,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     }),
     [
       backupDid,
+      didDetails?.identifier,
       didUri,
       generateDid,
       isFullDid,

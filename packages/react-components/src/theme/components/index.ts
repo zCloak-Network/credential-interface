@@ -220,12 +220,11 @@ const createComponents: Func = () => ({
       paper: {
         borderRadius: '10px !important'
       },
-      list: {
-        paddingLeft: 4,
-        paddingRight: 4,
+      list: ({ theme: { spacing } }) => ({
+        padding: spacing(3),
         border: '1px solid rgba(255, 255, 255, 0.6)',
         borderRadius: '10px'
-      }
+      })
     }
   },
 
