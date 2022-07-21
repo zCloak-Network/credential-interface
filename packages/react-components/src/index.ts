@@ -11,6 +11,7 @@ export { default as CredentialModal } from './CredentialModal';
 export { default as CredentialStatus } from './CredentialStatus';
 export { default as CTypeName } from './CTypeName';
 export { default as DialogHeader } from './DialogHeader';
+export { default as FormatBalance } from './FormatBalance';
 export { default as FullScreenDialog } from './FullScreenDialog';
 export { default as FullScreenDialogContent } from './FullScreenDialogContent';
 export { default as FullScreenDialogHeader } from './FullScreenDialogHeader';
