@@ -1,9 +1,10 @@
 import { Did, DidUri } from '@kiltprotocol/sdk-js';
 import Check from '@mui/icons-material/Check';
 import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import { Box } from '@mui/material';
+import { Box, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 
+import { ellipsisMixin } from '@credential/react-components/utils';
 import { useCopyClipboard } from '@credential/react-hooks';
 
 interface Props {
@@ -26,6 +27,7 @@ const DidName: React.FC<Props> = ({ copyable, value }) => {
     <Box
       sx={({ palette }) => ({
         display: 'flex',
+        justifyContent: 'space-between',
         alignItems: 'center',
         height: 34,
         borderRadius: '17px',
@@ -35,14 +37,14 @@ const DidName: React.FC<Props> = ({ copyable, value }) => {
         borderColor: palette.grey[300]
       })}
     >
-      {str}
+      <Typography sx={{ ...ellipsisMixin(), maxWidth: 'calc(100% - 20px)' }}>{str}</Typography>
       {copyable ? (
         isCopied ? (
           <Check sx={{ marginLeft: 0.875, width: 12, height: 12, cursor: 'pointer' }} />
         ) : (
           <ContentCopyIcon
             onClick={() => copy(str ?? '')}
-            sx={{ marginLeft: 0.875, width: 12, height: 12, cursor: 'pointer' }}
+            sx={{ marginLeft: 1, width: 12, height: 12, cursor: 'pointer' }}
           />
         )
       ) : null}
