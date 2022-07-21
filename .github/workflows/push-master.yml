@@ -11,6 +11,9 @@ jobs:
     environment: dev
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GH_PAT }}
 
     - name: install deps
       run: |
@@ -41,6 +44,9 @@ jobs:
     environment: master
     steps:
     - uses: actions/checkout@v2
+      with:
+        fetch-depth: 0
+        token: ${{ secrets.GH_PAT }}
 
     - name: install deps
       run: |
