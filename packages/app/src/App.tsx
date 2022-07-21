@@ -1,3 +1,4 @@
+import { Box, styled } from '@mui/material';
 import React from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
@@ -7,6 +8,7 @@ import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
+import PageDidProfile from '@credential/page-did/DidProfile';
 import PageUpgradeFullDid from '@credential/page-did/UpgradeFullDid';
 import PageMessage from '@credential/page-message';
 import PageAttesterMessage from '@credential/page-message/attester';
@@ -21,6 +23,8 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
   return <Navigate replace to={to} />;
 };
 
+const Container = styled(Box)``;
+
 const createClaimerApp = () => (
   <Route
     element={
@@ -30,9 +34,40 @@ const createClaimerApp = () => (
     }
     path="claimer"
   >
-    <Route element={<PageCType />} path="ctype" />
-    <Route element={<PageClaims />} path="claims" />
-    <Route element={<PageMessage />} path="message" />
+    <Route path="did">
+      <Route
+        element={
+          <Container>
+            <PageDidProfile />
+          </Container>
+        }
+        path="profile"
+      />
+    </Route>
+    <Route
+      element={
+        <Container p={4}>
+          <PageCType />
+        </Container>
+      }
+      path="ctype"
+    />
+    <Route
+      element={
+        <Container p={4}>
+          <PageClaims />
+        </Container>
+      }
+      path="claims"
+    />
+    <Route
+      element={
+        <Container p={4}>
+          <PageMessage />
+        </Container>
+      }
+      path="message"
+    />
     <Route element={<NoMatch to="ctype" />} path="*" />
     <Route element={<NoMatch to="ctype" />} index />
   </Route>
@@ -48,11 +83,47 @@ const createAttesterApp = () => (
     path="attester"
   >
     <Route path="did">
-      <Route element={<PageUpgradeFullDid />} path="upgrade" />
+      <Route
+        element={
+          <Container>
+            <PageUpgradeFullDid />
+          </Container>
+        }
+        path="upgrade"
+      />
+      <Route
+        element={
+          <Container>
+            <PageDidProfile />
+          </Container>
+        }
+        path="profile"
+      />
     </Route>
-    <Route element={<PageOwnerCType />} path="my-ctype" />
-    <Route element={<PageTasks />} path="tasks" />
-    <Route element={<PageAttesterMessage />} path="message" />
+    <Route
+      element={
+        <Container>
+          <PageOwnerCType />
+        </Container>
+      }
+      path="my-ctype"
+    />
+    <Route
+      element={
+        <Container>
+          <PageTasks />
+        </Container>
+      }
+      path="tasks"
+    />
+    <Route
+      element={
+        <Container>
+          <PageAttesterMessage />
+        </Container>
+      }
+      path="message"
+    />
     <Route element={<NoMatch to="my-ctype" />} path="*" />
     <Route element={<NoMatch to="my-ctype" />} index />
   </Route>

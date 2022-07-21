@@ -327,7 +327,7 @@ const createComponents: Func = () => ({
         fontWeight: 600,
         padding: spacing(3),
         paddingTop: spacing(7.5),
-        paddingBottom: spacing(7.5),
+        paddingBottom: spacing(4),
         [breakpoints.down('md')]: {
           padding: spacing(2)
         }
@@ -385,6 +385,14 @@ const createComponents: Func = () => ({
         color: theme.palette.grey[500],
         borderBottom: 'none'
       })
+    }
+  },
+
+  MuiTab: {
+    styleOverrides: {
+      root: {
+        textTransform: 'initial'
+      }
     }
   }
 });
