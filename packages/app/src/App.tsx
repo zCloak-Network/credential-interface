@@ -85,7 +85,7 @@ const createAttesterApp = () => (
     <Route path="did">
       <Route
         element={
-          <Container>
+          <Container paddingTop={3}>
             <PageUpgradeFullDid />
           </Container>
         }
@@ -102,7 +102,7 @@ const createAttesterApp = () => (
     </Route>
     <Route
       element={
-        <Container>
+        <Container paddingTop={3}>
           <PageOwnerCType />
         </Container>
       }
@@ -110,7 +110,7 @@ const createAttesterApp = () => (
     />
     <Route
       element={
-        <Container>
+        <Container paddingTop={3}>
           <PageTasks />
         </Container>
       }
@@ -118,7 +118,7 @@ const createAttesterApp = () => (
     />
     <Route
       element={
-        <Container>
+        <Container paddingTop={3}>
           <PageAttesterMessage />
         </Container>
       }

@@ -34,3 +34,7 @@ export function getEndpoint(): Endpoint {
 }
 
 export const endpoint = getEndpoint();
+
+export function storeEndpoint(endpoint: string) {
+  localStorage.setItem('runs_on_env', endpoint);
+}

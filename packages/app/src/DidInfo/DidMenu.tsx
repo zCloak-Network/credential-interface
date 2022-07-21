@@ -57,8 +57,6 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
       <Menu
         MenuListProps={{
           sx: {
-            padding: 3,
-
             '.MuiMenuItem-root,.MuiListItem-root': {
               paddingY: 1.5,
               paddingX: '5px'
