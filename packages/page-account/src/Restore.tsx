@@ -25,11 +25,14 @@ const Restore: React.FC = () => {
   const navigate = useNavigate();
   const [file, setFile] = useState<File>();
   const { notifyError } = useContext(NotificationContext);
-  const { restoreDid } = useContext(DidsContext);
+  const { generateDid, restoreDid } = useContext(DidsContext);
   const [redirect] = useQueryParam<string>('redirect');
+  const [mnemonic, setMnemonic] = useState<string>();
 
   const restore = useCallback(() => {
-    if (file && password) {
+    if (!password) return;
+
+    if (file) {
       setLoading(true);
       file
         .text()
@@ -41,8 +44,11 @@ const Restore: React.FC = () => {
           notifyError(error as Error);
         })
         .finally(() => setLoading(false));
+    } else if (mnemonic) {
+      generateDid(mnemonic, password);
+      setSuccess(true);
     }
-  }, [file, notifyError, password, restoreDid]);
+  }, [file, generateDid, mnemonic, notifyError, password, restoreDid]);
 
   return (
     <Container maxWidth="sm" sx={{ mt: 4 }}>
@@ -57,11 +63,11 @@ const Restore: React.FC = () => {
           <Typography textAlign="center" variant="h3">
             Restore account
           </Typography>
-          <Typography textAlign="center" variant="h5">
-            Select your did-keys file and input your password.
+          <Typography textAlign="center" variant="inherit">
+            Enter your Mnemonic Phrase or select your did-keys file here to restore your account.
           </Typography>
           <FormControl fullWidth variant="outlined">
-            <InputLabel shrink>did-keys file</InputLabel>
+            <InputLabel shrink>Mnemonic Phrase or did-keys file</InputLabel>
             <OutlinedInput
               endAdornment={
                 <InputAdornment position="end">
@@ -79,12 +85,17 @@ const Restore: React.FC = () => {
                 </InputAdornment>
               }
               fullWidth
-              value={file?.name}
+              onChange={(e) => setMnemonic(e.target.value)}
+              placeholder="Enter Mnemonic Phrase or Select did-keys file"
+              value={file?.name ?? mnemonic}
             />
           </FormControl>
           <FormControl fullWidth variant="outlined">
             <InputLabel shrink>Enter password</InputLabel>
-            <InputPassword onChange={(e) => setPassword(e.target.value)} />
+            <InputPassword
+              onChange={(e) => setPassword(e.target.value)}
+              placeholder="Enter your password"
+            />
           </FormControl>
           <LoadingButton
             fullWidth

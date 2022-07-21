@@ -14,6 +14,7 @@ export interface DidsState {
   isReady: boolean;
   blockchain: Blockchain;
   didUri?: DidUri;
+  identifier?: string;
   isLocked: boolean;
   isFullDid: boolean;
   needUpgrade: boolean; // if the did is full did, should it to upgrade

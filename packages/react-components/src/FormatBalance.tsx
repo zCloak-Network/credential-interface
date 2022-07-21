@@ -18,9 +18,9 @@ const FormatBalance: React.FC<Props> = ({
   forceUnit,
   locale,
   value,
-  withSi,
-  withSiFull,
-  withUnit
+  withSi = false,
+  withSiFull = false,
+  withUnit = false
 }) => {
   const str = useMemo(() => {
     return BalanceUtils.fromFemtoKilt(value ?? '0', decimals, {
