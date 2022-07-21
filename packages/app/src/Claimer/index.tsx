@@ -57,9 +57,9 @@ const Claimer: React.FC = () => {
       <Sidebar accountType="claimer" items={items} open={open} toggleOpen={toggleOpen} />
       <Box
         minHeight="100vh"
-        pl={open ? '251px' : '120px'}
-        pr="32px"
-        pt="100px"
+        pl={open ? '220px' : '93px'}
+        pr={0}
+        pt={'70px'}
         sx={{
           position: 'relative',
           boxSizing: 'border-box',

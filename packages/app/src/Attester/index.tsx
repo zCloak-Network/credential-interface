@@ -74,7 +74,7 @@ const Attester: React.FC = () => {
         <Box
           minHeight="100vh"
           pl={open ? '220px' : '93px'}
-          pt="100px"
+          pt={'70px'}
           sx={{
             boxSizing: 'border-box',
 

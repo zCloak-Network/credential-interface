@@ -1,4 +1,5 @@
 import jazzicon from '@metamask/jazzicon';
+import { Box } from '@mui/material';
 import React, { useLayoutEffect, useMemo, useRef } from 'react';
 
 interface Props {
@@ -32,7 +33,22 @@ const IdentityIcon: React.FC<Props> = ({ diameter = 16, value }) => {
     return () => 0;
   }, [icon, iconRef]);
 
-  return <span ref={iconRef} style={{ lineHeight: 1, fontSize: '12px' }} />;
+  return (
+    <Box
+      component="span"
+      ref={iconRef}
+      sx={{
+        display: 'inline-block',
+        width: diameter,
+        height: diameter,
+        lineHeight: 1,
+        fontSize: '12px !important',
+        '> div': {
+          borderRadius: `${diameter / 2}px !important`
+        }
+      }}
+    />
+  );
 };
 
 export default React.memo(IdentityIcon);

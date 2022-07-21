@@ -1,12 +1,7 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
-import Check from '@mui/icons-material/Check';
-import ContentCopyIcon from '@mui/icons-material/ContentCopy';
-import FileDownloadOutlinedIcon from '@mui/icons-material/FileDownloadOutlined';
-import LogoutIcon from '@mui/icons-material/Logout';
 import {
   alpha,
   Divider,
-  IconButton,
   ListItem,
   ListItemIcon,
   ListItemText,
@@ -15,12 +10,16 @@ import {
   Typography
 } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
+import { useLocation, useNavigate } from 'react-router-dom';
 
-import { IdentityIcon } from '@credential/react-components';
+import { Copy, IdentityIcon } from '@credential/react-components';
 import { DidName, DidsContext } from '@credential/react-dids';
-import { useCopyClipboard, useToggle } from '@credential/react-hooks';
+import { useToggle } from '@credential/react-hooks';
 
 import ExportModal from './ExportModal';
+import ExportIcon from './icon_export.svg';
+import LogoutIcon from './icon_logout.svg';
+import StarIcon from './icon_star.svg';
 
 interface Props {
   did: DidUri;
@@ -30,14 +29,19 @@ interface Props {
 }
 
 const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
-  const [isCopied, copy] = useCopyClipboard();
   const { logout } = useContext(DidsContext);
   const [exportOpen, toggleExportOpen] = useToggle();
+  const { pathname } = useLocation();
+  const navigate = useNavigate();
 
   const handleExport = useCallback(() => {
     toggleExportOpen();
     onClose();
   }, [onClose, toggleExportOpen]);
+
+  const handleProfile = useCallback(() => {
+    navigate(pathname.startsWith('/attester') ? '/attester/did/profile' : '/claimer/did/profile');
+  }, [navigate, pathname]);
 
   const handleLogout = useCallback(() => {
     logout();
@@ -81,20 +85,24 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
             <IdentityIcon value={did} />
           </ListItemIcon>
           <ListItemText primary={<DidName value={did} />} />
-          <IconButton onClick={() => copy(did)} size="small">
-            {!isCopied ? <ContentCopyIcon fontSize="small" /> : <Check fontSize="small" />}
-          </IconButton>
+          <Copy value={did} />
         </ListItem>
         <Divider sx={{ marginTop: 3, marginBottom: 1 }} />
+        <MenuItem onClick={handleProfile}>
+          <ListItemIcon>
+            <StarIcon />
+          </ListItemIcon>
+          <ListItemText>DID Profile</ListItemText>
+        </MenuItem>
         <MenuItem onClick={handleExport}>
           <ListItemIcon>
-            <FileDownloadOutlinedIcon fontSize="small" />
+            <ExportIcon />
           </ListItemIcon>
           <ListItemText>Export keystore</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <LogoutIcon fontSize="small" />
+            <LogoutIcon />
           </ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>
