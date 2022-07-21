@@ -58,15 +58,15 @@ const Restore: React.FC = () => {
             Restore account
           </Typography>
           <Typography textAlign="center" variant="h5">
-            Select your keystore file and input your password.
+            Select your did-keys file and input your password.
           </Typography>
           <FormControl fullWidth variant="outlined">
-            <InputLabel shrink>Keystore file</InputLabel>
+            <InputLabel shrink>did-keys file</InputLabel>
             <OutlinedInput
               endAdornment={
                 <InputAdornment position="end">
                   <Button component="label" variant="contained">
-                    Select keystore file
+                    Select did-keys file
                     <input
                       accept="application/json"
                       hidden
