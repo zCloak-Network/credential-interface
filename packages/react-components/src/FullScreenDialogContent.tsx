@@ -6,7 +6,16 @@ const FullScreenDialogContent: React.FC<React.PropsWithChildren<BoxProps>> = ({
   ...props
 }) => {
   return (
-    <Box component={Paper} position="relative" py={4} {...props}>
+    <Box
+      component={Paper}
+      flex="1"
+      overflow={{
+        overflowY: 'scroll'
+      }}
+      position="relative"
+      py={4}
+      {...props}
+    >
       <Container maxWidth="sm">{children}</Container>
     </Box>
   );

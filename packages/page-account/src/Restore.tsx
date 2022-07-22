@@ -64,15 +64,15 @@ const Restore: React.FC = () => {
             Restore account
           </Typography>
           <Typography textAlign="center" variant="inherit">
-            Enter your Mnemonic Phrase or select your did-keys file here to restore your account.
+            Enter your Mnemonic Phrase or select your Did Keys file here to restore your account.
           </Typography>
           <FormControl fullWidth variant="outlined">
-            <InputLabel shrink>Mnemonic Phrase or did-keys file</InputLabel>
+            <InputLabel shrink>Mnemonic Phrase or Did Keys file</InputLabel>
             <OutlinedInput
               endAdornment={
                 <InputAdornment position="end">
                   <Button component="label" variant="contained">
-                    Select did-keys file
+                    Select Did Keys file
                     <input
                       accept="application/json"
                       hidden
@@ -86,7 +86,7 @@ const Restore: React.FC = () => {
               }
               fullWidth
               onChange={(e) => setMnemonic(e.target.value)}
-              placeholder="Enter Mnemonic Phrase or Select did-keys file"
+              placeholder="Enter Mnemonic Phrase or Select Did Keys file"
               value={file?.name ?? mnemonic}
             />
           </FormControl>
