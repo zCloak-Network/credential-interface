@@ -38,6 +38,10 @@ const CreateCType: React.FC = () => {
   }>(key);
   const properties = useMemo(() => {
     if (cTypeContent?.title && cTypeContent?.properties) {
+      if (Object.entries(cTypeContent.properties).length === 0) {
+        return undefined;
+      }
+
       return Object.entries(cTypeContent.properties)
         .map(([name, property]) => ({
           [name]: {
