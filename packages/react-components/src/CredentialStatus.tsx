@@ -11,9 +11,10 @@ const CredentialStatus: React.FC<{
   showText?: boolean;
 }> = ({ role, revoked, status = RequestStatus.INIT, showText }) => {
   const theme = useTheme();
-  const initText = useMemo(() => (role === 'attester' ? 'Pending' : 'Verifying'), [role]);
+  const initText = useMemo(() => (role === 'attester' ? 'Pending' : 'Attesting'), [role]);
   const submitText = useMemo(
-    () => (role === 'attester' ? (revoked ? 'Revoked' : 'Valid') : revoked ? 'Revoked' : 'Passed'),
+    () =>
+      role === 'attester' ? (revoked ? 'Revoked' : 'Valid') : revoked ? 'Revoked' : 'Attested',
     [revoked, role]
   );
   const rejectText = useMemo(() => (role === 'attester' ? 'Rejected' : 'Rejected'), [role]);

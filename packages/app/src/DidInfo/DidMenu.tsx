@@ -113,7 +113,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
           <ListItemIcon>
             <ExportIcon />
           </ListItemIcon>
-          <ListItemText>Export did-keys</ListItemText>
+          <ListItemText>Export Did Keys</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>

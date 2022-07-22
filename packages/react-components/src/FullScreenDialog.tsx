@@ -16,10 +16,7 @@ const FullScreenDialog: React.FC<React.PropsWithChildren<Props>> = ({
     <Modal
       open={open}
       sx={{
-        overflowY: 'scroll',
         width: '100%',
-        py: 4,
-        px: 15,
 
         '.MuiBackdrop-root': {
           background: 'rgba(0, 0, 0, 0.9)'
@@ -40,7 +37,21 @@ const FullScreenDialog: React.FC<React.PropsWithChildren<Props>> = ({
             <CloseIcon />
           </IconButton>
         )}
-        <Container maxWidth="xl">{children}</Container>
+        <Container
+          maxWidth="lg"
+          sx={({ spacing }) => ({
+            position: 'absolute',
+            bottom: 0,
+            top: spacing(4),
+            left: 0,
+            right: 0,
+            margin: 'auto',
+            display: 'flex',
+            flexDirection: 'column'
+          })}
+        >
+          {children}
+        </Container>
       </>
     </Modal>
   );
