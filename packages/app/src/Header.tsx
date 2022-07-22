@@ -1,5 +1,5 @@
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
-import { alpha, Badge, Box, IconButton, Link, Stack } from '@mui/material';
+import { alpha, Badge, Box, Chip, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
 import { endpoint } from '@credential/app-config/endpoints';
@@ -66,6 +66,7 @@ const Header: React.FC<{
       >
         <Stack alignItems="center" direction="row" spacing={2}>
           <Logo />
+          <Chip color="warning" label="Beta" variant="outlined" />
         </Stack>
         <Stack alignItems="center" direction="row" spacing={2}>
           <IconButton onClick={handleNotification} sx={{ marginRight: 3 }}>

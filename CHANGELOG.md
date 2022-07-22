@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.4.1 Jul 21, 2022
+
+Changes:
+
+- add `beta` chip.
+
 ## 0.3.1 Jul 21, 2022
 
 Changes:
