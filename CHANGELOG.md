@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.3.1 Jul 21, 2022
+
+Changes:
+
+- change some text.
+- ui style change.
+- create-ctype and request-details display with new pages.
+
+
 ## 0.1.1 Jul 21, 2022
 
 Changes:
