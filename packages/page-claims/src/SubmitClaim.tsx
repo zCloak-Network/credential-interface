@@ -8,7 +8,7 @@ import {
 import { Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import {
@@ -51,7 +51,7 @@ const SubmitClaim: React.FC<{
 
   const _onDone = useCallback(() => {
     if (message) {
-      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+      endpoint.db.message.add({ ...message, deal: 0, isRead: 1 });
     }
 
     onDone?.();

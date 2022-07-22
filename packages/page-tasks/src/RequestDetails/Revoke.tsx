@@ -6,7 +6,7 @@ import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
 import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
@@ -20,7 +20,7 @@ const Revoke: React.FC<{
   request: Request;
   attestation: IAttestation;
   messageLinked?: IMessage[];
-}> = ({ attestation: _attestation, messageLinked, request, type }) => {
+}> = ({ attestation: _attestation, messageLinked, request, type = 'button' }) => {
   const [open, toggleOpen] = useToggle();
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
@@ -82,7 +82,7 @@ const Revoke: React.FC<{
 
   const onDone = useCallback(() => {
     if (message) {
-      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+      endpoint.db.message.add({ ...message, deal: 0, isRead: 1 });
     }
 
     toggleOpen();

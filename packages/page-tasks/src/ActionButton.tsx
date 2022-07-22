@@ -2,24 +2,23 @@ import { IAttestation } from '@kiltprotocol/sdk-js';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
+import { Link } from 'react-router-dom';
 
-import { credentialDb } from '@credential/app-db';
-import { useRequestMessages, useToggle } from '@credential/react-hooks';
+import { endpoint } from '@credential/app-config/endpoints';
+import { useRequestMessages } from '@credential/react-hooks';
 import { Request, RequestStatus } from '@credential/react-hooks/types';
 
 import IconDetails from './icons/icon_details.svg';
 import Approve from './RequestDetails/Approve';
 import Reject from './RequestDetails/Reject';
 import Revoke from './RequestDetails/Revoke';
-import RequestDetails from './RequestDetails';
 
 const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
   attestation,
   request
 }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const [detailsOpen, toggleDetailsOpen] = useToggle();
-  const messageLinked = useRequestMessages(credentialDb, request.rootHash);
+  const messageLinked = useRequestMessages(endpoint.db, request.rootHash);
 
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -36,6 +35,7 @@ const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | nu
         <MoreHorizIcon />
       </IconButton>
       <Menu
+        MenuListProps={{ sx: { padding: 1 } }}
         anchorEl={anchorEl}
         anchorOrigin={{ horizontal: 'right', vertical: 'bottom' }}
         onClose={handleClose}
@@ -43,12 +43,12 @@ const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | nu
         transformOrigin={{ horizontal: 'right', vertical: 'top' }}
       >
         <MenuItem
+          component={Link}
           onClick={() => {
-            toggleDetailsOpen();
-            handleClose();
-            credentialDb.readMessage(request.messageId);
+            endpoint.db.readMessage(request.messageId);
           }}
           sx={({ palette }) => ({ color: palette.grey[600] })}
+          to={`/attester/tasks/${request.rootHash}`}
         >
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
             <IconDetails />
@@ -70,15 +70,6 @@ const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | nu
           />
         )}
       </Menu>
-      {detailsOpen && (
-        <RequestDetails
-          attestation={attestation}
-          messageLinked={messageLinked}
-          onClose={toggleDetailsOpen}
-          open={detailsOpen}
-          request={request}
-        />
-      )}
     </>
   );
 };

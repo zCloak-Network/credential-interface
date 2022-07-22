@@ -9,8 +9,8 @@ export class CredentialData extends Dexie {
   // request!: Table<Request>;
   // attestation!: Table<Attestation>;
 
-  constructor() {
-    super('credential-db');
+  constructor(name: string) {
+    super(`credential-db${name}`);
     this.version(1).stores({
       message:
         '++id, syncId, isRead, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references'
@@ -29,5 +29,3 @@ export class CredentialData extends Dexie {
     }
   }
 }
-
-export const credentialDb = new CredentialData();

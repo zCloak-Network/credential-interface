@@ -2,7 +2,7 @@ import { Box, CircularProgress, Stack, SvgIcon, Typography, useTheme } from '@mu
 import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
@@ -38,13 +38,13 @@ const Attester: React.FC = () => {
   const { pathname } = useLocation();
   const { transitions } = useTheme();
   const { didUri, isReady } = useContext(DidsContext);
-  const { messageUnread, taskUnread } = useUnread(credentialDb, didUri);
+  const { messageUnread, taskUnread } = useUnread(endpoint.db, didUri);
 
   const items = useMemo(
     () => [
       {
-        to: '/attester/my-ctype',
-        active: pathname.startsWith('/attester/my-ctype'),
+        to: '/attester/ctypes',
+        active: pathname.startsWith('/attester/ctypes'),
         svgIcon: <SvgIcon component={IconCtype} fontSize="inherit" viewBox="0 0 15.502 15.502" />,
         text: 'My ctypes'
       },

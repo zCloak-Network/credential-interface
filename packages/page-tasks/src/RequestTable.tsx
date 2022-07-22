@@ -1,3 +1,4 @@
+import { IAttestation } from '@kiltprotocol/sdk-js';
 import {
   Box,
   Table,
@@ -10,16 +11,52 @@ import {
 import moment from 'moment';
 import React from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useCredentials } from '@credential/react-hooks';
+import { Request } from '@credential/react-hooks/types';
 
 import ActionButton from './ActionButton';
 
+const Row: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
+  attestation,
+  request
+}) => {
+  return (
+    <TableRow>
+      <TableCell>
+        <Box sx={{ width: 200, ...ellipsisMixin() }}>
+          <DidName value={request.claim.owner} />
+        </Box>
+      </TableCell>
+      <TableCell>
+        <Box sx={{ width: 200, ...ellipsisMixin() }}>{request.rootHash}</Box>
+      </TableCell>
+      <TableCell>
+        <Box sx={{ width: 200, ...ellipsisMixin() }}>
+          <CTypeName cTypeHash={request.claim.cTypeHash} />
+        </Box>
+      </TableCell>
+      <TableCell>{moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
+      <TableCell>
+        <CredentialStatus
+          revoked={attestation?.revoked}
+          role="attester"
+          showText
+          status={request.status}
+        />
+      </TableCell>
+      <TableCell>
+        <ActionButton attestation={attestation} request={request} />
+      </TableCell>
+    </TableRow>
+  );
+};
+
 const RequestTable: React.FC = () => {
-  const list = useCredentials(credentialDb);
+  const list = useCredentials(endpoint.db);
 
   return (
     <TableContainer>
@@ -36,33 +73,7 @@ const RequestTable: React.FC = () => {
         </TableHead>
         <TableBody>
           {list?.map(({ attestation, request }, index) => (
-            <TableRow key={index}>
-              <TableCell>
-                <Box sx={{ width: 200, ...ellipsisMixin() }}>
-                  <DidName value={request.claim.owner} />
-                </Box>
-              </TableCell>
-              <TableCell>
-                <Box sx={{ width: 200, ...ellipsisMixin() }}>{request.rootHash}</Box>
-              </TableCell>
-              <TableCell>
-                <Box sx={{ width: 200, ...ellipsisMixin() }}>
-                  <CTypeName cTypeHash={request.claim.cTypeHash} />
-                </Box>
-              </TableCell>
-              <TableCell>{moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
-              <TableCell>
-                <CredentialStatus
-                  revoked={attestation?.revoked}
-                  role="attester"
-                  showText
-                  status={request.status}
-                />
-              </TableCell>
-              <TableCell>
-                <ActionButton attestation={attestation} request={request} />
-              </TableCell>
-            </TableRow>
+            <Row attestation={attestation} key={index} request={request} />
           ))}
         </TableBody>
       </Table>

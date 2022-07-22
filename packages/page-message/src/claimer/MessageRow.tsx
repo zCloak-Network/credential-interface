@@ -8,12 +8,12 @@ import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { Message } from '@credential/app-db/message';
 import { CredentialModal, CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
-import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
+import { useCredential, useToggle } from '@credential/react-hooks';
 
 const MessageRow: React.FC<{
   message: Message & { body: ISubmitAttestation | IRejectAttestation | IRequestAttestation };
@@ -34,8 +34,7 @@ const MessageRow: React.FC<{
       ? message.body.content.requestForAttestation.claim.cTypeHash
       : null;
   }, [message]);
-  const request = useRequest(credentialDb, rootHash);
-  const attestation = useAttestation(rootHash);
+  const { attestation, request } = useCredential(endpoint.db, rootHash);
 
   const credential = useMemo(
     () => (attestation && request ? { request, attestation } : null),
@@ -47,7 +46,7 @@ const MessageRow: React.FC<{
       <TableRow
         onClick={() => {
           toggleOpen();
-          credentialDb.readMessage(message.messageId);
+          endpoint.db.readMessage(message.messageId);
         }}
         sx={({ palette }) => ({
           border: 'none',

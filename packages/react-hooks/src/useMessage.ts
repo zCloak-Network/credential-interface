@@ -1,4 +1,4 @@
-import { DidUri, MessageBodyType } from '@kiltprotocol/types';
+import { DidUri, Hash, MessageBodyType } from '@kiltprotocol/types';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useCallback } from 'react';
 
@@ -7,12 +7,14 @@ import { Message } from '@credential/app-db/message';
 
 import { useDebounce } from '.';
 
-export function useRequestMessages(db: CredentialData, rootHash: string) {
+export function useRequestMessages(db: CredentialData, rootHash?: Hash) {
   const getRequestMessages = useCallback(async () => {
     const messages = db.message
       .orderBy('createdAt')
       .reverse()
       .filter((message) => {
+        if (!rootHash) return false;
+
         if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
           return message.body.content.requestForAttestation.rootHash === rootHash;
         }

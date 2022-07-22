@@ -1,7 +1,7 @@
 import type { DidUri } from '@kiltprotocol/types';
 
 import { CType } from '@kiltprotocol/sdk-js';
-import React, { createContext, useCallback, useEffect, useMemo } from 'react';
+import React, { createContext, useCallback, useMemo } from 'react';
 
 import { useLocalStorage } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
@@ -33,20 +33,6 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     },
     [cTypeList, setCTypeList]
   );
-
-  useEffect(() => {
-    if (cTypeList.length === 0) {
-      credentialApi
-        .getCTypes()
-        .then((res) =>
-          setCTypeList(
-            res.data.map(({ metadata, owner }) =>
-              CType.fromSchema(metadata as CType['schema'], owner as DidUri)
-            )
-          )
-        );
-    }
-  }, [cTypeList.length, setCTypeList]);
 
   const value = useMemo(() => {
     return {

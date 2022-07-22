@@ -3,7 +3,7 @@ import { alpha, Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/mate
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import {
   CredentialModal,
   CredentialStatus,
@@ -103,7 +103,7 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
       (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
     );
   }, [cTypeList, request.claim.cTypeHash]);
-  const requestMessages = useRequestMessages(credentialDb, request.rootHash);
+  const requestMessages = useRequestMessages(endpoint.db, request.rootHash);
 
   const credential = useMemo(
     () => (attestation ? { attestation, request } : null),

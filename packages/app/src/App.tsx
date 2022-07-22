@@ -7,12 +7,14 @@ import PageCreateAccount from '@credential/page-account/Create';
 import PageRestoreAccount from '@credential/page-account/Restore';
 import PageClaims from '@credential/page-claims';
 import PageCType from '@credential/page-ctype';
+import PageCreateCType from '@credential/page-ctype/create';
 import PageOwnerCType from '@credential/page-ctype/OwnerCType';
 import PageDidProfile from '@credential/page-did/DidProfile';
 import PageUpgradeFullDid from '@credential/page-did/UpgradeFullDid';
 import PageMessage from '@credential/page-message';
 import PageAttesterMessage from '@credential/page-message/attester';
 import PageTasks from '@credential/page-tasks';
+import PageRequestDetails from '@credential/page-tasks/RequestDetails';
 
 import AccountAuth from './Account/AccountAuth';
 import Account from './Account';
@@ -23,7 +25,9 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
   return <Navigate replace to={to} />;
 };
 
-const Container = styled(Box)``;
+const Container = styled(Box)(() => ({
+  paddingBottom: '44px'
+}));
 
 const createClaimerApp = () => (
   <Route
@@ -100,22 +104,42 @@ const createAttesterApp = () => (
         path="profile"
       />
     </Route>
-    <Route
-      element={
-        <Container paddingTop={3}>
-          <PageOwnerCType />
-        </Container>
-      }
-      path="my-ctype"
-    />
-    <Route
-      element={
-        <Container paddingTop={3}>
-          <PageTasks />
-        </Container>
-      }
-      path="tasks"
-    />
+    <Route path="ctypes">
+      <Route
+        element={
+          <Container paddingTop={3}>
+            <PageOwnerCType />
+          </Container>
+        }
+        index
+      />
+      <Route
+        element={
+          <Container paddingTop={3}>
+            <PageCreateCType />
+          </Container>
+        }
+        path="create"
+      />
+    </Route>
+    <Route path="tasks">
+      <Route
+        element={
+          <Container paddingTop={3}>
+            <PageTasks />
+          </Container>
+        }
+        index
+      />
+      <Route
+        element={
+          <Container paddingTop={3}>
+            <PageRequestDetails />
+          </Container>
+        }
+        path=":rootHash"
+      />
+    </Route>
     <Route
       element={
         <Container paddingTop={3}>
@@ -124,8 +148,8 @@ const createAttesterApp = () => (
       }
       path="message"
     />
-    <Route element={<NoMatch to="my-ctype" />} path="*" />
-    <Route element={<NoMatch to="my-ctype" />} index />
+    <Route element={<NoMatch to="ctypes" />} path="*" />
+    <Route element={<NoMatch to="ctypes" />} index />
   </Route>
 );
 

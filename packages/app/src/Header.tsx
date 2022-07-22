@@ -2,8 +2,8 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import { alpha, Badge, Box, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
+import { endpoint } from '@credential/app-config/endpoints';
 import { LogoBlackIcon } from '@credential/app-config/icons';
-import { credentialDb } from '@credential/app-db';
 import { AppContext } from '@credential/react-components';
 import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
@@ -40,7 +40,7 @@ const Header: React.FC<{
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
-  const { allUnread } = useUnread(credentialDb, didUri);
+  const { allUnread } = useUnread(endpoint.db, didUri);
 
   const handleNotification = useCallback(() => {
     toggleNotiOpen();

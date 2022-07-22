@@ -2,8 +2,8 @@ import { Did, ICredential, IEncryptedMessage, Message } from '@kiltprotocol/sdk-
 import { IconButton, lighten, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
+import { endpoint } from '@credential/app-config/endpoints';
 import { IconForward } from '@credential/app-config/icons';
-import { credentialDb } from '@credential/app-db';
 import { Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, InputDid, useDidDetails } from '@credential/react-dids';
 import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
@@ -47,7 +47,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
 
   const onDone = useCallback(() => {
     if (message) {
-      credentialDb.message.add({ ...message, deal: 0, isRead: 1 });
+      endpoint.db.message.add({ ...message, deal: 0, isRead: 1 });
     }
 
     toggleOpen();

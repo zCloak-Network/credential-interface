@@ -1,7 +1,7 @@
 import { Box, Grid, Stack, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { DidsContext } from '@credential/react-dids';
 import { useCredentials } from '@credential/react-hooks';
 
@@ -11,11 +11,11 @@ import CredentialCell from './CredentialCell';
 const Claims: React.FC = () => {
   const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
-  const credentials = useCredentials(credentialDb, didUri);
+  const credentials = useCredentials(endpoint.db, didUri);
 
   const list = useMemo(() => {
     return type === 0
-      ? credentials ?? []
+      ? credentials?.filter(({ attestation }) => !attestation) ?? []
       : credentials?.filter(({ attestation }) => !!attestation && !attestation.revoked) ?? [];
   }, [credentials, type]);
 
