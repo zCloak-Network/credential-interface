@@ -1,6 +1,7 @@
 import { IAttestation } from '@kiltprotocol/sdk-js';
 import {
   Box,
+  Link,
   Table,
   TableBody,
   TableCell,
@@ -10,6 +11,7 @@ import {
 } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
+import { Link as LinkRouter } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
@@ -32,7 +34,11 @@ const Row: React.FC<{ request: Request; attestation?: IAttestation | null }> = (
         </Box>
       </TableCell>
       <TableCell>
-        <Box sx={{ width: 200, ...ellipsisMixin() }}>{request.rootHash}</Box>
+        <Box sx={{ width: 200, ...ellipsisMixin() }}>
+          <Link component={LinkRouter} to={`/attester/tasks/${request.rootHash}`}>
+            {request.rootHash}
+          </Link>
+        </Box>
       </TableCell>
       <TableCell>
         <Box sx={{ width: 200, ...ellipsisMixin() }}>
