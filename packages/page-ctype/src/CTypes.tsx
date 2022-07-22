@@ -1,19 +1,26 @@
 import type { ICType } from '@kiltprotocol/sdk-js';
 
-import { Box, Paper, Stack, SvgIcon, Typography } from '@mui/material';
+import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
+import { Box, Button, Paper, Stack, SvgIcon, Typography } from '@mui/material';
 import React from 'react';
+import { Link } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 
-import CreateCType from './CreateCType';
-
 const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
   return (
     <Box>
       <Box sx={{ textAlign: 'right', mb: 3 }}>
-        <CreateCType />
+        <Button
+          component={Link}
+          startIcon={<AddBoxOutlinedIcon />}
+          to="/attester/ctypes/create"
+          variant="contained"
+        >
+          Create ctype
+        </Button>
       </Box>
       <Stack spacing={3}>
         {list.map((cType) => (

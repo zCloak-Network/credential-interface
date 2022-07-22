@@ -2,7 +2,7 @@ import { MessageBodyType } from '@kiltprotocol/types';
 import { Box, Stack, Tab, Tabs } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
@@ -17,7 +17,7 @@ const AttesterMessage: React.FC = () => {
     }),
     [didUri]
   );
-  const messages = useMessages(credentialDb, filter);
+  const messages = useMessages(endpoint.db, filter);
 
   return (
     <Stack spacing={3}>

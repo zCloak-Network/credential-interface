@@ -3,18 +3,16 @@ import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { Message } from '@credential/app-db/message';
-import RequestDetails from '@credential/page-tasks/RequestDetails';
 import { CredentialModal, CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
-import { useAttestation, useRequest, useToggle } from '@credential/react-hooks';
+import { useCredential, useToggle } from '@credential/react-hooks';
 
 const MessageRow: React.FC<{
   message: Message & { body: IRequestAttestation | ISubmitCredential };
 }> = ({ message }) => {
-  const [requestOpen, toggleRequest] = useToggle();
   const [credentialOpen, toggleCredential] = useToggle();
   const rootHash = useMemo(() => {
     return message.body.type === MessageBodyType.REQUEST_ATTESTATION
@@ -22,8 +20,7 @@ const MessageRow: React.FC<{
       : message.body.content[0].request.rootHash;
   }, [message.body.content, message.body.type]);
 
-  const request = useRequest(credentialDb, rootHash);
-  const attestation = useAttestation(rootHash);
+  const { attestation, request } = useCredential(endpoint.db, rootHash);
 
   const credential = useMemo(
     () => (request && attestation ? { request, attestation } : null),
@@ -31,14 +28,9 @@ const MessageRow: React.FC<{
   );
 
   const handleClick = useCallback(() => {
-    if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
-      request && toggleRequest();
-      credentialDb.readMessage(message.messageId);
-    } else {
-      credential && toggleCredential();
-      credentialDb.readMessage(message.messageId);
-    }
-  }, [credential, message.body.type, message.messageId, request, toggleCredential, toggleRequest]);
+    credential && toggleCredential();
+    endpoint.db.readMessage(message.messageId);
+  }, [credential, message.messageId, toggleCredential]);
 
   return (
     <>
@@ -69,15 +61,6 @@ const MessageRow: React.FC<{
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </TableRow>
-      {requestOpen && request && (
-        <RequestDetails
-          attestation={attestation}
-          onClose={toggleRequest}
-          open={requestOpen}
-          request={request}
-          showActions={false}
-        />
-      )}
       {credentialOpen && credential && (
         <CredentialModal credential={credential} onClose={toggleCredential} />
       )}

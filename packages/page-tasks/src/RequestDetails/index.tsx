@@ -1,26 +1,31 @@
-import type { Request } from '@credential/react-hooks/types';
-
-import { IAttestation } from '@kiltprotocol/sdk-js';
+import { Hash } from '@kiltprotocol/sdk-js';
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
 import React from 'react';
+import { useNavigate, useParams } from 'react-router-dom';
 
-import { Message } from '@credential/app-db/message';
+import { endpoint } from '@credential/app-config/endpoints';
 import { DialogHeader } from '@credential/react-components';
+import { useCredential, useRequestMessages } from '@credential/react-hooks';
 
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
 
-const RequestDetails: React.FC<{
-  request: Request;
-  attestation?: IAttestation | null;
-  open: boolean;
-  messageLinked?: Message[];
-  onClose?: () => void;
-  showActions?: boolean;
-}> = ({ attestation, messageLinked, onClose, open, request, showActions = true }) => {
+const RequestDetails: React.FC = () => {
+  const { rootHash } = useParams<{ rootHash: string }>();
+
+  const { attestation, request } = useCredential(endpoint.db, rootHash as Hash);
+  const messageLinked = useRequestMessages(endpoint.db, rootHash as Hash);
+  const navigate = useNavigate();
+
+  if (!request) {
+    return <Dialog fullScreen open></Dialog>;
+  }
+
   return (
-    <Dialog fullScreen open={open}>
-      <DialogHeader onClose={onClose}>{request.rootHash}</DialogHeader>
+    <Dialog fullScreen open>
+      <DialogHeader onClose={() => navigate('/attester/tasks', { replace: true })}>
+        {rootHash}
+      </DialogHeader>
       <Container
         component={DialogContent}
         maxWidth="lg"
@@ -30,7 +35,7 @@ const RequestDetails: React.FC<{
           attestation={attestation}
           messageLinked={messageLinked}
           request={request}
-          showActions={showActions}
+          showActions
         />
         <Details contents={request.claim.contents} messageLinked={messageLinked} />
       </Container>

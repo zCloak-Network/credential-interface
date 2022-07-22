@@ -10,7 +10,7 @@ import {
 } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
@@ -28,7 +28,7 @@ const ReceivedMessages: React.FC = () => {
         : undefined,
     [didUri]
   );
-  const messages = useMessages(credentialDb, filter);
+  const messages = useMessages(endpoint.db, filter);
 
   return (
     <TableContainer>

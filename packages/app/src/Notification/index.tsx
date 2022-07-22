@@ -2,7 +2,7 @@ import { MessageBodyType } from '@kiltprotocol/sdk-js';
 import { Badge, Box, Drawer, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
-import { credentialDb } from '@credential/app-db';
+import { endpoint } from '@credential/app-config/endpoints';
 import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
@@ -17,7 +17,7 @@ interface Props {
 const Notification: React.FC<Props> = ({ onClose, open }) => {
   const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
-  const { allUnread, messageUnread, taskUnread } = useUnread(credentialDb, didUri);
+  const { allUnread, messageUnread, taskUnread } = useUnread(endpoint.db, didUri);
 
   const filter = useMemo(
     () =>
@@ -43,7 +43,7 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
         : undefined,
     [didUri, type]
   );
-  const messages = useMessages(credentialDb, filter);
+  const messages = useMessages(endpoint.db, filter);
 
   return (
     <Drawer anchor="right" onClose={onClose} open={open}>
@@ -87,7 +87,7 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
           key={index}
           onRead={() => {
             // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            credentialDb.readMessage(message.messageId);
+            endpoint.db.readMessage(message.messageId);
           }}
           receiver={message.receiver}
           sender={message.sender}

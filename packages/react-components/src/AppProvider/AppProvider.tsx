@@ -2,7 +2,6 @@ import { Message } from '@kiltprotocol/sdk-js';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { endpoint } from '@credential/app-config/endpoints';
-import { credentialDb } from '@credential/app-db';
 import { SyncProvider } from '@credential/app-sync';
 import { MessageType } from '@credential/app-sync/type';
 import { DidsContext, useDidDetails } from '@credential/react-dids';
@@ -28,7 +27,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
   useEffect(() => {
     if (didDetails) {
-      credentialDb.message
+      endpoint.db.message
         .orderBy('syncId')
         .reverse()
         .filter((data) => {
@@ -71,7 +70,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             keyring,
             didDetails
           ).then((message) => {
-            return credentialDb.message
+            return endpoint.db.message
               .add({
                 ...message,
                 syncId: encryptedMessage.id,
