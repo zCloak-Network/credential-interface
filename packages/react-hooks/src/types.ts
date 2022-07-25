@@ -1,4 +1,4 @@
-import { IRequestForAttestation } from '@kiltprotocol/sdk-js';
+import type { DidUri, IRequestForAttestation } from '@kiltprotocol/sdk-js';
 
 export enum RequestStatus {
   INIT = 'init',
@@ -13,3 +13,8 @@ export interface Request extends IRequestForAttestation {
   receivedAt?: number;
   isRead: boolean;
 }
+
+export type RequestFilter = {
+  receiver?: DidUri;
+  owner?: DidUri;
+};
