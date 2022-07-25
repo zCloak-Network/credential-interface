@@ -54,9 +54,9 @@ const Item: React.FC<{
 
 const FullDidCreator: React.FC = () => {
   const { keyring } = useKeystore();
-  const { blockchain, didUri } = useContext(DidsContext);
+  const { blockchain, didUri, tryFetchFullDid } = useContext(DidsContext);
   const didDetails = useDidDetails(didUri);
-  const [checkeds, setCheckeds] = useState<[true, true, true, boolean]>([true, true, true, true]);
+  const [checkeds] = useState<[true, true, true, true]>([true, true, true, true]);
   const [open, toggleOpen] = useToggle();
 
   const keys = useMemo(() => {
@@ -86,17 +86,17 @@ const FullDidCreator: React.FC = () => {
     assert(didDetails, 'no light did');
     assert(didDetails instanceof Did.LightDidDetails, 'did is not light did');
 
-    const creation = Did.FullDidCreationBuilder.fromLightDidDetails(
-      blockchain.api,
-      didDetails
-    ).setAttestationKey(didDetails.authenticationKey);
-
-    if (checkeds[3]) {
-      creation.setDelegationKey(didDetails.authenticationKey);
-    }
+    const creation = Did.FullDidCreationBuilder.fromLightDidDetails(blockchain.api, didDetails)
+      .setAttestationKey(didDetails.authenticationKey)
+      .setDelegationKey(didDetails.authenticationKey);
 
     return creation.build(keyring, didDetails?.identifier);
-  }, [blockchain.api, checkeds, didDetails, keyring]);
+  }, [blockchain.api, didDetails, keyring]);
+
+  const onDone = useCallback(() => {
+    toggleOpen();
+    tryFetchFullDid();
+  }, [toggleOpen, tryFetchFullDid]);
 
   if (didDetails instanceof Did.FullDidDetails) {
     return <Alert severity="warning">You are already has full did</Alert>;
@@ -111,18 +111,7 @@ const FullDidCreator: React.FC = () => {
             <Item checked={checkeds[0]} disabled label="Authentication Key" text={keys?.[0]} />
             <Item checked={checkeds[1]} disabled label="Agreement Key Set" text={keys?.[1]} />
             <Item checked={checkeds[2]} disabled label="Assertion Key" text={keys?.[2]} />
-            <Item
-              checked={checkeds[3]}
-              label="Delegation Key"
-              onChange={(checked) =>
-                setCheckeds((checkeds) => {
-                  checkeds[3] = checked;
-
-                  return [...checkeds];
-                })
-              }
-              text={keys?.[3]}
-            />
+            <Item checked={checkeds[3]} disabled label="Delegation Key" text={keys?.[3]} />
           </Paper>
         </Box>
         <Box>
@@ -138,7 +127,7 @@ const FullDidCreator: React.FC = () => {
         open={open}
         steps={
           <Steps
-            onDone={toggleOpen}
+            onDone={onDone}
             steps={[
               {
                 label: 'Sign and submit',

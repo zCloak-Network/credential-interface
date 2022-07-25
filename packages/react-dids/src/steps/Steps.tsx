@@ -68,6 +68,7 @@ const DidsModal: React.FC<{
   }, [activeStep, execing]);
 
   const handleExec = useCallback(() => {
+    setError(null);
     setStatus({ loading: true });
     setLoading(true);
     stepsRef.current[activeStep]

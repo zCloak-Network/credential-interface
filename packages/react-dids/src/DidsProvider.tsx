@@ -30,12 +30,12 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [needUpgrade, setNeedUpgrade] = useState(false);
   const didDetails = useDidDetails(didUri);
 
-  useEffect(() => {
+  const tryFetchFullDid = useCallback(async () => {
     try {
       if (didUri) {
         const { identifier, type } = Did.Utils.parseDidUri(didUri);
 
-        Did.FullDidDetails.fromChainInfo(
+        await Did.FullDidDetails.fromChainInfo(
           type === 'light'
             ? Did.Utils.getKiltDidFromIdentifier(identifier.slice(2), 'full')
             : didUri
@@ -58,6 +58,10 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       }
     } catch {}
   }, [didUri, keyring, setDidUri]);
+
+  useEffect(() => {
+    tryFetchFullDid();
+  }, [tryFetchFullDid]);
 
   const isFullDid = useMemo(() => {
     try {
@@ -186,7 +190,8 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       restoreDid,
       backupDid,
       logout,
-      unlockDid
+      unlockDid,
+      tryFetchFullDid
     }),
     [
       backupDid,
@@ -199,7 +204,8 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       logout,
       needUpgrade,
       restoreDid,
-      unlockDid
+      unlockDid,
+      tryFetchFullDid
     ]
   );
 
