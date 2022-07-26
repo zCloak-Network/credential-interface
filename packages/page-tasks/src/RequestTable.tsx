@@ -10,7 +10,7 @@ import {
   TableRow
 } from '@mui/material';
 import moment from 'moment';
-import React, { useContext } from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Link as LinkRouter } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
@@ -63,7 +63,8 @@ const Row: React.FC<{ request: Request; attestation?: IAttestation | null }> = (
 
 const RequestTable: React.FC = () => {
   const { didUri } = useContext(DidsContext);
-  const list = useCredentials(endpoint.db, { receiver: didUri });
+  const filter = useMemo(() => ({ receiver: didUri }), [didUri]);
+  const list = useCredentials(endpoint.db, filter);
 
   return (
     <TableContainer>

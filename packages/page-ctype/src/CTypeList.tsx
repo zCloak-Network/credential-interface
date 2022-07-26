@@ -1,11 +1,11 @@
-import type { CType } from '@kiltprotocol/sdk-js';
+import type { ICType } from '@kiltprotocol/sdk-js';
 
 import { Box, Grid } from '@mui/material';
 import React from 'react';
 
 import CTypeCell from './CTypeCell';
 
-const CTypeList: React.FC<{ list: CType[] }> = ({ list }) => {
+const CTypeList: React.FC<{ list: ICType[] }> = ({ list }) => {
   return (
     <Box>
       <Grid container spacing={3}>

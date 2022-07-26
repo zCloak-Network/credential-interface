@@ -11,3 +11,4 @@ export * from './useQueryParams';
 export * from './useCredentials';
 export * from './useRequestForAttestation';
 export * from './useMessage';
+export * from './useCTypes';
