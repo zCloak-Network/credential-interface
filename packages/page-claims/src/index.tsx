@@ -11,7 +11,8 @@ import CredentialCell from './CredentialCell';
 const Claims: React.FC = () => {
   const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
-  const credentials = useCredentials(endpoint.db, didUri);
+  const filter = useMemo(() => ({ owner: didUri }), [didUri]);
+  const credentials = useCredentials(endpoint.db, filter);
 
   const list = useMemo(() => {
     return type === 0

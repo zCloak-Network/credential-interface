@@ -1,4 +1,4 @@
-import type { CType } from '@kiltprotocol/sdk-js';
+import type { ICType } from '@kiltprotocol/sdk-js';
 
 import {
   alpha,
@@ -92,7 +92,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
+const CTypeCell: React.FC<{ cType: ICType }> = ({ cType }) => {
   const navigate = useNavigate();
 
   const submitClaim = useCallback(() => {

@@ -1,11 +1,9 @@
-import type { DidUri } from '@kiltprotocol/types';
-
 import { IRequestAttestation, MessageBodyType } from '@kiltprotocol/sdk-js';
 import { useLiveQuery } from 'dexie-react-hooks';
 
 import { CredentialData } from '@credential/app-db';
 
-import { Request, RequestStatus } from './types';
+import { Request, RequestFilter, RequestStatus } from './types';
 import { useDebounce } from '.';
 
 async function getStatus(db: CredentialData, rootHash: string): Promise<RequestStatus> {
@@ -39,7 +37,7 @@ async function getStatus(db: CredentialData, rootHash: string): Promise<RequestS
 
 export function useRequestForAttestation(
   db: CredentialData,
-  owner?: DidUri
+  filter: RequestFilter
 ): Request[] | undefined {
   const data = useLiveQuery(async () => {
     const messages = await db.message
@@ -48,7 +46,10 @@ export function useRequestForAttestation(
       .filter(
         (message) =>
           message.body.type === MessageBodyType.REQUEST_ATTESTATION &&
-          (!owner ? true : message.body.content.requestForAttestation.claim.owner === owner)
+          (!filter.receiver ? true : message.receiver === filter.receiver) &&
+          (!filter.owner
+            ? true
+            : message.body.content.requestForAttestation.claim.owner === filter.owner)
       )
       .toArray();
 
@@ -69,7 +70,7 @@ export function useRequestForAttestation(
     }
 
     return requests;
-  }, [owner]);
+  }, [filter]);
 
   return useDebounce(data, 100);
 }

@@ -71,11 +71,14 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             didDetails
           ).then((message) => {
             return endpoint.db.message
-              .add({
-                ...message,
-                syncId: encryptedMessage.id,
-                deal: 0
-              })
+              .put(
+                {
+                  ...message,
+                  syncId: encryptedMessage.id,
+                  deal: 0
+                },
+                ['messageId']
+              )
               .then(() => {
                 encryptedMessages.delete(encryptedMessage.id);
               });

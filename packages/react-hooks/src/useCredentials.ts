@@ -1,19 +1,19 @@
-import type { DidUri, Hash } from '@kiltprotocol/types';
+import type { Hash } from '@kiltprotocol/types';
 
 import { Attestation } from '@kiltprotocol/sdk-js';
 import { useMemo } from 'react';
 
 import { CredentialData } from '@credential/app-db';
 
-import { Request, RequestStatus } from './types';
+import { Request, RequestFilter, RequestStatus } from './types';
 import { useAttestation, useAttestationBatch } from './useAttestation';
 import { useRequest, useRequestForAttestation } from './useRequestForAttestation';
 
 export function useCredentials(
   db: CredentialData,
-  owner?: DidUri
+  filter: RequestFilter
 ): { request: Request; attestation: Attestation | null | undefined }[] {
-  const requests = useRequestForAttestation(db, owner);
+  const requests = useRequestForAttestation(db, filter);
 
   const claimHashs = useMemo(() => (requests ?? []).map((request) => request.rootHash), [requests]);
   const attestations = useAttestationBatch(claimHashs);

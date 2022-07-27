@@ -10,13 +10,13 @@ import {
   TableRow
 } from '@mui/material';
 import moment from 'moment';
-import React from 'react';
+import React, { useContext, useMemo } from 'react';
 import { Link as LinkRouter } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { DidName } from '@credential/react-dids';
+import { DidName, DidsContext } from '@credential/react-dids';
 import { useCredentials } from '@credential/react-hooks';
 import { Request } from '@credential/react-hooks/types';
 
@@ -62,7 +62,9 @@ const Row: React.FC<{ request: Request; attestation?: IAttestation | null }> = (
 };
 
 const RequestTable: React.FC = () => {
-  const list = useCredentials(endpoint.db);
+  const { didUri } = useContext(DidsContext);
+  const filter = useMemo(() => ({ receiver: didUri }), [didUri]);
+  const list = useCredentials(endpoint.db, filter);
 
   return (
     <TableContainer>

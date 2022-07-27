@@ -1,37 +1,39 @@
-import type { DidUri } from '@kiltprotocol/types';
+import type { DidUri, Hash, ICType } from '@kiltprotocol/types';
 
-import { CType } from '@kiltprotocol/sdk-js';
 import React, { createContext, useCallback, useMemo } from 'react';
 
-import { useLocalStorage } from '@credential/react-hooks';
+import { endpoint } from '@credential/app-config/endpoints';
+import { useCTypes } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
 
 interface State {
-  cTypeList: CType[];
+  cTypeList: ICType[];
   importCType: (hash: string) => void;
 }
 
 export const CTypeContext = createContext<State>({} as State);
 
-const STORAGE_KEY = 'credential:ctypes';
-
 const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const [cTypeList, setCTypeList] = useLocalStorage<CType[]>(STORAGE_KEY, []);
+  const cTypeList = useCTypes(endpoint.db);
 
   const importCType = useCallback(
     (hash: string) => {
-      const has = !!cTypeList.find(({ hash: _hash }) => _hash === hash);
+      const has = !!cTypeList?.find(({ hash: _hash }) => _hash === hash);
 
       if (has) return;
 
       credentialApi.getCType(hash).then((res) => {
-        setCTypeList((value) => [
-          CType.fromSchema(res.data.metadata as CType['schema'], res.data.owner as DidUri),
-          ...value
-        ]);
+        endpoint.db.ctype.put(
+          {
+            schema: res.data.metadata as ICType['schema'],
+            owner: res.data.owner as DidUri,
+            hash: res.data.ctypeHash as Hash
+          },
+          ['hash']
+        );
       });
     },
-    [cTypeList, setCTypeList]
+    [cTypeList]
   );
 
   const value = useMemo(() => {
