@@ -75,7 +75,8 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
                 {
                   ...message,
                   syncId: encryptedMessage.id,
-                  deal: 0
+                  deal: 0,
+                  isRead: 0
                 },
                 ['messageId']
               )

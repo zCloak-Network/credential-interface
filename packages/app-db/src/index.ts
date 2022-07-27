@@ -17,7 +17,7 @@ export class CredentialData extends Dexie {
       .stores({
         ctype: '&hash, owner, *schema',
         message:
-          '&syncId, isRead, createdAt, deal, *body, sender, receiver, &messageId, receivedAt, inReplyTo, *references'
+          '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references'
       })
       .upgrade((tx) => {
         tx.table('message').delete('id');
