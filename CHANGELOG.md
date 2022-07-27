@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.5.1 Jul 27, 2022
+
+Changes:
+
+- save ctypes in indexdb.
+- upgrade dexie, remove duplicate messages.
+- add chip in attester.
+
 ## 0.4.1 Jul 21, 2022
 
 Changes:
