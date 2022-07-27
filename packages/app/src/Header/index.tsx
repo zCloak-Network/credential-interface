@@ -8,11 +8,12 @@ import { AppContext } from '@credential/react-components';
 import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
-import { useUnread } from './Notification/useUnread';
-import DidInfo from './DidInfo';
-import Network from './Network';
-import Notification from './Notification';
-import UpgradeFullDid from './UpgradeFullDid';
+import DidInfo from '../DidInfo';
+import Network from '../Network';
+import Notification from '../Notification';
+import { useUnread } from '../Notification/useUnread';
+import UpgradeFullDid from '../UpgradeFullDid';
+import AttesterIcon from './icon_attester.svg';
 
 const Logo: React.FC = () => {
   return (
@@ -35,8 +36,9 @@ const Logo: React.FC = () => {
 };
 
 const Header: React.FC<{
+  isAttester?: boolean;
   showUpgrade?: boolean;
-}> = ({ showUpgrade = false }) => {
+}> = ({ isAttester = false, showUpgrade = false }) => {
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
@@ -66,6 +68,18 @@ const Header: React.FC<{
       >
         <Stack alignItems="center" direction="row" spacing={2}>
           <Logo />
+          {isAttester && (
+            <Chip
+              color="primary"
+              label={
+                <Stack alignItems="center" direction="row" spacing={0.5}>
+                  <AttesterIcon />
+                  <Box>Attester</Box>
+                </Stack>
+              }
+              variant="outlined"
+            />
+          )}
           <Chip color="warning" label="Beta" variant="outlined" />
         </Stack>
         <Stack alignItems="center" direction="row" spacing={2}>
