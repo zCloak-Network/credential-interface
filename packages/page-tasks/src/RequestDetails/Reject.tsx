@@ -49,7 +49,7 @@ const Reject: React.FC<{
 
   const onDone = useCallback(() => {
     if (message) {
-      endpoint.db.message.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
+      endpoint.db.messages.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
     }
 
     toggleOpen();

@@ -9,7 +9,7 @@ import { useDebounce } from '.';
 
 export function useRequestMessages(db: CredentialData, rootHash?: Hash) {
   const getRequestMessages = useCallback(async () => {
-    const messages = db.message
+    const messages = db.messages
       .orderBy('createdAt')
       .reverse()
       .filter((message) => {
@@ -32,7 +32,7 @@ export function useRequestMessages(db: CredentialData, rootHash?: Hash) {
       .toArray();
 
     return messages;
-  }, [db.message, rootHash]);
+  }, [db.messages, rootHash]);
 
   const data = useLiveQuery(() => getRequestMessages(), [getRequestMessages]);
 
@@ -56,7 +56,7 @@ export function useMessages(
       wheres.receiver = filter.receiver;
     }
 
-    return db.message
+    return db.messages
       .where(wheres)
       .filter((message) => {
         let flag = true;

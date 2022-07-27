@@ -7,46 +7,47 @@ import { Message } from './message';
 
 export class CredentialData extends Dexie {
   ctype!: Table<CType>;
+  messages!: Table<Message>;
   message!: Table<Message>;
-  // request!: Table<Request>;
-  // attestation!: Table<Attestation>;
 
   constructor(name: string) {
     super(`credential-db${name}`);
-    this.version(4)
+    this.version(6)
       .upgrade((tx) => {
         tx.table('message')
           .toCollection()
           .toArray()
           .then((messages) => {
-            const set = new Set();
-            const set2 = new Set();
-
-            messages.forEach((message) => {
-              if (set.has(message.messageId)) {
-                set2.add(message.messageId);
-              }
-
-              set.add(message.messageId);
-            });
-
-            tx.table('message')
-              .filter((message) => {
-                return !message.syncId && set2.has(message.messageId);
-              })
-              .delete();
+            tx.table('messages').bulkPut(
+              messages.map((message) => ({
+                messageId: message.messageId,
+                syncId: message.sync,
+                isRead: message.isRead,
+                createdAt: message.createdAt,
+                deal: message.deal,
+                body: message.body,
+                sender: message.sender,
+                receiver: message.receiver,
+                receivedAt: message.receivedAt,
+                inReplyTo: message.inReplyTo,
+                references: message.references
+              })),
+              ['messageId']
+            );
           });
       })
       .stores({
         ctype: '&hash, owner, *schema',
+        messages:
+          '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references',
         message:
-          '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references, aaa'
+          '++id, syncId, isRead, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references'
       });
   }
 
   public async readMessage(messageId?: string) {
     if (messageId) {
-      await this.message.where('messageId').equals(messageId).modify({
+      await this.messages.where('messageId').equals(messageId).modify({
         isRead: 1
       });
     }

@@ -6,10 +6,10 @@ import { CredentialData } from '@credential/app-db';
 
 export function useUnread(db: CredentialData, receiver?: DidUri) {
   const allUnread = useLiveQuery(() =>
-    db.message.filter((message) => !message.isRead && message.receiver === receiver).count()
+    db.messages.filter((message) => !message.isRead && message.receiver === receiver).count()
   );
   const taskUnread = useLiveQuery(() =>
-    db.message
+    db.messages
       .filter(
         (message) =>
           !message.isRead &&
@@ -19,7 +19,7 @@ export function useUnread(db: CredentialData, receiver?: DidUri) {
       .count()
   );
   const messageUnread = useLiveQuery(() =>
-    db.message
+    db.messages
       .filter(
         (message) =>
           !message.isRead &&

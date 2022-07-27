@@ -27,7 +27,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
   useEffect(() => {
     if (didDetails) {
-      endpoint.db.message
+      endpoint.db.messages
         .orderBy('syncId')
         .reverse()
         .filter((data) => {
@@ -70,7 +70,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             keyring,
             didDetails
           ).then((message) => {
-            return endpoint.db.message
+            return endpoint.db.messages
               .put(
                 {
                   ...message,

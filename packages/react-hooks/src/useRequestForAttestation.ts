@@ -7,14 +7,14 @@ import { Request, RequestFilter, RequestStatus } from './types';
 import { useDebounce } from '.';
 
 async function getStatus(db: CredentialData, rootHash: string): Promise<RequestStatus> {
-  const reject = await db.message
+  const reject = await db.messages
     .orderBy('createdAt')
     .reverse()
     .filter(
       (m) => m.body.type === MessageBodyType.REJECT_ATTESTATION && m.body.content === rootHash
     )
     .first();
-  const submit = await db.message
+  const submit = await db.messages
     .orderBy('createdAt')
     .reverse()
     .filter(
@@ -40,7 +40,7 @@ export function useRequestForAttestation(
   filter: RequestFilter
 ): Request[] | undefined {
   const data = useLiveQuery(async () => {
-    const messages = await db.message
+    const messages = await db.messages
       .orderBy('createdAt')
       .reverse()
       .filter(
@@ -77,7 +77,7 @@ export function useRequestForAttestation(
 
 export function useRequest(db: CredentialData, rootHash?: string): Request | undefined {
   const data = useLiveQuery(async () => {
-    const message = await db.message
+    const message = await db.messages
       .orderBy('createdAt')
       .reverse()
       .filter(
