@@ -13,14 +13,8 @@ export class CredentialData extends Dexie {
 
   constructor(name: string) {
     super(`credential-db${name}`);
-    this.version(3)
-      .stores({
-        ctype: '&hash, owner, *schema',
-        message:
-          '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references'
-      })
+    this.version(4)
       .upgrade((tx) => {
-        tx.table('message').delete('id');
         tx.table('message')
           .toCollection()
           .toArray()
@@ -42,6 +36,11 @@ export class CredentialData extends Dexie {
               })
               .delete();
           });
+      })
+      .stores({
+        ctype: '&hash, owner, *schema',
+        message:
+          '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references, aaa'
       });
   }
 
