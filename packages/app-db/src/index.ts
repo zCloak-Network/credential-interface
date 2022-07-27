@@ -17,9 +17,10 @@ export class CredentialData extends Dexie {
       .stores({
         ctype: '&hash, owner, *schema',
         message:
-          '++id, &syncId, isRead, createdAt, deal, *body, sender, receiver, &messageId, receivedAt, inReplyTo, *references'
+          '&syncId, isRead, createdAt, deal, *body, sender, receiver, &messageId, receivedAt, inReplyTo, *references'
       })
       .upgrade((tx) => {
+        tx.table('message').delete('id');
         tx.table('message')
           .toCollection()
           .toArray()

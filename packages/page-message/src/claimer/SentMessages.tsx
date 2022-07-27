@@ -66,7 +66,7 @@ const SentMessages: React.FC = () => {
         </TableHead>
         <TableBody>
           {messages?.map((message) => (
-            <MessageRow key={message.id} message={message as any} />
+            <MessageRow key={message.messageId} message={message as any} />
           ))}
         </TableBody>
       </Table>

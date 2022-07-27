@@ -24,7 +24,7 @@ const Messages: React.FC<{
         </TableHead>
         <TableBody>
           {messages?.map((message) => (
-            <MessageRow key={message.id} message={message} />
+            <MessageRow key={message.messageId} message={message} />
           ))}
         </TableBody>
       </Table>
