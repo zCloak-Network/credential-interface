@@ -23,11 +23,14 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       if (has) return;
 
       credentialApi.getCType(hash).then((res) => {
-        endpoint.db.ctype.add({
-          schema: res.data.metadata as ICType['schema'],
-          owner: res.data.owner as DidUri,
-          hash: res.data.ctypeHash as Hash
-        });
+        endpoint.db.ctype.put(
+          {
+            schema: res.data.metadata as ICType['schema'],
+            owner: res.data.owner as DidUri,
+            hash: res.data.ctypeHash as Hash
+          },
+          ['hash']
+        );
       });
     },
     [cTypeList]

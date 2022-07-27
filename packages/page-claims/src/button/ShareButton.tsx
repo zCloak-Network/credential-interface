@@ -47,7 +47,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
 
   const onDone = useCallback(() => {
     if (message) {
-      endpoint.db.message.add({ ...message, deal: 0, isRead: 1 });
+      endpoint.db.message.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
     }
 
     toggleOpen();

@@ -17,11 +17,36 @@ export class CredentialData extends Dexie {
       ctype: 'hash, owner, *schema',
       message:
         '++id, syncId, isRead, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references'
-      // request:
-      //   '++id, messageId, isRead, *claim, *claimNonceMap, *claimHashes, *claimerSignature, delegationId, *legitimations, &rootHash',
-      // attestation:
-      //   '++id, updateTime, messageId, &claimHash, cTypeHash, owner, delegationId, revoked'
     });
+    this.version(3)
+      .stores({
+        ctype: '&hash, owner, *schema',
+        message:
+          '++id, &syncId, isRead, createdAt, deal, *body, sender, receiver, &messageId, receivedAt, inReplyTo, *references'
+      })
+      .upgrade((tx) => {
+        tx.table('message')
+          .toCollection()
+          .toArray()
+          .then((messages) => {
+            const set = new Set();
+            const set2 = new Set();
+
+            messages.forEach((message) => {
+              if (set.has(message.messageId)) {
+                set2.add(message.messageId);
+              }
+
+              set.add(message.messageId);
+            });
+
+            tx.table('message')
+              .filter((message) => {
+                return !message.syncId && set2.has(message.messageId);
+              })
+              .delete();
+          });
+      });
   }
 
   public async readMessage(messageId?: string) {
