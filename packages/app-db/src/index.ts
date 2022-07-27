@@ -13,11 +13,6 @@ export class CredentialData extends Dexie {
 
   constructor(name: string) {
     super(`credential-db${name}`);
-    this.version(2).stores({
-      ctype: 'hash, owner, *schema',
-      message:
-        '++id, syncId, isRead, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references'
-    });
     this.version(3)
       .stores({
         ctype: '&hash, owner, *schema',
