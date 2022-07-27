@@ -12,37 +12,13 @@ export class CredentialData extends Dexie {
 
   constructor(name: string) {
     super(`credential-db${name}`);
-    this.version(6)
-      .upgrade((tx) => {
-        tx.table('message')
-          .toCollection()
-          .toArray()
-          .then((messages) => {
-            tx.table('messages').bulkPut(
-              messages.map((message) => ({
-                messageId: message.messageId,
-                syncId: message.sync,
-                isRead: message.isRead,
-                createdAt: message.createdAt,
-                deal: message.deal,
-                body: message.body,
-                sender: message.sender,
-                receiver: message.receiver,
-                receivedAt: message.receivedAt,
-                inReplyTo: message.inReplyTo,
-                references: message.references
-              })),
-              ['messageId']
-            );
-          });
-      })
-      .stores({
-        ctype: '&hash, owner, *schema',
-        messages:
-          '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references',
-        message:
-          '++id, syncId, isRead, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references'
-      });
+    this.version(7).stores({
+      ctype: '&hash, owner, *schema',
+      messages:
+        '&messageId, syncId, isRead, createdAt, deal, *body, sender, receiver, receivedAt, inReplyTo, *references',
+      message:
+        '++id, syncId, isRead, createdAt, deal, *body, sender, receiver, messageId, receivedAt, inReplyTo, *references'
+    });
   }
 
   public async readMessage(messageId?: string) {
