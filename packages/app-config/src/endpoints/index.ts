@@ -10,7 +10,8 @@ export const endpoints: Record<string, Endpoint> = isRelease
         endpoint: 'wss://peregrine.kilt.io/parachain-public-ws/',
         service: 'https://testnet.credential-service.zkid.app',
         messageWs: 'wss://wss.testnet.credential-service.zkid.app/ws',
-        db: new CredentialData('')
+        db: new CredentialData(''),
+        faucetLink: 'https://faucet.peregrine.kilt.io/'
       },
       'KILT Spiritnet': {
         endpoint: 'wss://spiritnet.kilt.io/',
@@ -24,7 +25,8 @@ export const endpoints: Record<string, Endpoint> = isRelease
         endpoint: 'wss://peregrine.kilt.io/parachain-public-ws/',
         service: 'https://credential-service.starks.network',
         messageWs: 'wss://wss.credential-service.starks.network/ws',
-        db: new CredentialData('')
+        db: new CredentialData(''),
+        faucetLink: 'https://faucet.peregrine.kilt.io/'
       }
     };
 
