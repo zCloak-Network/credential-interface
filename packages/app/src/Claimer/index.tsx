@@ -35,7 +35,7 @@ const Claimer: React.FC = () => {
             color={pathname.startsWith('/claimer/claims') ? palette.primary.main : undefined}
           />
         ),
-        text: 'Claims'
+        text: 'Credentials'
       },
       {
         to: '/claimer/message',

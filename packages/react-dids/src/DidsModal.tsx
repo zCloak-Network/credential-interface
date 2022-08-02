@@ -28,7 +28,6 @@ const DidsModal: React.FC<
       <DialogHeader onClose={onClose}>{title}</DialogHeader>
       <DialogContent sx={{ minWidth: 325, width: 578, maxWidth: '100%', padding: 7.5 }}>
         <Stack spacing={3}>
-          {children}
           {isLocked && (
             <>
               <InputPassword
@@ -52,7 +51,7 @@ const DidsModal: React.FC<
               </Button>
             </>
           )}
-          {!isLocked && steps}
+          {isLocked ? null : steps || children}
         </Stack>
       </DialogContent>
     </Dialog>
