@@ -23,15 +23,15 @@ const Claims: React.FC = () => {
   return (
     <>
       <Stack spacing={4}>
-        <Typography variant="h2">Claims</Typography>
+        <Typography variant="h2">Credentials</Typography>
         <Tabs onChange={(_, value) => setType(value)} value={type}>
           <Tab label="My Claims" />
           <Tab label="My Credentials" />
         </Tabs>
         <Box>
           <Grid container spacing={3}>
-            {list.map(({ attestation, request }, index) => (
-              <Grid item key={index} lg={4} md={6} sm={12} xl={3} xs={12}>
+            {list.map(({ attestation, request }) => (
+              <Grid item key={request.rootHash} lg={4} md={6} sm={12} xl={3} xs={12}>
                 <CredentialCell attestation={attestation} request={request} />
               </Grid>
             ))}

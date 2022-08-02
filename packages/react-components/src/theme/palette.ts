@@ -58,7 +58,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     secondary: 'rgba(0, 0, 0, 0.6)',
     disabled: 'rgba(0, 0, 0, 0.38)'
   },
-  divider: 'rgba(0, 0, 0, 0.12)',
+  divider: '#C5C5DE',
   action: {
     active: 'rgba(0, 0, 0, 0.54)',
     hover: 'rgba(0, 0, 0, 0.04)',
@@ -68,7 +68,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     disabled: 'rgba(0, 0, 0, 0.26)',
     disabledBackground: 'rgba(0, 0, 0, 0.12)',
     disabledOpacity: 0.38,
-    focus: 'rgba(0, 0, 0, 0.12)',
+    focus: '#C5C5DE',
     focusOpacity: 0.12,
     activatedOpacity: 0.12
   }

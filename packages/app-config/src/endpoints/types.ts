@@ -5,4 +5,5 @@ export interface Endpoint {
   service: string;
   messageWs: string;
   db: CredentialData;
+  faucetLink?: string;
 }

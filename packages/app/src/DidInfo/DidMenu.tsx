@@ -2,7 +2,9 @@ import type { DidUri } from '@kiltprotocol/sdk-js';
 
 import {
   alpha,
+  Button,
   Divider,
+  Link,
   ListItem,
   ListItemIcon,
   ListItemSecondaryAction,
@@ -14,6 +16,7 @@ import {
 import React, { useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { endpoint } from '@credential/app-config/endpoints';
 import { Copy, FormatBalance, IdentityIcon } from '@credential/react-components';
 import { DidName, DidsContext } from '@credential/react-dids';
 import { useBalances, useToggle } from '@credential/react-hooks';
@@ -102,6 +105,18 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
             <FormatBalance value={balances?.free} />
           </ListItemSecondaryAction>
         </ListItem>
+        {endpoint && (
+          <Button
+            component={Link}
+            fullWidth
+            href={endpoint.faucetLink}
+            sx={{ marginBottom: 2 }}
+            target="_blank"
+            variant="contained"
+          >
+            Go to KILT faucet to get token
+          </Button>
+        )}
         <Divider sx={{ marginY: 1 }} />
         <MenuItem onClick={handleProfile}>
           <ListItemIcon>
