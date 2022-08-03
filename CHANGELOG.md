@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.9.1 Aug 03, 2022
+
+Changes:
+
+- restore ui use mnemonic and Did Keys file
+- select attributes when share credential
+- change KILT Peregrine endpoint
+- fix some bugs
+
 ## 0.5.1 Jul 27, 2022
 
 Changes:
