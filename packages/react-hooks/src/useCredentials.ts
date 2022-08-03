@@ -19,7 +19,7 @@ export function useCredentials(
   const attestations = useAttestationBatch(claimHashs);
 
   return useMemo(() => {
-    if (requests && attestations) {
+    if (requests && attestations && requests.length === attestations.length) {
       return requests.map((request, index) => ({
         request: {
           ...request,

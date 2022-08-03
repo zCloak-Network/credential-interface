@@ -7,7 +7,7 @@ const isRelease = location.hostname.includes('zkid.app');
 export const endpoints: Record<string, Endpoint> = isRelease
   ? {
       'KILT Peregrine': {
-        endpoint: 'wss://peregrine.kilt.io/parachain-public-ws/',
+        endpoint: 'wss://kilt.zkid.app/',
         service: 'https://testnet.credential-service.zkid.app',
         messageWs: 'wss://wss.testnet.credential-service.zkid.app/ws',
         db: new CredentialData(''),
@@ -22,7 +22,7 @@ export const endpoints: Record<string, Endpoint> = isRelease
     }
   : {
       'KILT Peregrine': {
-        endpoint: 'wss://peregrine.kilt.io/parachain-public-ws/',
+        endpoint: 'wss://kilt.zkid.app/',
         service: 'https://credential-service.starks.network',
         messageWs: 'wss://wss.credential-service.starks.network/ws',
         db: new CredentialData(''),
