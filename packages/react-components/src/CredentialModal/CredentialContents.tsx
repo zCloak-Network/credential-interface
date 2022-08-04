@@ -43,7 +43,7 @@ const Item: React.FC<{
     if (['string', 'number', 'undefined'].includes(type)) {
       return <>{value}</>;
     } else if (typeof value === 'boolean') {
-      return <Switch value={value} />;
+      return <Switch disabled value={value} />;
     } else {
       return <>{JSON.stringify(value)}</>;
     }

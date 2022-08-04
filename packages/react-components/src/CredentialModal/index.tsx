@@ -19,7 +19,7 @@ interface Props {
   onClose?: () => void;
 }
 
-const CredentialModal: React.FC<Props> = ({ actions, credential, onClose }) => {
+const CredentialModal: React.FC<Props> = ({ credential, onClose }) => {
   const owner = useMemo(() => credential.request.claim.owner, [credential.request.claim.owner]);
   const rootHash = useMemo(() => credential.request.rootHash, [credential.request.rootHash]);
   const ctypeHash = useMemo(
@@ -48,7 +48,6 @@ const CredentialModal: React.FC<Props> = ({ actions, credential, onClose }) => {
         </Stack>
       </FullScreenDialogHeader>
       <FullScreenDialogContent>
-        {actions}
         <CredentialContents
           attester={attester}
           contents={contents}

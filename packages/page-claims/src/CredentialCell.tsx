@@ -201,10 +201,6 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               alignItems="center"
               spacing={2}
               sx={({ palette }) => ({
-                position: 'absolute',
-                left: 'calc(100% + 32px)',
-                top: 0,
-
                 '.MuiButtonBase-root': {
                   width: 44,
                   height: 44,

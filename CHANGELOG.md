@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.10.1 Aug 04, 2022
+
+Changes:
+
+- fix bug
+
 ## 0.9.1 Aug 03, 2022
 
 Changes:
