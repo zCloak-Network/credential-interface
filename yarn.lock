@@ -1489,7 +1489,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/app-db@0.10.1, @credential/app-db@workspace:packages/app-db":
+"@credential/app-db@0.11.0, @credential/app-db@workspace:packages/app-db":
   version: 0.0.0-use.local
   resolution: "@credential/app-db@workspace:packages/app-db"
   dependencies:
@@ -1502,7 +1502,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/app-sync@workspace:packages/app-sync"
   dependencies:
-    "@credential/app-db": 0.10.1
+    "@credential/app-db": 0.11.0
     socket.io-client: ^4.5.1
   languageName: unknown
   linkType: soft
@@ -1556,7 +1556,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-account@workspace:packages/page-account"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
     file-saver: ^2.0.5
   languageName: unknown
   linkType: soft
@@ -1565,7 +1565,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-claims@workspace:packages/page-claims"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
   languageName: unknown
   linkType: soft
 
@@ -1573,7 +1573,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-ctype@workspace:packages/page-ctype"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
   languageName: unknown
   linkType: soft
 
@@ -1581,7 +1581,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-did@workspace:packages/page-did"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
   languageName: unknown
   linkType: soft
 
@@ -1589,7 +1589,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-message@workspace:packages/page-message"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
   languageName: unknown
   linkType: soft
 
@@ -1597,15 +1597,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-tasks@workspace:packages/page-tasks"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
   languageName: unknown
   linkType: soft
 
-"@credential/react-components@0.10.1, @credential/react-components@workspace:packages/react-components":
+"@credential/react-components@0.11.0, @credential/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@credential/react-components@workspace:packages/react-components"
   dependencies:
-    "@credential/react-hooks": 0.10.1
+    "@credential/react-hooks": 0.11.0
     "@date-io/date-fns": ^2.14.0
     "@date-io/moment": ^2.14.0
     "@emotion/react": ^11.9.0
@@ -1623,29 +1623,29 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/react-ctype@workspace:packages/react-ctype"
   dependencies:
-    "@credential/react-components": 0.10.1
-    "@credential/react-dids": 0.10.1
+    "@credential/react-components": 0.11.0
+    "@credential/react-dids": 0.11.0
     "@mui/lab": ^5.0.0-alpha.88
     "@mui/material": ^5.8.6
   languageName: unknown
   linkType: soft
 
-"@credential/react-dids@0.10.1, @credential/react-dids@workspace:packages/react-dids":
+"@credential/react-dids@0.11.0, @credential/react-dids@workspace:packages/react-dids":
   version: 0.0.0-use.local
   resolution: "@credential/react-dids@workspace:packages/react-dids"
   dependencies:
-    "@credential/react-keystore": 0.10.1
+    "@credential/react-keystore": 0.11.0
     "@kiltprotocol/sdk-js": ^0.28.0
     "@mui/material": ^5.8.6
     "@polkadot/util": ^9.0.0
   languageName: unknown
   linkType: soft
 
-"@credential/react-hooks@0.10.1, @credential/react-hooks@workspace:packages/react-hooks":
+"@credential/react-hooks@0.11.0, @credential/react-hooks@workspace:packages/react-hooks":
   version: 0.0.0-use.local
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
-    "@credential/app-db": 0.10.1
+    "@credential/app-db": 0.11.0
     "@zcloak/service": ^0.0.2-26
     copy-to-clipboard: ^3.3.1
     dexie-react-hooks: ^1.1.1
@@ -1653,7 +1653,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/react-keystore@0.10.1, @credential/react-keystore@workspace:packages/react-keystore":
+"@credential/react-keystore@0.11.0, @credential/react-keystore@workspace:packages/react-keystore":
   version: 0.0.0-use.local
   resolution: "@credential/react-keystore@workspace:packages/react-keystore"
   dependencies:
