@@ -15,7 +15,7 @@ import { useUnread } from '../Notification/useUnread';
 import UpgradeFullDid from '../UpgradeFullDid';
 import AttesterIcon from './icon_attester.svg';
 
-const Logo: React.FC = () => {
+function Logo() {
   return (
     <Link
       sx={{
@@ -33,12 +33,15 @@ const Logo: React.FC = () => {
       </Box>
     </Link>
   );
-};
+}
 
-const Header: React.FC<{
+function Header({
+  isAttester = false,
+  showUpgrade = false
+}: {
   isAttester?: boolean;
   showUpgrade?: boolean;
-}> = ({ isAttester = false, showUpgrade = false }) => {
+}) {
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
@@ -96,6 +99,6 @@ const Header: React.FC<{
       <Notification onClose={toggleNotiOpen} open={notiOpen} />
     </>
   );
-};
+}
 
 export default React.memo(Header);

@@ -23,7 +23,7 @@ const SentMessages: React.FC = () => {
       didUri
         ? {
             sender: didUri,
-            bodyTypes: [MessageBodyType.REQUEST_ATTESTATION]
+            bodyTypes: [MessageBodyType.REQUEST_ATTESTATION, MessageBodyType.SUBMIT_CREDENTIAL]
           }
         : undefined,
     [didUri]

@@ -23,7 +23,11 @@ const ReceivedMessages: React.FC = () => {
       didUri
         ? {
             receiver: didUri,
-            bodyTypes: [MessageBodyType.SUBMIT_ATTESTATION, MessageBodyType.REJECT_ATTESTATION]
+            bodyTypes: [
+              MessageBodyType.SUBMIT_ATTESTATION,
+              MessageBodyType.REJECT_ATTESTATION,
+              MessageBodyType.SUBMIT_CREDENTIAL
+            ]
           }
         : undefined,
     [didUri]

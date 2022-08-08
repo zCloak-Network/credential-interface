@@ -1,4 +1,5 @@
-import { IRequestAttestation, ISubmitCredential, MessageBodyType } from '@kiltprotocol/types';
+import type { ICredential, ISubmitCredential } from '@kiltprotocol/types';
+
 import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
@@ -8,23 +9,16 @@ import { Message } from '@credential/app-db/message';
 import { CredentialModal, CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
-import { useCredential, useToggle } from '@credential/react-hooks';
+import { useToggle } from '@credential/react-hooks';
+import { RequestStatus } from '@credential/react-hooks/types';
 
 const MessageRow: React.FC<{
-  message: Message & { body: IRequestAttestation | ISubmitCredential };
+  message: Message & { body: ISubmitCredential };
 }> = ({ message }) => {
   const [credentialOpen, toggleCredential] = useToggle();
-  const rootHash = useMemo(() => {
-    return message.body.type === MessageBodyType.REQUEST_ATTESTATION
-      ? message.body.content.requestForAttestation.rootHash
-      : message.body.content[0].request.rootHash;
-  }, [message.body.content, message.body.type]);
-
-  const { attestation, request } = useCredential(endpoint.db, rootHash);
-
   const credential = useMemo(
-    () => (request && attestation ? { request, attestation } : null),
-    [attestation, request]
+    (): ICredential | undefined => message.body.content[0] ?? undefined,
+    [message.body.content]
   );
 
   const handleClick = useCallback(() => {
@@ -41,10 +35,10 @@ const MessageRow: React.FC<{
           </Box>
         </TableCell>
         <TableCell>
-          <Box sx={{ width: 150, ...ellipsisMixin() }}>{request?.rootHash}</Box>
+          <Box sx={{ width: 150, ...ellipsisMixin() }}>{credential?.request.rootHash}</Box>
         </TableCell>
         <TableCell>
-          <CTypeName cTypeHash={request?.claim.cTypeHash} />
+          <CTypeName cTypeHash={credential?.attestation.cTypeHash} />
         </TableCell>
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
@@ -53,10 +47,10 @@ const MessageRow: React.FC<{
         </TableCell>
         <TableCell>
           <CredentialStatus
-            revoked={attestation?.revoked}
+            revoked={credential?.attestation?.revoked}
             role="attester"
             showText
-            status={request?.status}
+            status={RequestStatus.SUBMIT}
           />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>

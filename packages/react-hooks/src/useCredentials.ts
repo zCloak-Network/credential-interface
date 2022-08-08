@@ -36,17 +36,11 @@ export function useCredentials(
 export function useCredential(
   db: CredentialData,
   rootHash?: Hash
-): { request?: Request; attestation: Attestation | null | undefined } {
+): { request: Request; attestation: Attestation } | null {
   const request = useRequest(db, rootHash);
   const attestation = useAttestation(rootHash);
 
-  return {
-    request: request
-      ? {
-          ...request,
-          status: attestation ? RequestStatus.SUBMIT : request.status
-        }
-      : request,
-    attestation
-  };
+  return useMemo(() => {
+    return request && attestation ? { request, attestation } : null;
+  }, [attestation, request]);
 }

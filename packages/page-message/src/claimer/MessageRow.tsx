@@ -1,45 +1,30 @@
-import {
+import type {
   IRejectAttestation,
   IRequestAttestation,
   ISubmitAttestation,
-  MessageBodyType
+  ISubmitCredential
 } from '@kiltprotocol/types';
+
 import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
-import React, { useMemo } from 'react';
+import React from 'react';
 
 import { endpoint } from '@credential/app-config/endpoints';
 import { Message } from '@credential/app-db/message';
 import { CredentialModal, CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
-import { useCredential, useToggle } from '@credential/react-hooks';
+import { useToggle } from '@credential/react-hooks';
+
+import { useParsedMessage } from './useParsedMessage';
 
 const MessageRow: React.FC<{
-  message: Message & { body: ISubmitAttestation | IRejectAttestation | IRequestAttestation };
+  message: Message & {
+    body: ISubmitAttestation | IRejectAttestation | IRequestAttestation | ISubmitCredential;
+  };
 }> = ({ message }) => {
   const [open, toggleOpen] = useToggle();
-
-  const rootHash = useMemo(() => {
-    return message.body.type === MessageBodyType.SUBMIT_ATTESTATION
-      ? message.body.content.attestation.claimHash
-      : message.body.type === MessageBodyType.REQUEST_ATTESTATION
-      ? message.body.content.requestForAttestation.rootHash
-      : message.body.content;
-  }, [message.body.content, message.body.type]);
-  const cTypeHash = useMemo(() => {
-    return message.body.type === MessageBodyType.SUBMIT_ATTESTATION
-      ? message.body.content.attestation.cTypeHash
-      : message.body.type === MessageBodyType.REQUEST_ATTESTATION
-      ? message.body.content.requestForAttestation.claim.cTypeHash
-      : null;
-  }, [message]);
-  const { attestation, request } = useCredential(endpoint.db, rootHash);
-
-  const credential = useMemo(
-    () => (attestation && request ? { request, attestation } : null),
-    [attestation, request]
-  );
+  const { credential, ctypeHash, rootHash, status } = useParsedMessage(message);
 
   return (
     <>
@@ -68,10 +53,10 @@ const MessageRow: React.FC<{
           </Box>
         </TableCell>
         <TableCell>
-          <Box sx={{ width: 150, ...ellipsisMixin() }}>{request?.rootHash ?? rootHash}</Box>
+          <Box sx={{ width: 150, ...ellipsisMixin() }}>{rootHash}</Box>
         </TableCell>
         <TableCell>
-          <CTypeName cTypeHash={request?.claim.cTypeHash ?? cTypeHash} />
+          <CTypeName cTypeHash={ctypeHash} />
         </TableCell>
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
@@ -81,10 +66,10 @@ const MessageRow: React.FC<{
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
         <TableCell>
           <CredentialStatus
-            revoked={attestation?.revoked}
+            revoked={credential?.attestation.revoked}
             role="claimer"
             showText
-            status={request?.status}
+            status={status}
           />
         </TableCell>
       </TableRow>
