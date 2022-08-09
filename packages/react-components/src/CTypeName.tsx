@@ -12,11 +12,16 @@ const CTypeName: React.FC<{ cTypeHash?: string | null }> = ({ cTypeHash }) => {
     return cTypeList.find((cType) => cType.hash === cTypeHash);
   }, [cTypeHash, cTypeList]);
 
-  const handleClick = useCallback(() => {
-    if (cTypeHash) {
-      importCType(cTypeHash);
-    }
-  }, [cTypeHash, importCType]);
+  const handleClick = useCallback(
+    (e: React.MouseEvent<HTMLButtonElement>) => {
+      e.stopPropagation();
+
+      if (cTypeHash) {
+        importCType(cTypeHash);
+      }
+    },
+    [cTypeHash, importCType]
+  );
 
   if (cType) {
     return <>{cType.schema.title}</>;

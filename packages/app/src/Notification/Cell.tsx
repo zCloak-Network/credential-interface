@@ -1,4 +1,5 @@
 import {
+  Hash,
   IRejectAttestation,
   IRequestAttestation,
   ISubmitAttestation,
@@ -6,7 +7,7 @@ import {
   MessageBodyType
 } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
-import { alpha, Box, Stack, Typography } from '@mui/material';
+import { alpha, Box, Button, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -15,7 +16,7 @@ import { IconNewMessage, IconNewTask } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { CredentialModal, CTypeName } from '@credential/react-components';
 import { DidName } from '@credential/react-dids';
-import { useToggle } from '@credential/react-hooks';
+import { useCredential, useToggle } from '@credential/react-hooks';
 
 function Cell({
   message: { body, createdAt, isRead, sender },
@@ -27,9 +28,20 @@ function Cell({
   onRead: () => void;
 }) {
   const navigate = useNavigate();
+  const rootHash = useMemo((): Hash | null => {
+    return body.type === MessageBodyType.SUBMIT_ATTESTATION
+      ? body.content.attestation.claimHash
+      : body.type === MessageBodyType.REQUEST_ATTESTATION
+      ? body.content.requestForAttestation.rootHash
+      : body.type === MessageBodyType.REJECT_ATTESTATION
+      ? body.content
+      : null;
+  }, [body.content, body.type]);
+  const localCredential = useCredential(rootHash);
+
   const credential = useMemo(
-    () => (body.type === MessageBodyType.SUBMIT_CREDENTIAL ? body.content[0] : null),
-    [body.content, body.type]
+    () => (body.type === MessageBodyType.SUBMIT_CREDENTIAL ? body.content[0] : localCredential),
+    [body.content, body.type, localCredential]
   );
 
   const [open, toggleOpen] = useToggle();
@@ -41,7 +53,7 @@ function Cell({
           <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
             <DidName value={sender} />
           </Box>{' '}
-          submitted
+          submitted{' '}
           <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
             <CTypeName cTypeHash={body.content.requestForAttestation.claim.cTypeHash} />
           </Box>{' '}
@@ -76,9 +88,10 @@ function Cell({
   }, [body, sender]);
 
   const handleClick = useCallback(() => {
+    onRead();
+
     if (body.type === MessageBodyType.SUBMIT_CREDENTIAL && credential) {
       toggleOpen();
-      onRead();
     } else if (body.type === MessageBodyType.REQUEST_ATTESTATION) {
       navigate(`/attester/tasks/${body.content.requestForAttestation.rootHash}`);
     }
@@ -121,17 +134,17 @@ function Cell({
             <Circle color={isRead ? 'disabled' : 'warning'} sx={{ width: 8, height: 8 }} />
           </Stack>
           {!isRead && (
-            <Box
-              onClick={onRead}
-              sx={({ palette }) => ({
-                fontSize: 12,
-                color: palette.primary.main,
-                cursor: 'pointer',
-                marginTop: 1
-              })}
+            <Button
+              onClick={(e) => {
+                e.stopPropagation();
+                onRead();
+              }}
+              sx={{
+                fontSize: 12
+              }}
             >
               Mask as read
-            </Box>
+            </Button>
           )}
         </Box>
       </Stack>

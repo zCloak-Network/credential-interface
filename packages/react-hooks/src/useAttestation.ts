@@ -1,7 +1,7 @@
 import { Attestation, Hash } from '@kiltprotocol/sdk-js';
 import { useEffect, useState } from 'react';
 
-export function useAttestation(claimHash?: Hash): Attestation | null {
+export function useAttestation(claimHash?: Hash | null): Attestation | null {
   const [attestation, setAttestation] = useState<Attestation | null>(null);
 
   useEffect(() => {
