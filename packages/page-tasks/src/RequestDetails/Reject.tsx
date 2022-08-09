@@ -1,13 +1,11 @@
-import type { IEncryptedMessage, IMessage } from '@kiltprotocol/types';
+import type { IEncryptedMessage, IMessage, IRequestAttestation } from '@kiltprotocol/types';
 
-import type { Request } from '@credential/react-hooks/types';
-
-import { Message } from '@kiltprotocol/sdk-js';
+import { Message as MessageKilt } from '@kiltprotocol/sdk-js';
 import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
-import { Recaptcha } from '@credential/react-components';
+import { Message } from '@credential/app-db/message';
+import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -17,11 +15,12 @@ import IconReject from '../icons/icon_reject.svg';
 
 const Reject: React.FC<{
   type?: 'button' | 'menu';
-  request: Request;
+  request: Message<IRequestAttestation>;
   messageLinked?: IMessage[];
 }> = ({ messageLinked, request, type = 'button' }) => {
   const { keyring } = useKeystore();
   const [open, toggleOpen] = useToggle();
+  const { fetcher } = useContext(AppContext);
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
@@ -32,28 +31,25 @@ const Reject: React.FC<{
       return null;
     }
 
-    const message = new Message(
+    const message = new MessageKilt(
       {
-        content: request.rootHash,
-        type: Message.BodyType.REJECT_ATTESTATION
+        content: request.body.content.requestForAttestation.rootHash,
+        type: MessageKilt.BodyType.REJECT_ATTESTATION
       },
       didUri,
-      request.claim.owner
+      request.body.content.requestForAttestation.claim.owner
     );
 
     message.references = messageLinked?.map((message) => message.messageId);
 
     return message;
-  }, [didUri, messageLinked, request.claim.owner, request.rootHash]);
-  const claimer = useDidDetails(request.claim.owner);
-
-  const onDone = useCallback(() => {
-    if (message) {
-      endpoint.db.messages.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
-    }
-
-    toggleOpen();
-  }, [message, toggleOpen]);
+  }, [
+    didUri,
+    messageLinked,
+    request.body.content.requestForAttestation.claim.owner,
+    request.body.content.requestForAttestation.rootHash
+  ]);
+  const claimer = useDidDetails(request.body.content.requestForAttestation.claim.owner);
 
   return (
     <>
@@ -86,7 +82,7 @@ const Reject: React.FC<{
         open={open}
         steps={
           <Steps
-            onDone={onDone}
+            onDone={toggleOpen}
             steps={[
               {
                 label: 'Encrypt message',
@@ -97,7 +93,7 @@ const Reject: React.FC<{
                 label: 'Send message',
                 paused: true,
                 content: <Recaptcha onCallback={setRecaptchaToken} />,
-                exec: () => sendMessage(encryptedMessage, recaptchaToken)
+                exec: () => sendMessage(fetcher, encryptedMessage, recaptchaToken, message)
               }
             ]}
             submitText="Reject"

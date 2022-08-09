@@ -2,7 +2,6 @@ import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNone
 import { alpha, Badge, Box, Chip, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
 import { LogoBlackIcon } from '@credential/app-config/icons';
 import { AppContext } from '@credential/react-components';
 import { DidsContext } from '@credential/react-dids';
@@ -11,7 +10,7 @@ import { useToggle } from '@credential/react-hooks';
 import DidInfo from '../DidInfo';
 import Network from '../Network';
 import Notification from '../Notification';
-import { useUnread } from '../Notification/useUnread';
+import { useUnreadCount } from '../Notification/useUnread';
 import UpgradeFullDid from '../UpgradeFullDid';
 import AttesterIcon from './icon_attester.svg';
 
@@ -45,7 +44,7 @@ function Header({
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
-  const { allUnread } = useUnread(endpoint.db, didUri);
+  const { allUnread } = useUnreadCount();
 
   const handleNotification = useCallback(() => {
     toggleNotiOpen();

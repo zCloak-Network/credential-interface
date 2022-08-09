@@ -10,9 +10,7 @@ import type {
 import { MessageBodyType } from '@kiltprotocol/types';
 import { useMemo } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
 import { Message } from '@credential/app-db/message';
-import { useCredential } from '@credential/react-hooks';
 import { RequestStatus } from '@credential/react-hooks/types';
 
 export type UseParsedMessage = {
@@ -23,9 +21,9 @@ export type UseParsedMessage = {
 };
 
 export function useParsedMessage(
-  message: Message & {
-    body: ISubmitAttestation | IRejectAttestation | IRequestAttestation | ISubmitCredential;
-  }
+  message: Message<
+    ISubmitAttestation | IRejectAttestation | IRequestAttestation | ISubmitCredential
+  >
 ): UseParsedMessage {
   const rootHash = useMemo((): Hash => {
     return message.body.type === MessageBodyType.SUBMIT_ATTESTATION
@@ -61,15 +59,13 @@ export function useParsedMessage(
     return message.body.type === MessageBodyType.SUBMIT_CREDENTIAL ? message.body.content[0] : null;
   }, [message.body.content, message.body.type]);
 
-  const localCredential = useCredential(endpoint.db, rootHash);
-
   return useMemo(
     () => ({
       rootHash,
       ctypeHash,
       status,
-      credential: credential || localCredential
+      credential
     }),
-    [credential, ctypeHash, localCredential, rootHash, status]
+    [credential, ctypeHash, rootHash, status]
   );
 }

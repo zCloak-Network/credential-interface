@@ -13,10 +13,9 @@ import {
 } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
 import { IconForward } from '@credential/app-config/icons';
-import { Recaptcha } from '@credential/react-components';
-import { DidsContext, DidsModal, InputDid, useDidDetails } from '@credential/react-dids';
+import { AppContext, Recaptcha } from '@credential/react-components';
+import { DidsContext, DidsModal, InputDid } from '@credential/react-dids';
 import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
@@ -26,10 +25,10 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
   withText = false
 }) => {
   const { keyring } = useKeystore();
-  const { didUri } = useContext(DidsContext);
+  const { didDetails: sender } = useContext(DidsContext);
+  const { fetcher } = useContext(AppContext);
   const [open, toggleOpen] = useToggle();
   const [receiver, setReceiver] = useState<Did.FullDidDetails | null>(null);
-  const sender = useDidDetails(didUri);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
   const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
@@ -63,14 +62,6 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
     [presentation, receiver, sender]
   );
 
-  const onDone = useCallback(() => {
-    if (message) {
-      endpoint.db.messages.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
-    }
-
-    toggleOpen();
-  }, [message, toggleOpen]);
-
   return (
     <>
       <Tooltip title="Share to other">
@@ -91,7 +82,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
         steps={
           message ? (
             <Steps
-              onDone={onDone}
+              onDone={toggleOpen}
               steps={[
                 {
                   label: 'Encrypt message',
@@ -102,7 +93,7 @@ const ShareButton: React.FC<{ credential: ICredential; withText?: boolean }> = (
                   label: 'Send message',
                   paused: true,
                   content: <Recaptcha onCallback={setRecaptchaToken} />,
-                  exec: () => sendMessage(encryptedMessage, recaptchaToken)
+                  exec: () => sendMessage(fetcher, encryptedMessage, recaptchaToken, message)
                 }
               ]}
               submitText="Share"

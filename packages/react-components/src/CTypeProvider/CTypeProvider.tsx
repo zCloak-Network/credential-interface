@@ -1,10 +1,11 @@
 import type { DidUri, Hash, ICType } from '@kiltprotocol/types';
 
-import React, { createContext, useCallback, useMemo } from 'react';
+import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
 import { useCTypes } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
+
+import { AppContext } from '../AppProvider';
 
 interface State {
   cTypeList: ICType[];
@@ -14,7 +15,8 @@ interface State {
 export const CTypeContext = createContext<State>({} as State);
 
 const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const cTypeList = useCTypes(endpoint.db);
+  const { fetcher } = useContext(AppContext);
+  const cTypeList = useCTypes();
 
   const importCType = useCallback(
     (hash: string) => {
@@ -23,17 +25,14 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       if (has) return;
 
       credentialApi.getCType(hash).then((res) => {
-        endpoint.db.ctype.put(
-          {
-            schema: res.data.metadata as ICType['schema'],
-            owner: res.data.owner as DidUri,
-            hash: res.data.ctypeHash as Hash
-          },
-          ['hash']
-        );
+        fetcher?.write.ctypes.put({
+          schema: res.data.metadata as ICType['schema'],
+          owner: res.data.owner as DidUri,
+          hash: res.data.ctypeHash as Hash
+        });
       });
     },
-    [cTypeList]
+    [cTypeList, fetcher?.write.ctypes]
   );
 
   const value = useMemo(() => {

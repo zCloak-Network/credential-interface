@@ -1,7 +1,9 @@
 import type { IMessage } from '@kiltprotocol/types';
 
-export interface Message extends IMessage {
+import { MessageBody } from '@kiltprotocol/types';
+
+export interface Message<Body extends MessageBody> extends IMessage {
+  body: Body;
   syncId?: number;
-  deal: 0 | 1;
   isRead?: 0 | 1;
 }

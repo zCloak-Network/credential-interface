@@ -7,7 +7,7 @@ import { Message } from '@credential/app-db/message';
 import MessageRow from './MessageRow';
 
 const Messages: React.FC<{
-  messages?: (Message & { body: ISubmitCredential })[];
+  messages?: Message<ISubmitCredential>[];
 }> = ({ messages }) => {
   return (
     <TableContainer>

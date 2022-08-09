@@ -1,4 +1,9 @@
-import { MessageBodyType } from '@kiltprotocol/types';
+import {
+  IRequestAttestation,
+  ISubmitCredential,
+  MessageBody,
+  MessageBodyType
+} from '@kiltprotocol/types';
 import {
   alpha,
   Table,
@@ -8,9 +13,9 @@ import {
   TableHead,
   TableRow
 } from '@mui/material';
-import React, { useContext, useMemo } from 'react';
+import React, { useCallback, useContext } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
+import { Message } from '@credential/app-db/message';
 import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
@@ -18,17 +23,14 @@ import MessageRow from './MessageRow';
 
 const SentMessages: React.FC = () => {
   const { didUri } = useContext(DidsContext);
-  const filter = useMemo(
-    () =>
-      didUri
-        ? {
-            sender: didUri,
-            bodyTypes: [MessageBodyType.REQUEST_ATTESTATION, MessageBodyType.SUBMIT_CREDENTIAL]
-          }
-        : undefined,
+  const filter = useCallback(
+    (message: Message<MessageBody>) =>
+      [MessageBodyType.REQUEST_ATTESTATION, MessageBodyType.SUBMIT_CREDENTIAL].includes(
+        message.body.type
+      ) && didUri === message.sender,
     [didUri]
   );
-  const messages = useMessages(endpoint.db, filter);
+  const messages = useMessages<IRequestAttestation | ISubmitCredential>(filter);
 
   return (
     <TableContainer>
@@ -66,7 +68,7 @@ const SentMessages: React.FC = () => {
         </TableHead>
         <TableBody>
           {messages?.map((message) => (
-            <MessageRow key={message.messageId} message={message as any} />
+            <MessageRow key={message.messageId} message={message} />
           ))}
         </TableBody>
       </Table>

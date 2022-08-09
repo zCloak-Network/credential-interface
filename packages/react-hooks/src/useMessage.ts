@@ -1,76 +1,75 @@
-import { DidUri, Hash, MessageBodyType } from '@kiltprotocol/types';
+import {
+  DidUri,
+  Hash,
+  IRequestAttestation,
+  MessageBody,
+  MessageBodyType
+} from '@kiltprotocol/sdk-js';
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useCallback } from 'react';
+import { useCallback, useContext, useMemo } from 'react';
 
-import { CredentialData } from '@credential/app-db';
 import { Message } from '@credential/app-db/message';
+import { AppContext } from '@credential/react-components';
 
-import { useDebounce } from '.';
+export function useMessages<Body extends MessageBody>(
+  filter: (message: Message<MessageBody>) => boolean
+) {
+  const { fetcher } = useContext(AppContext);
+  const getMessages = useCallback(() => fetcher?.query.messages.all(filter), [fetcher, filter]);
 
-export function useRequestMessages(db: CredentialData, rootHash?: Hash) {
-  const getRequestMessages = useCallback(async () => {
-    const messages = db.messages
-      .orderBy('createdAt')
-      .reverse()
-      .filter((message) => {
-        if (!rootHash) return false;
+  const data = useLiveQuery(getMessages, [getMessages]);
 
-        if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
-          return message.body.content.requestForAttestation.rootHash === rootHash;
-        }
-
-        if (message.body.type === MessageBodyType.SUBMIT_ATTESTATION) {
-          return message.body.content.attestation.claimHash === rootHash;
-        }
-
-        if (message.body.type === MessageBodyType.REJECT_ATTESTATION) {
-          return message.body.content === rootHash;
-        }
-
-        return false;
-      })
-      .toArray();
-
-    return messages;
-  }, [db.messages, rootHash]);
-
-  const data = useLiveQuery(() => getRequestMessages(), [getRequestMessages]);
-
-  return useDebounce(data, 100);
+  return useMemo(() => {
+    if (data) {
+      return data as Message<Body>[];
+    } else {
+      return [];
+    }
+  }, [data]);
 }
 
-export function useMessages(
-  db: CredentialData,
-  filter?: { sender?: DidUri; receiver?: DidUri; bodyTypes?: MessageBodyType[] }
-) {
-  const getMessages = useCallback(async () => {
-    if (!filter) return [];
+export function useAttesterRequests(attester?: DidUri) {
+  const filter = useCallback(
+    (message: Message<MessageBody>): boolean => {
+      if (!attester) return false;
 
-    const wheres: Partial<Pick<Message, 'sender' | 'receiver'>> = {};
+      return (
+        message.body.type === MessageBodyType.REQUEST_ATTESTATION && message.receiver === attester
+      );
+    },
+    [attester]
+  );
 
-    if (filter.sender) {
-      wheres.sender = filter.sender;
-    }
+  return useMessages<IRequestAttestation>(filter);
+}
 
-    if (filter.receiver) {
-      wheres.receiver = filter.receiver;
-    }
+export function useClaimerRequests(claimer?: DidUri) {
+  const filter = useCallback(
+    (message: Message<MessageBody>): boolean => {
+      if (!claimer) return false;
 
-    return db.messages
-      .where(wheres)
-      .filter((message) => {
-        let flag = true;
+      return (
+        message.body.type === MessageBodyType.REQUEST_ATTESTATION && message.sender === claimer
+      );
+    },
+    [claimer]
+  );
 
-        if (filter.bodyTypes) {
-          flag = flag && filter.bodyTypes.includes(message.body.type);
-        }
+  return useMessages<IRequestAttestation>(filter);
+}
 
-        return flag;
-      })
-      .sortBy('createdAt', (messages) => messages.reverse());
-  }, [db, filter]);
+export function useRequest(rootHash: Hash) {
+  const filter = useCallback(
+    (message: Message<MessageBody>): boolean => {
+      return (
+        message.body.type === MessageBodyType.REQUEST_ATTESTATION &&
+        message.body.content.requestForAttestation.rootHash === rootHash
+      );
+    },
+    [rootHash]
+  );
 
-  const data = useLiveQuery(() => getMessages(), [getMessages]);
+  const messages = useMessages<IRequestAttestation>(filter);
 
-  return useDebounce(data, 100);
+  return useMemo(() => (messages.length > 0 ? messages[0] : null), [messages]);
 }

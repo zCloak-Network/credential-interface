@@ -2,19 +2,24 @@ import type { ICredential, ISubmitCredential } from '@kiltprotocol/types';
 
 import { Box, TableCell, TableRow } from '@mui/material';
 import moment from 'moment';
-import React, { useCallback, useMemo } from 'react';
+import React, { useCallback, useContext, useMemo } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
 import { Message } from '@credential/app-db/message';
-import { CredentialModal, CredentialStatus, CTypeName } from '@credential/react-components';
+import {
+  AppContext,
+  CredentialModal,
+  CredentialStatus,
+  CTypeName
+} from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 import { RequestStatus } from '@credential/react-hooks/types';
 
 const MessageRow: React.FC<{
-  message: Message & { body: ISubmitCredential };
+  message: Message<ISubmitCredential>;
 }> = ({ message }) => {
+  const { fetcher } = useContext(AppContext);
   const [credentialOpen, toggleCredential] = useToggle();
   const credential = useMemo(
     (): ICredential | undefined => message.body.content[0] ?? undefined,
@@ -23,8 +28,8 @@ const MessageRow: React.FC<{
 
   const handleClick = useCallback(() => {
     credential && toggleCredential();
-    endpoint.db.readMessage(message.messageId);
-  }, [credential, message.messageId, toggleCredential]);
+    fetcher?.write.messages.read(message.messageId);
+  }, [credential, fetcher, message.messageId, toggleCredential]);
 
   return (
     <>

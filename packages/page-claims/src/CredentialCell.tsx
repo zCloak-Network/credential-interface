@@ -1,9 +1,9 @@
-import { CType, IAttestation } from '@kiltprotocol/sdk-js';
+import { CType, IAttestation, IRequestAttestation } from '@kiltprotocol/sdk-js';
 import { alpha, Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
+import { Message } from '@credential/app-db/message';
 import {
   CredentialModal,
   CredentialStatus,
@@ -12,8 +12,8 @@ import {
 } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
-import { useRequestMessages, useToggle } from '@credential/react-hooks';
-import { Request, RequestStatus } from '@credential/react-hooks/types';
+import { useRequestStatus, useToggle } from '@credential/react-hooks';
+import { RequestStatus } from '@credential/react-hooks/types';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -92,23 +92,27 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
-  attestation,
-  request
-}) => {
+const CredentialCell: React.FC<{
+  request: Message<IRequestAttestation>;
+  attestation?: IAttestation | null;
+}> = ({ attestation, request }) => {
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const cType = useMemo(() => {
     return cTypeList.find(
-      (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
+      (cType) =>
+        CType.fromSchema(cType.schema, cType.owner).hash ===
+        request.body.content.requestForAttestation.claim.cTypeHash
     );
-  }, [cTypeList, request.claim.cTypeHash]);
-  const requestMessages = useRequestMessages(endpoint.db, request.rootHash);
+  }, [cTypeList, request.body.content.requestForAttestation.claim.cTypeHash]);
 
   const credential = useMemo(
-    () => (attestation ? { attestation, request } : null),
+    () =>
+      attestation ? { attestation, request: request.body.content.requestForAttestation } : null,
     [attestation, request]
   );
+
+  const requestStatus = useRequestStatus(request.body.content.requestForAttestation.rootHash);
 
   return (
     <>
@@ -126,11 +130,11 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
             borderTopRightRadius: 4,
             borderBottomRightRadius: 4,
             background:
-              request.status === RequestStatus.SUBMIT
+              requestStatus === RequestStatus.SUBMIT
                 ? attestation?.revoked
                   ? palette.error.main
                   : palette.success.main
-                : request.status === RequestStatus.REJECT
+                : requestStatus === RequestStatus.REJECT
                 ? palette.error.main
                 : palette.warning.main
           })}
@@ -141,14 +145,14 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               revoked={attestation?.revoked}
               role="claimer"
               showText
-              status={request.status}
+              status={requestStatus}
             />
             <Typography className="CredentialCell_Time" variant="inherit">
               {moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}
             </Typography>
           </Box>
           <Typography className="CredentialCell_title" mt={2} variant="h3">
-            <CTypeName cTypeHash={request.claim.cTypeHash} />
+            <CTypeName cTypeHash={request.body.content.requestForAttestation.claim.cTypeHash} />
           </Typography>
           <Stack
             className="CredentialCell_attester"
@@ -163,7 +167,7 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  <DidName value={attestation?.owner ?? requestMessages?.[0]?.receiver} />
+                  <DidName value={attestation?.owner ?? request.receiver} />
                 </Typography>
               </Tooltip>
             </Box>
@@ -171,14 +175,14 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
                 Claim hash
               </Typography>
-              <Tooltip placement="top" title={request.rootHash}>
+              <Tooltip placement="top" title={request.body.content.requestForAttestation.rootHash}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  {request.rootHash}
+                  {request.body.content.requestForAttestation.rootHash}
                 </Typography>
               </Tooltip>
             </Box>
           </Stack>
-          {attestation && (
+          {credential && (
             <Stack
               className="CredentialCell_actions"
               direction="row-reverse"
@@ -187,9 +191,9 @@ const CredentialCell: React.FC<{ request: Request; attestation?: IAttestation | 
               onClick={(e) => e.stopPropagation()}
               spacing={1}
             >
-              <ImportButton credential={{ attestation, request }} />
-              <ShareButton credential={{ attestation, request }} />
-              <DownloadButton credential={{ attestation, request }} />
+              <ImportButton credential={credential} />
+              <ShareButton credential={credential} />
+              <DownloadButton credential={credential} />
             </Stack>
           )}
         </Wrapper>

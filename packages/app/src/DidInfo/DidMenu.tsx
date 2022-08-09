@@ -35,11 +35,11 @@ interface Props {
 }
 
 const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
-  const { identifier, logout } = useContext(DidsContext);
+  const { didDetails, logout } = useContext(DidsContext);
   const [exportOpen, toggleExportOpen] = useToggle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const balances = useBalances(identifier);
+  const balances = useBalances(didDetails?.identifier);
 
   const handleExport = useCallback(() => {
     toggleExportOpen();
