@@ -1,5 +1,5 @@
 import type { Blockchain } from '@kiltprotocol/chain-helpers';
-import type { DidUri } from '@kiltprotocol/sdk-js';
+import type { Did, DidUri } from '@kiltprotocol/sdk-js';
 import type { KeyringPair$Json } from '@polkadot/keyring/types';
 import type { KeyringPairs$Json } from '@polkadot/ui-keyring/types';
 
@@ -14,7 +14,7 @@ export interface DidsState {
   isReady: boolean;
   blockchain: Blockchain;
   didUri?: DidUri;
-  identifier?: string;
+  didDetails: Did.DidDetails | null;
   isLocked: boolean;
   isFullDid: boolean;
   needUpgrade: boolean; // if the did is full did, should it to upgrade

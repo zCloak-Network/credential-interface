@@ -1,6 +1,4 @@
-import type { IAttestation } from '@kiltprotocol/sdk-js';
-
-import type { Request } from '@credential/react-hooks/types';
+import type { IAttestation, IRequestAttestation, MessageBody } from '@kiltprotocol/sdk-js';
 
 import { Box, Grid, Stack, Typography } from '@mui/material';
 import moment from 'moment';
@@ -18,31 +16,35 @@ import Revoke from './Revoke';
 
 const ClaimInfo: React.FC<{
   showActions: boolean;
-  request: Request;
+  request: Message<IRequestAttestation>;
   attestation?: IAttestation | null;
-  messageLinked?: Message[];
-}> = ({ attestation, messageLinked, request, showActions }) => {
+  status: RequestStatus;
+  messageLinked?: Message<MessageBody>[];
+}> = ({ attestation, messageLinked, request, showActions, status }) => {
   return (
     <Box sx={({ palette }) => ({ background: palette.common.white, paddingX: 8, paddingY: 4 })}>
       <Box sx={{ display: 'flex', justifyContent: 'space-between' }}>
         <Stack alignItems="center" direction="row" spacing={3} sx={{ width: '60%' }}>
-          <IdentityIcon diameter={70} value={request.claim.owner} />
+          <IdentityIcon
+            diameter={70}
+            value={request.body.content.requestForAttestation.claim.owner}
+          />
           <Box sx={{ width: 300 }}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claimer</Typography>
             <Typography sx={{ ...ellipsisMixin() }} variant="h4">
-              <DidName value={request.claim.owner} />
+              <DidName value={request.body.content.requestForAttestation.claim.owner} />
             </Typography>
           </Box>
         </Stack>
         {showActions && (
           <Stack alignItems="center" direction="row" spacing={1.5}>
-            {request.status === RequestStatus.INIT && (
+            {status === RequestStatus.INIT && (
               <Approve messageLinked={messageLinked} request={request} />
             )}
-            {request.status === RequestStatus.INIT && (
+            {status === RequestStatus.INIT && (
               <Reject messageLinked={messageLinked} request={request} />
             )}
-            {request.status === RequestStatus.SUBMIT && attestation && !attestation.revoked && (
+            {status === RequestStatus.SUBMIT && attestation && !attestation.revoked && (
               <Revoke attestation={attestation} messageLinked={messageLinked} request={request} />
             )}
           </Stack>
@@ -59,7 +61,7 @@ const ClaimInfo: React.FC<{
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
             <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>Claim hash</Typography>
             <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
-              {request.rootHash}
+              {request.body.content.requestForAttestation.rootHash}
             </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
@@ -67,7 +69,7 @@ const ClaimInfo: React.FC<{
               Credential type
             </Typography>
             <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
-              <CTypeName cTypeHash={request.claim.cTypeHash} />
+              <CTypeName cTypeHash={request.body.content.requestForAttestation.claim.cTypeHash} />
             </Typography>
           </Grid>
           <Grid item lg={3} md={6} sm={12} xl={3} xs={12}>
@@ -79,7 +81,7 @@ const ClaimInfo: React.FC<{
                 revoked={attestation?.revoked}
                 role="attester"
                 showText={!attestation?.owner}
-                status={request.status}
+                status={status}
               />
               {attestation?.owner && (
                 <Typography sx={({ palette }) => ({ color: palette.grey[700] })} variant="inherit">

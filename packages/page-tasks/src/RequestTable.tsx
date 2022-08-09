@@ -1,4 +1,4 @@
-import { IAttestation } from '@kiltprotocol/sdk-js';
+import { IRequestAttestation } from '@kiltprotocol/sdk-js';
 import {
   Box,
   Link,
@@ -10,52 +10,49 @@ import {
   TableRow
 } from '@mui/material';
 import moment from 'moment';
-import React, { useContext, useMemo } from 'react';
+import React, { useContext } from 'react';
 import { Link as LinkRouter } from 'react-router-dom';
 
-import { endpoint } from '@credential/app-config/endpoints';
+import { Message } from '@credential/app-db/message';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName, DidsContext } from '@credential/react-dids';
-import { useCredentials } from '@credential/react-hooks';
-import { Request } from '@credential/react-hooks/types';
+import { useAttestation, useAttesterRequests, useRequestStatus } from '@credential/react-hooks';
 
 import ActionButton from './ActionButton';
 
-const Row: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
-  attestation,
-  request
-}) => {
+const Row: React.FC<{ request: Message<IRequestAttestation> }> = ({ request }) => {
+  const attestation = useAttestation(request.body.content.requestForAttestation.rootHash);
+  const status = useRequestStatus(request.body.content.requestForAttestation.rootHash);
+
   return (
     <TableRow>
       <TableCell>
         <Box sx={{ width: 200, ...ellipsisMixin() }}>
-          <DidName value={request.claim.owner} />
+          <DidName value={request.body.content.requestForAttestation.claim.owner} />
         </Box>
       </TableCell>
       <TableCell>
         <Box sx={{ width: 200, ...ellipsisMixin() }}>
-          <Link component={LinkRouter} to={`/attester/tasks/${request.rootHash}`}>
-            {request.rootHash}
+          <Link
+            component={LinkRouter}
+            to={`/attester/tasks/${request.body.content.requestForAttestation.rootHash}`}
+          >
+            {request.body.content.requestForAttestation.rootHash}
           </Link>
         </Box>
       </TableCell>
       <TableCell>
         <Box sx={{ width: 200, ...ellipsisMixin() }}>
-          <CTypeName cTypeHash={request.claim.cTypeHash} />
+          <CTypeName cTypeHash={request.body.content.requestForAttestation.claim.cTypeHash} />
         </Box>
       </TableCell>
       <TableCell>{moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       <TableCell>
-        <CredentialStatus
-          revoked={attestation?.revoked}
-          role="attester"
-          showText
-          status={request.status}
-        />
+        <CredentialStatus revoked={attestation?.revoked} role="attester" showText status={status} />
       </TableCell>
       <TableCell>
-        <ActionButton attestation={attestation} request={request} />
+        <ActionButton attestation={attestation} request={request} status={status} />
       </TableCell>
     </TableRow>
   );
@@ -63,8 +60,7 @@ const Row: React.FC<{ request: Request; attestation?: IAttestation | null }> = (
 
 const RequestTable: React.FC = () => {
   const { didUri } = useContext(DidsContext);
-  const filter = useMemo(() => ({ receiver: didUri }), [didUri]);
-  const list = useCredentials(endpoint.db, filter);
+  const list = useAttesterRequests(didUri);
 
   return (
     <TableContainer>
@@ -80,8 +76,8 @@ const RequestTable: React.FC = () => {
           </TableRow>
         </TableHead>
         <TableBody>
-          {list?.map(({ attestation, request }, index) => (
-            <Row attestation={attestation} key={index} request={request} />
+          {list?.map((request, index) => (
+            <Row key={index} request={request} />
           ))}
         </TableBody>
       </Table>

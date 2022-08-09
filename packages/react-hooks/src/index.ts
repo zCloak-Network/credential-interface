@@ -8,7 +8,6 @@ export * from './useAttestation';
 export * from './useQueryParams';
 
 // db query
-export * from './useCredentials';
-export * from './useRequestForAttestation';
 export * from './useMessage';
+export * from './useRequestStatus';
 export * from './useCTypes';

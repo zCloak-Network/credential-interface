@@ -1,24 +1,25 @@
-import { IAttestation } from '@kiltprotocol/sdk-js';
+import { IAttestation, IRequestAttestation } from '@kiltprotocol/sdk-js';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
-import { endpoint } from '@credential/app-config/endpoints';
-import { useRequestMessages } from '@credential/react-hooks';
-import { Request, RequestStatus } from '@credential/react-hooks/types';
+import { Message } from '@credential/app-db/message';
+import { RequestStatus } from '@credential/react-hooks/types';
 
 import IconDetails from './icons/icon_details.svg';
 import Approve from './RequestDetails/Approve';
 import Reject from './RequestDetails/Reject';
 import Revoke from './RequestDetails/Revoke';
+import { useMessageLinked } from './useMessageLinked';
 
-const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | null }> = ({
-  attestation,
-  request
-}) => {
+const ActionButton: React.FC<{
+  request: Message<IRequestAttestation>;
+  attestation?: IAttestation | null;
+  status: RequestStatus;
+}> = ({ attestation, request, status }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const messageLinked = useRequestMessages(endpoint.db, request.rootHash);
+  const messageLinked = useMessageLinked(request.body.content.requestForAttestation.rootHash);
 
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);
@@ -44,24 +45,21 @@ const ActionButton: React.FC<{ request: Request; attestation?: IAttestation | nu
       >
         <MenuItem
           component={Link}
-          onClick={() => {
-            endpoint.db.readMessage(request.messageId);
-          }}
           sx={({ palette }) => ({ color: palette.grey[600] })}
-          to={`/attester/tasks/${request.rootHash}`}
+          to={`/attester/tasks/${request.body.content.requestForAttestation.rootHash}`}
         >
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
             <IconDetails />
           </ListItemIcon>
           <ListItemText>Details</ListItemText>
         </MenuItem>
-        {request.status === RequestStatus.INIT && (
+        {status === RequestStatus.INIT && (
           <Approve messageLinked={messageLinked} request={request} type="menu" />
         )}
-        {request.status === RequestStatus.INIT && (
+        {status === RequestStatus.INIT && (
           <Reject messageLinked={messageLinked} request={request} type="menu" />
         )}
-        {request.status === RequestStatus.SUBMIT && attestation && !attestation.revoked && (
+        {status === RequestStatus.SUBMIT && attestation && !attestation.revoked && (
           <Revoke
             attestation={attestation}
             messageLinked={messageLinked}

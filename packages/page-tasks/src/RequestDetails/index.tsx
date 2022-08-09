@@ -1,21 +1,30 @@
 import { Hash } from '@kiltprotocol/sdk-js';
 import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
-import React from 'react';
+import React, { useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
-import { endpoint } from '@credential/app-config/endpoints';
-import { DialogHeader } from '@credential/react-components';
-import { useCredential, useRequestMessages } from '@credential/react-hooks';
+import { AppContext, DialogHeader } from '@credential/react-components';
+import { useAttestation, useRequest, useRequestStatus } from '@credential/react-hooks';
 
+import { useMessageLinked } from '../useMessageLinked';
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
 
 const RequestDetails: React.FC = () => {
+  const { fetcher } = useContext(AppContext);
   const { rootHash } = useParams<{ rootHash: string }>();
 
-  const { attestation, request } = useCredential(endpoint.db, rootHash as Hash);
-  const messageLinked = useRequestMessages(endpoint.db, rootHash as Hash);
+  const request = useRequest(rootHash as Hash);
+  const attestation = useAttestation(rootHash as Hash);
+  const messageLinked = useMessageLinked(rootHash as Hash);
+  const status = useRequestStatus(rootHash as Hash);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    if (request && fetcher) {
+      fetcher.write.messages.read(request.messageId);
+    }
+  }, [fetcher, request]);
 
   if (!request) {
     return <Dialog fullScreen open></Dialog>;
@@ -36,8 +45,12 @@ const RequestDetails: React.FC = () => {
           messageLinked={messageLinked}
           request={request}
           showActions
+          status={status}
         />
-        <Details contents={request.claim.contents} messageLinked={messageLinked} />
+        <Details
+          contents={request.body.content.requestForAttestation.claim.contents}
+          messageLinked={messageLinked}
+        />
       </Container>
       <DialogActions></DialogActions>
     </Dialog>

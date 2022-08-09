@@ -1,13 +1,10 @@
-import { MessageBodyType } from '@kiltprotocol/sdk-js';
 import { Badge, Box, Drawer, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
-import { DidsContext } from '@credential/react-dids';
-import { useMessages } from '@credential/react-hooks';
+import { AppContext } from '@credential/react-components';
 
 import Cell from './Cell';
-import { useUnread } from './useUnread';
+import { useUnread, useUnreadCount } from './useUnread';
 
 interface Props {
   open: boolean;
@@ -15,35 +12,15 @@ interface Props {
 }
 
 const Notification: React.FC<Props> = ({ onClose, open }) => {
-  const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
-  const { allUnread, messageUnread, taskUnread } = useUnread(endpoint.db, didUri);
+  const { fetcher } = useContext(AppContext);
+  const { allUnread, messageUnread, taskUnread } = useUnread();
+  const counts = useUnreadCount();
 
-  const filter = useMemo(
-    () =>
-      didUri
-        ? {
-            receiver: didUri,
-            bodyTypes:
-              type === 0
-                ? [
-                    MessageBodyType.REQUEST_ATTESTATION,
-                    MessageBodyType.SUBMIT_ATTESTATION,
-                    MessageBodyType.REJECT_ATTESTATION,
-                    MessageBodyType.SUBMIT_CREDENTIAL
-                  ]
-                : type === 1
-                ? [MessageBodyType.REQUEST_ATTESTATION]
-                : [
-                    MessageBodyType.SUBMIT_ATTESTATION,
-                    MessageBodyType.REJECT_ATTESTATION,
-                    MessageBodyType.SUBMIT_CREDENTIAL
-                  ]
-          }
-        : undefined,
-    [didUri, type]
+  const messages = useMemo(
+    () => (type === 0 ? allUnread : type === 1 ? taskUnread : messageUnread),
+    [allUnread, messageUnread, taskUnread, type]
   );
-  const messages = useMessages(endpoint.db, filter);
 
   return (
     <Drawer anchor="right" onClose={onClose} open={open}>
@@ -59,21 +36,21 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
         <Tabs onChange={(_, value) => setType(value)} value={type}>
           <Tab
             label={
-              <Badge badgeContent={allUnread} color="warning" max={99} variant="dot">
+              <Badge badgeContent={counts.allUnread} color="warning" max={99} variant="dot">
                 All
               </Badge>
             }
           />
           <Tab
             label={
-              <Badge badgeContent={taskUnread} color="warning" max={99} variant="dot">
+              <Badge badgeContent={counts.taskUnread} color="warning" max={99} variant="dot">
                 Tasks
               </Badge>
             }
           />
           <Tab
             label={
-              <Badge badgeContent={messageUnread} color="warning" max={99} variant="dot">
+              <Badge badgeContent={counts.messageUnread} color="warning" max={99} variant="dot">
                 Messages
               </Badge>
             }
@@ -86,8 +63,7 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
           isRead={!!message.isRead}
           key={index}
           onRead={() => {
-            // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-            endpoint.db.readMessage(message.messageId);
+            fetcher?.write.messages.read(message.messageId);
           }}
           receiver={message.receiver}
           sender={message.sender}

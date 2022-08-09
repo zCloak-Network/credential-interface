@@ -1,14 +1,18 @@
+import type { CredentialInterface } from '@credential/app-db/types';
+
 import { Message } from '@kiltprotocol/sdk-js';
-import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
+import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
 
 import { endpoint } from '@credential/app-config/endpoints';
+import { CredentialFetcher } from '@credential/app-db';
 import { SyncProvider } from '@credential/app-sync';
 import { MessageType } from '@credential/app-sync/type';
-import { DidsContext, useDidDetails } from '@credential/react-dids';
+import { DidsContext } from '@credential/react-dids';
 import { useKeystore } from '@credential/react-keystore';
 import { unlock } from '@credential/react-keystore/KeystoreProvider';
 
 interface State {
+  fetcher: CredentialInterface | null;
   unParsed: number;
   parse: () => Promise<void>;
 }
@@ -21,37 +25,42 @@ const encryptedMessages = new Map<number, MessageType>();
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { keyring } = useKeystore();
-  const { didUri, isLocked } = useContext(DidsContext);
-  const didDetails = useDidDetails(didUri);
+  const { didDetails, isLocked } = useContext(DidsContext);
   const [unParsed, setUnParsed] = useState(0);
 
-  useEffect(() => {
-    if (didDetails) {
-      endpoint.db.messages
-        .orderBy('syncId')
-        .reverse()
-        .filter((data) => {
-          return didDetails.uri === data.receiver;
-        })
-        .first()
-        .then((message) => {
-          let startId: number;
-
-          if (!message?.syncId) {
-            startId = 0;
-          } else {
-            startId = message.syncId;
-          }
-
-          syncProvider.subscribe(didDetails, startId, (messages) => {
-            messages.forEach((message) => encryptedMessages.set(message.id, message));
-            setUnParsed(encryptedMessages.size);
-          });
-        });
+  const fetcher = useMemo(() => {
+    if (didDetails && didDetails.encryptionKey) {
+      return new CredentialFetcher(
+        `${endpoint.name}-${didDetails.assembleKeyUri(didDetails.encryptionKey.id)}`
+      );
     }
 
-    return () => encryptedMessages.clear();
+    return null;
   }, [didDetails]);
+
+  useEffect(() => {
+    if (fetcher && didDetails) {
+      fetcher.query.messages.lastSync().then((message) => {
+        let startId: number;
+
+        if (!message?.syncId) {
+          startId = 0;
+        } else {
+          startId = message.syncId;
+        }
+
+        syncProvider.subscribe(didDetails, startId, (messages) => {
+          messages.forEach((message) => encryptedMessages.set(message.id, message));
+          setUnParsed(encryptedMessages.size);
+        });
+      });
+    }
+
+    return () => {
+      encryptedMessages.clear();
+      setUnParsed(0);
+    };
+  }, [fetcher, didDetails]);
 
   const parse = useCallback(async () => {
     if (didDetails && encryptedMessages.size > 0) {
@@ -70,16 +79,12 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             keyring,
             didDetails
           ).then((message) => {
-            return endpoint.db.messages
-              .put(
-                {
-                  ...message,
-                  syncId: encryptedMessage.id,
-                  deal: 0,
-                  isRead: 0
-                },
-                ['messageId']
-              )
+            return fetcher?.write.messages
+              .put({
+                ...message,
+                syncId: encryptedMessage.id,
+                isRead: 0
+              })
               .then(() => {
                 encryptedMessages.delete(encryptedMessage.id);
               });
@@ -91,9 +96,9 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         setUnParsed(encryptedMessages.size);
       });
     }
-  }, [didDetails, isLocked, keyring]);
+  }, [fetcher, didDetails, isLocked, keyring]);
 
-  return <AppContext.Provider value={{ unParsed, parse }}>{children}</AppContext.Provider>;
+  return <AppContext.Provider value={{ fetcher, unParsed, parse }}>{children}</AppContext.Provider>;
 };
 
 export default AppProvider;

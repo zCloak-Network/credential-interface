@@ -1,10 +1,11 @@
 import { useLiveQuery } from 'dexie-react-hooks';
-import { useMemo } from 'react';
+import { useContext, useMemo } from 'react';
 
-import { CredentialData } from '@credential/app-db';
+import { AppContext } from '@credential/react-components';
 
-export function useCTypes(db: CredentialData) {
-  const data = useLiveQuery(() => db.ctype.toArray());
+export function useCTypes() {
+  const { fetcher } = useContext(AppContext);
+  const data = useLiveQuery(() => fetcher?.query.ctypes.all(), [fetcher]);
 
   return useMemo(() => data || [], [data]);
 }

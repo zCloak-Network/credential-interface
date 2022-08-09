@@ -2,7 +2,6 @@ import { Box, CircularProgress, Stack, SvgIcon, Typography, useTheme } from '@mu
 import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
-import { endpoint } from '@credential/app-config/endpoints';
 import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
@@ -10,7 +9,7 @@ import Header from '../Header';
 import IconMessage from '../icon_message.svg';
 import IconCtype from '../icon_myctype.svg';
 import IconTask from '../icon_task.svg';
-import { useUnread } from '../Notification/useUnread';
+import { useUnreadCount } from '../Notification/useUnread';
 import Sidebar from '../Sidebar';
 
 const Badge: React.FC<{ value: number }> = ({ value }) => {
@@ -37,8 +36,8 @@ const Attester: React.FC = () => {
   const [open, toggleOpen] = useToggle(true);
   const { pathname } = useLocation();
   const { transitions } = useTheme();
-  const { didUri, isReady } = useContext(DidsContext);
-  const { messageUnread, taskUnread } = useUnread(endpoint.db, didUri);
+  const { isReady } = useContext(DidsContext);
+  const { messageUnread, taskUnread } = useUnreadCount();
 
   const items = useMemo(
     () => [

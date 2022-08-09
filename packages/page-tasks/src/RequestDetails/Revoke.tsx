@@ -1,13 +1,16 @@
-import type { IAttestation, IEncryptedMessage, IMessage } from '@kiltprotocol/types';
+import type {
+  IAttestation,
+  IEncryptedMessage,
+  IMessage,
+  IRequestAttestation
+} from '@kiltprotocol/types';
 
-import type { Request } from '@credential/react-hooks/types';
-
-import { Attestation, Did, Message } from '@kiltprotocol/sdk-js';
+import { Attestation, Did, Message as MessageKilt } from '@kiltprotocol/sdk-js';
 import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
-import { Recaptcha } from '@credential/react-components';
+import { Message } from '@credential/app-db/message';
+import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
@@ -17,11 +20,12 @@ import IconRevoke from '../icons/icon_revok.svg';
 
 const Revoke: React.FC<{
   type?: 'button' | 'menu';
-  request: Request;
+  request: Message<IRequestAttestation>;
   attestation: IAttestation;
   messageLinked?: IMessage[];
 }> = ({ attestation: _attestation, messageLinked, request, type = 'button' }) => {
   const [open, toggleOpen] = useToggle();
+  const { fetcher } = useContext(AppContext);
   const { didUri } = useContext(DidsContext);
   const attester = useDidDetails(didUri);
   const { keyring } = useKeystore();
@@ -64,29 +68,21 @@ const Revoke: React.FC<{
       return null;
     }
 
-    const message = new Message(
+    const message = new MessageKilt(
       {
         content: { attestation },
-        type: Message.BodyType.SUBMIT_ATTESTATION
+        type: MessageKilt.BodyType.SUBMIT_ATTESTATION
       },
       didUri,
-      request.claim.owner
+      request.body.content.requestForAttestation.claim.owner
     );
 
     message.references = messageLinked?.map((message) => message.messageId);
 
     return message;
-  }, [attestation, didUri, messageLinked, request.claim.owner]);
+  }, [attestation, didUri, messageLinked, request.body.content.requestForAttestation.claim.owner]);
 
-  const claimer = useDidDetails(request.claim.owner);
-
-  const onDone = useCallback(() => {
-    if (message) {
-      endpoint.db.messages.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
-    }
-
-    toggleOpen();
-  }, [message, toggleOpen]);
+  const claimer = useDidDetails(request.body.content.requestForAttestation.claim.owner);
 
   return (
     <>
@@ -119,7 +115,7 @@ const Revoke: React.FC<{
         open={open}
         steps={
           <Steps
-            onDone={onDone}
+            onDone={toggleOpen}
             steps={[
               {
                 label: 'Sign and submit attestation',
@@ -136,7 +132,7 @@ const Revoke: React.FC<{
                 label: 'Send message',
                 paused: true,
                 content: <Recaptcha onCallback={setRecaptchaToken} />,
-                exec: () => sendMessage(encryptedMessage, recaptchaToken)
+                exec: () => sendMessage(fetcher, encryptedMessage, recaptchaToken, message)
               }
             ]}
             submitText="Revoke"

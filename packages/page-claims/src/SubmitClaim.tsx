@@ -6,10 +6,9 @@ import {
   RequestForAttestation
 } from '@kiltprotocol/sdk-js';
 import { Button } from '@mui/material';
-import React, { useCallback, useContext, useMemo, useState } from 'react';
+import React, { useContext, useMemo, useState } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
-import { Recaptcha } from '@credential/react-components';
+import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import {
   encryptMessage,
@@ -28,6 +27,7 @@ const SubmitClaim: React.FC<{
 }> = ({ attester, contents, ctype, onDone }) => {
   const { keyring } = useKeystore();
   const { didUri } = useContext(DidsContext);
+  const { fetcher } = useContext(AppContext);
   const [open, toggleOpen] = useToggle();
   const sender = useDidDetails(didUri);
   const [request, setRequest] = useState<RequestForAttestation>();
@@ -49,14 +49,6 @@ const SubmitClaim: React.FC<{
     [attester, request, sender]
   );
 
-  const _onDone = useCallback(() => {
-    if (message) {
-      endpoint.db.messages.put({ ...message, deal: 0, isRead: 1 }, ['messageId']);
-    }
-
-    onDone?.();
-  }, [message, onDone]);
-
   return (
     <>
       <Button onClick={toggleOpen} variant="contained">
@@ -67,7 +59,7 @@ const SubmitClaim: React.FC<{
         open={open}
         steps={
           <Steps
-            onDone={_onDone}
+            onDone={onDone}
             steps={[
               {
                 label: 'Request for attestation and sign',
@@ -85,7 +77,7 @@ const SubmitClaim: React.FC<{
                 label: 'Send message',
                 paused: true,
                 content: <Recaptcha onCallback={setRecaptchaToken} />,
-                exec: () => sendMessage(encryptedMessage, recaptchaToken)
+                exec: () => sendMessage(fetcher, encryptedMessage, recaptchaToken, message)
               }
             ]}
             submitText="Submit claim"

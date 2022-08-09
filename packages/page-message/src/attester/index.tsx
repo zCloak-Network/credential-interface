@@ -1,8 +1,8 @@
-import { MessageBodyType } from '@kiltprotocol/types';
+import { ISubmitCredential, MessageBody, MessageBodyType } from '@kiltprotocol/types';
 import { Box, Stack, Tab, Tabs } from '@mui/material';
-import React, { useContext, useMemo } from 'react';
+import React, { useCallback, useContext } from 'react';
 
-import { endpoint } from '@credential/app-config/endpoints';
+import { Message } from '@credential/app-db/message';
 import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
@@ -10,14 +10,12 @@ import Messages from './Messages';
 
 const AttesterMessage: React.FC = () => {
   const { didUri } = useContext(DidsContext);
-  const filter = useMemo(
-    () => ({
-      receiver: didUri,
-      bodyTypes: [MessageBodyType.SUBMIT_CREDENTIAL]
-    }),
+  const filter = useCallback(
+    (message: Message<MessageBody>) =>
+      message.body.type === MessageBodyType.SUBMIT_CREDENTIAL && didUri === message.receiver,
     [didUri]
   );
-  const messages = useMessages(endpoint.db, filter);
+  const messages = useMessages<ISubmitCredential>(filter);
 
   return (
     <Stack spacing={3}>
@@ -31,7 +29,7 @@ const AttesterMessage: React.FC = () => {
         <Tab label="Message" />
       </Tabs>
       <Box px={4}>
-        <Messages messages={messages as any} />
+        <Messages messages={messages} />
       </Box>
     </Stack>
   );

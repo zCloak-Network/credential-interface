@@ -1,4 +1,4 @@
-import type { IClaimContents } from '@kiltprotocol/types';
+import type { IClaimContents, MessageBody } from '@kiltprotocol/types';
 
 import type { Message } from '@credential/app-db/message';
 
@@ -12,7 +12,7 @@ import { DidName } from '@credential/react-dids';
 
 interface Props {
   contents: IClaimContents;
-  messageLinked?: Message[];
+  messageLinked?: Message<MessageBody>[];
 }
 
 const Details: React.FC<Props> = ({ contents, messageLinked }) => {
