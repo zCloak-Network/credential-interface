@@ -1,3 +1,5 @@
+import type { BN } from '@polkadot/util';
+
 import { Box, Typography } from '@mui/material';
 import React, { useContext } from 'react';
 
@@ -18,8 +20,8 @@ const UpgradeFullDid: React.FC = () => {
         variant="inherit"
       >
         To unlock all functions of the attester, you need to upgrade your account to fullDID. You
-        need to stake <FormatBalance value={blockchain.api.consts.did.deposit} /> KILT for this
-        step.
+        need to stake <FormatBalance value={blockchain.api.consts.did.deposit as unknown as BN} />{' '}
+        KILT for this step.
       </Typography>
       <FullDidCreation />
     </Box>
