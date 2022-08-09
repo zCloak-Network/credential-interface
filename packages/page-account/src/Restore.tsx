@@ -40,7 +40,7 @@ const Restore: React.FC = () => {
             Restore account
           </Typography>
           <Typography marginBottom={9} marginTop={3} textAlign="center" variant="inherit">
-            Enter your Mnemonic Phrase or select your Did Keys file here to restore your account.
+            Enter your Mnemonic Phrase or select your DID-Key file here to restore your account.
           </Typography>
 
           {selected === 1 ? (
@@ -50,7 +50,7 @@ const Restore: React.FC = () => {
           ) : (
             <>
               <Button fullWidth onClick={() => setSelected(0)} size="large" variant="outlined">
-                Did-keys file
+                DID-Key file
               </Button>
               <Button
                 fullWidth

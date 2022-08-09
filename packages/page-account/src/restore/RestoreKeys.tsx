@@ -36,12 +36,12 @@ const Restore: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   return (
     <Stack spacing={5.5}>
       <FormControl fullWidth variant="outlined">
-        <InputLabel shrink>Did-keys File</InputLabel>
+        <InputLabel shrink>DID-Key File</InputLabel>
         <OutlinedInput
           endAdornment={
             <InputAdornment position="end">
               <Button component="label" variant="contained">
-                Select Did Keys file
+                Select DID-Key file
                 <input
                   accept="application/json"
                   hidden
@@ -54,7 +54,7 @@ const Restore: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
             </InputAdornment>
           }
           fullWidth
-          placeholder="Select Did-keys file"
+          placeholder="Select DID-Key file"
           value={file?.name}
         />
       </FormControl>
