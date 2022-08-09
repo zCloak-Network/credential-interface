@@ -7,6 +7,7 @@ import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
 import { ClaimsIcon, CTypeIcon, MessageIcon } from '../icons';
+import { useNotification } from '../Notification/useNotification';
 import Sidebar from '../Sidebar';
 
 const Claimer: React.FC = () => {
@@ -14,6 +15,7 @@ const Claimer: React.FC = () => {
   const { pathname } = useLocation();
   const { palette, transitions } = useTheme();
   const { isReady } = useContext(DidsContext);
+  const unreads = useNotification();
 
   const items = useMemo(
     () => [
@@ -53,7 +55,7 @@ const Claimer: React.FC = () => {
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
-      <Header />
+      <Header unreads={unreads} />
       <Sidebar accountType="claimer" items={items} open={open} toggleOpen={toggleOpen} />
       <Box
         minHeight="100vh"

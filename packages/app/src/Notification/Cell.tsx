@@ -1,24 +1,32 @@
-import { DidUri, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
+import {
+  IRejectAttestation,
+  IRequestAttestation,
+  ISubmitAttestation,
+  ISubmitCredential,
+  MessageBodyType
+} from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
 import { alpha, Box, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { IconNewMessage, IconNewTask } from '@credential/app-config/icons';
+import { Message } from '@credential/app-db/message';
 import { CredentialModal, CTypeName } from '@credential/react-components';
 import { DidName } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
-interface Props {
-  sender: DidUri;
-  receiver: DidUri;
-  body: MessageBody;
-  time: number;
-  isRead: boolean;
+function Cell({
+  message: { body, createdAt, isRead, sender },
+  onRead
+}: {
+  message: Message<
+    IRejectAttestation | IRequestAttestation | ISubmitAttestation | ISubmitCredential
+  >;
   onRead: () => void;
-}
-
-const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
+}) {
+  const navigate = useNavigate();
   const credential = useMemo(
     () => (body.type === MessageBodyType.SUBMIT_CREDENTIAL ? body.content[0] : null),
     [body.content, body.type]
@@ -55,7 +63,7 @@ const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
           attestation
         </>
       );
-    } else if (body.type === MessageBodyType.REJECT_ATTESTATION) {
+    } else {
       return (
         <>
           <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
@@ -64,8 +72,6 @@ const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
           reject attestation
         </>
       );
-    } else {
-      return body.type;
     }
   }, [body, sender]);
 
@@ -73,8 +79,10 @@ const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
     if (body.type === MessageBodyType.SUBMIT_CREDENTIAL && credential) {
       toggleOpen();
       onRead();
+    } else if (body.type === MessageBodyType.REQUEST_ATTESTATION) {
+      navigate(`/attester/tasks/${body.content.requestForAttestation.rootHash}`);
     }
-  }, [body.type, credential, onRead, toggleOpen]);
+  }, [body, credential, navigate, onRead, toggleOpen]);
 
   return (
     <>
@@ -108,7 +116,7 @@ const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
               })}
               variant="inherit"
             >
-              {moment(time).format('YYYY-MM-DD HH:mm:ss')}
+              {moment(createdAt).format('YYYY-MM-DD HH:mm:ss')}
             </Typography>
             <Circle color={isRead ? 'disabled' : 'warning'} sx={{ width: 8, height: 8 }} />
           </Stack>
@@ -130,6 +138,6 @@ const Cell: React.FC<Props> = ({ body, isRead, onRead, sender, time }) => {
       {open && credential && <CredentialModal credential={credential} onClose={toggleOpen} />}
     </>
   );
-};
+}
 
 export default React.memo(Cell);

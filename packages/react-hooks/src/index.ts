@@ -11,3 +11,4 @@ export * from './useQueryParams';
 export * from './useMessage';
 export * from './useRequestStatus';
 export * from './useCTypes';
+export * from './useCredential';
