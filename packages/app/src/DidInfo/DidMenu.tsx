@@ -11,16 +11,18 @@ import {
   ListItemText,
   Menu,
   MenuItem,
+  Stack,
   Typography
 } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
-import { Copy, FormatBalance, IdentityIcon } from '@credential/react-components';
+import { Address, Copy, FormatBalance, IdentityIcon } from '@credential/react-components';
 import { DidName, DidsContext } from '@credential/react-dids';
 import { useBalances, useToggle } from '@credential/react-hooks';
 
+import AddressIcon from './address.svg';
 import ExportModal from './ExportModal';
 import ExportIcon from './icon_export.svg';
 import LogoutIcon from './icon_logout.svg';
@@ -65,7 +67,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
               paddingX: '5px'
             },
             '.MuiListItemIcon-root': {
-              minWidth: '36px'
+              minWidth: '32px'
             }
           }
         }}
@@ -98,6 +100,18 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         <Divider sx={{ marginTop: 3, marginBottom: 1 }} />
         <ListItem>
           <ListItemIcon>
+            <AddressIcon />
+          </ListItemIcon>
+          <ListItemText>KILT Address</ListItemText>
+          <ListItemSecondaryAction>
+            <Stack alignItems="center" direction="row" spacing={0.5}>
+              <Address value={didDetails?.identifier} />
+              <Copy value={didDetails?.identifier ?? ''} />
+            </Stack>
+          </ListItemSecondaryAction>
+        </ListItem>
+        <ListItem>
+          <ListItemIcon>
             <img src={KiltIcon} />
           </ListItemIcon>
           <ListItemText>KILT Balance</ListItemText>
@@ -128,7 +142,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
           <ListItemIcon>
             <ExportIcon />
           </ListItemIcon>
-          <ListItemText>Export Did Keys</ListItemText>
+          <ListItemText>Export DID-Key</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>

@@ -4,22 +4,25 @@ import React, { useContext, useMemo, useState } from 'react';
 import { AppContext } from '@credential/react-components';
 
 import Cell from './Cell';
-import { useUnread, useUnreadCount } from './useUnread';
+import { UseNotification } from './useNotification';
 
 interface Props {
+  unreads: UseNotification;
   open: boolean;
   onClose: () => void;
 }
 
-const Notification: React.FC<Props> = ({ onClose, open }) => {
+const Notification: React.FC<Props> = ({
+  onClose,
+  open,
+  unreads: { all, allUnread, message, messageUnread, task, taskUnread }
+}) => {
   const [type, setType] = useState(0);
   const { fetcher } = useContext(AppContext);
-  const { allUnread, messageUnread, taskUnread } = useUnread();
-  const counts = useUnreadCount();
 
   const messages = useMemo(
-    () => (type === 0 ? allUnread : type === 1 ? taskUnread : messageUnread),
-    [allUnread, messageUnread, taskUnread, type]
+    () => (type === 0 ? all : type === 1 ? task : message),
+    [all, message, task, type]
   );
 
   return (
@@ -36,21 +39,21 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
         <Tabs onChange={(_, value) => setType(value)} value={type}>
           <Tab
             label={
-              <Badge badgeContent={counts.allUnread} color="warning" max={99} variant="dot">
+              <Badge badgeContent={allUnread} color="warning" max={99} variant="dot">
                 All
               </Badge>
             }
           />
           <Tab
             label={
-              <Badge badgeContent={counts.taskUnread} color="warning" max={99} variant="dot">
+              <Badge badgeContent={taskUnread} color="warning" max={99} variant="dot">
                 Tasks
               </Badge>
             }
           />
           <Tab
             label={
-              <Badge badgeContent={counts.messageUnread} color="warning" max={99} variant="dot">
+              <Badge badgeContent={messageUnread} color="warning" max={99} variant="dot">
                 Messages
               </Badge>
             }
@@ -59,15 +62,11 @@ const Notification: React.FC<Props> = ({ onClose, open }) => {
       </Box>
       {messages?.map((message, index) => (
         <Cell
-          body={message.body}
-          isRead={!!message.isRead}
           key={index}
+          message={message}
           onRead={() => {
             fetcher?.write.messages.read(message.messageId);
           }}
-          receiver={message.receiver}
-          sender={message.sender}
-          time={message.createdAt}
         />
       ))}
     </Drawer>

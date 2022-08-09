@@ -11,6 +11,7 @@ import { MessageBodyType } from '@kiltprotocol/types';
 import { useMemo } from 'react';
 
 import { Message } from '@credential/app-db/message';
+import { useCredential } from '@credential/react-hooks';
 import { RequestStatus } from '@credential/react-hooks/types';
 
 export type UseParsedMessage = {
@@ -58,14 +59,15 @@ export function useParsedMessage(
   const credential = useMemo(() => {
     return message.body.type === MessageBodyType.SUBMIT_CREDENTIAL ? message.body.content[0] : null;
   }, [message.body.content, message.body.type]);
+  const localCredential = useCredential(rootHash);
 
   return useMemo(
     () => ({
       rootHash,
       ctypeHash,
       status,
-      credential
+      credential: credential || localCredential
     }),
-    [credential, ctypeHash, rootHash, status]
+    [credential, ctypeHash, localCredential, rootHash, status]
   );
 }

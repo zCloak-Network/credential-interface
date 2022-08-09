@@ -9,7 +9,7 @@ import Header from '../Header';
 import IconMessage from '../icon_message.svg';
 import IconCtype from '../icon_myctype.svg';
 import IconTask from '../icon_task.svg';
-import { useUnreadCount } from '../Notification/useUnread';
+import { useNotification } from '../Notification/useNotification';
 import Sidebar from '../Sidebar';
 
 const Badge: React.FC<{ value: number }> = ({ value }) => {
@@ -37,7 +37,7 @@ const Attester: React.FC = () => {
   const { pathname } = useLocation();
   const { transitions } = useTheme();
   const { isReady } = useContext(DidsContext);
-  const { messageUnread, taskUnread } = useUnreadCount();
+  const unreads = useNotification();
 
   const items = useMemo(
     () => [
@@ -52,23 +52,23 @@ const Attester: React.FC = () => {
         active: pathname.startsWith('/attester/tasks'),
         svgIcon: <SvgIcon component={IconTask} fontSize="inherit" viewBox="0 0 16 12.799" />,
         text: 'Tasks',
-        extra: taskUnread ? <Badge value={taskUnread} /> : undefined
+        extra: unreads.taskUnread ? <Badge value={unreads.taskUnread} /> : undefined
       },
       {
         to: '/attester/message',
         active: pathname.startsWith('/attester/message'),
         svgIcon: <SvgIcon component={IconMessage} fontSize="inherit" viewBox="0 0 14 14.22" />,
         text: 'Message',
-        extra: messageUnread ? <Badge value={messageUnread} /> : undefined
+        extra: unreads.messageUnread ? <Badge value={unreads.messageUnread} /> : undefined
       }
     ],
-    [messageUnread, pathname, taskUnread]
+    [pathname, unreads.messageUnread, unreads.taskUnread]
   );
 
   return (
     <>
       <Box bgcolor="#fff" minHeight="100vh">
-        <Header isAttester showUpgrade />
+        <Header isAttester showUpgrade unreads={unreads} />
         <Sidebar accountType="attester" items={items} open={open} toggleOpen={toggleOpen} />
         <Box
           minHeight="100vh"

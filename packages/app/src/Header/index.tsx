@@ -10,7 +10,7 @@ import { useToggle } from '@credential/react-hooks';
 import DidInfo from '../DidInfo';
 import Network from '../Network';
 import Notification from '../Notification';
-import { useUnreadCount } from '../Notification/useUnread';
+import { UseNotification } from '../Notification/useNotification';
 import UpgradeFullDid from '../UpgradeFullDid';
 import AttesterIcon from './icon_attester.svg';
 
@@ -36,15 +36,16 @@ function Logo() {
 
 function Header({
   isAttester = false,
-  showUpgrade = false
+  showUpgrade = false,
+  unreads
 }: {
   isAttester?: boolean;
   showUpgrade?: boolean;
+  unreads: UseNotification;
 }) {
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
-  const { allUnread } = useUnreadCount();
 
   const handleNotification = useCallback(() => {
     toggleNotiOpen();
@@ -86,7 +87,7 @@ function Header({
         </Stack>
         <Stack alignItems="center" direction="row" spacing={2}>
           <IconButton onClick={handleNotification} sx={{ marginRight: 3 }}>
-            <Badge badgeContent={Number(allUnread ?? 0) + unParsed} color="warning" max={99}>
+            <Badge badgeContent={unreads.allUnread + unParsed} color="warning" max={99}>
               <NotificationsNoneOutlinedIcon />
             </Badge>
           </IconButton>
@@ -95,7 +96,7 @@ function Header({
           {showUpgrade && !isFullDid && <UpgradeFullDid />}
         </Stack>
       </Stack>
-      <Notification onClose={toggleNotiOpen} open={notiOpen} />
+      <Notification onClose={toggleNotiOpen} open={notiOpen} unreads={unreads} />
     </>
   );
 }

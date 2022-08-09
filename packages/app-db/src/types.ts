@@ -4,10 +4,6 @@ import type { Message } from './message';
 
 export interface CredentialQuery {
   messages: {
-    unread: (
-      filter?: (message: Message<MessageBody>) => boolean
-    ) => Promise<Message<MessageBody>[]>;
-    unreadCount: (filter?: (message: Message<MessageBody>) => boolean) => Promise<number>;
     all: (filter?: (message: Message<MessageBody>) => boolean) => Promise<Message<MessageBody>[]>;
     lastSync: () => Promise<Message<MessageBody> | undefined>;
   };

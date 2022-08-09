@@ -8,18 +8,6 @@ import { CredentialInterface, CredentialQuery, CredentialWrite } from './types';
 function generateQuery(data: DexieData): CredentialQuery {
   return {
     messages: {
-      unread: (filter?: (message: Message<MessageBody>) => boolean) =>
-        data.messages
-          .orderBy('createdAt')
-          .reverse()
-          .filter((message) => !message.isRead && (filter ? filter(message) : true))
-          .toArray(),
-      unreadCount: (filter?: (message: Message<MessageBody>) => boolean) =>
-        data.messages
-          .orderBy('createdAt')
-          .reverse()
-          .filter((message) => !message.isRead && (filter ? filter(message) : true))
-          .count(),
       all: (filter) =>
         data.messages
           .orderBy('createdAt')

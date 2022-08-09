@@ -1,9 +1,12 @@
 import { Box, Typography } from '@mui/material';
-import React from 'react';
+import React, { useContext } from 'react';
 
-import { FullDidCreation } from '@credential/react-dids';
+import { FormatBalance } from '@credential/react-components';
+import { DidsContext, FullDidCreation } from '@credential/react-dids';
 
 const UpgradeFullDid: React.FC = () => {
+  const { blockchain } = useContext(DidsContext);
+
   return (
     <Box sx={{ width: 458, margin: '40px auto' }}>
       <Typography sx={{ textAlign: 'center' }} variant="h5">
@@ -15,7 +18,8 @@ const UpgradeFullDid: React.FC = () => {
         variant="inherit"
       >
         To unlock all functions of the attester, you need to upgrade your account to fullDID. You
-        need to stake xxxx KILT for this step.
+        need to stake <FormatBalance value={blockchain.api.consts.did.deposit} /> KILT for this
+        step.
       </Typography>
       <FullDidCreation />
     </Box>

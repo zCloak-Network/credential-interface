@@ -39,6 +39,13 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [didDetails]);
 
   useEffect(() => {
+    return () => {
+      encryptedMessages.clear();
+      setUnParsed(0);
+    };
+  }, [didDetails]);
+
+  useEffect(() => {
     if (fetcher && didDetails) {
       fetcher.query.messages.lastSync().then((message) => {
         let startId: number;
@@ -55,11 +62,6 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         });
       });
     }
-
-    return () => {
-      encryptedMessages.clear();
-      setUnParsed(0);
-    };
   }, [fetcher, didDetails]);
 
   const parse = useCallback(async () => {

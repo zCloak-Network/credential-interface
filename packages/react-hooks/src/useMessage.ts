@@ -1,10 +1,4 @@
-import {
-  DidUri,
-  Hash,
-  IRequestAttestation,
-  MessageBody,
-  MessageBodyType
-} from '@kiltprotocol/sdk-js';
+import { DidUri, IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useCallback, useContext, useMemo } from 'react';
 
@@ -12,7 +6,7 @@ import { Message } from '@credential/app-db/message';
 import { AppContext } from '@credential/react-components';
 
 export function useMessages<Body extends MessageBody>(
-  filter: (message: Message<MessageBody>) => boolean
+  filter?: (message: Message<MessageBody>) => boolean
 ) {
   const { fetcher } = useContext(AppContext);
   const getMessages = useCallback(() => fetcher?.query.messages.all(filter), [fetcher, filter]);
@@ -56,20 +50,4 @@ export function useClaimerRequests(claimer?: DidUri) {
   );
 
   return useMessages<IRequestAttestation>(filter);
-}
-
-export function useRequest(rootHash: Hash) {
-  const filter = useCallback(
-    (message: Message<MessageBody>): boolean => {
-      return (
-        message.body.type === MessageBodyType.REQUEST_ATTESTATION &&
-        message.body.content.requestForAttestation.rootHash === rootHash
-      );
-    },
-    [rootHash]
-  );
-
-  const messages = useMessages<IRequestAttestation>(filter);
-
-  return useMemo(() => (messages.length > 0 ? messages[0] : null), [messages]);
 }
