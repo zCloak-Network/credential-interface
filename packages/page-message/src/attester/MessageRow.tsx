@@ -34,6 +34,7 @@ const MessageRow: React.FC<{
   return (
     <>
       <TableRow hover onClick={handleClick}>
+        <TableCell>{message.body.type}</TableCell>
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
             <DidName value={message.sender} />

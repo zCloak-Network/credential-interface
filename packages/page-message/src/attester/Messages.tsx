@@ -14,6 +14,7 @@ const Messages: React.FC<{
       <Table>
         <TableHead>
           <TableRow>
+            <TableCell>Type</TableCell>
             <TableCell>From</TableCell>
             <TableCell>Claim hash</TableCell>
             <TableCell>Credential type</TableCell>

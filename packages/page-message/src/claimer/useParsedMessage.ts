@@ -11,11 +11,11 @@ import { MessageBodyType } from '@kiltprotocol/types';
 import { useMemo } from 'react';
 
 import { Message } from '@credential/app-db/message';
-import { useCredential } from '@credential/react-hooks';
+import { useCredential, useRequestStatus } from '@credential/react-hooks';
 import { RequestStatus } from '@credential/react-hooks/types';
 
 export type UseParsedMessage = {
-  ctypeHash: Hash | null;
+  ctypeHash?: Hash | null;
   rootHash: Hash;
   credential?: ICredential | null;
   status: RequestStatus;
@@ -46,25 +46,19 @@ export function useParsedMessage(
       : message.body.content[0].attestation.cTypeHash;
   }, [message.body.content, message.body.type]);
 
-  const status = useMemo((): RequestStatus => {
-    return message.body.type === MessageBodyType.SUBMIT_ATTESTATION
-      ? RequestStatus.SUBMIT
-      : message.body.type === MessageBodyType.REQUEST_ATTESTATION
-      ? RequestStatus.INIT
-      : message.body.type === MessageBodyType.REJECT_ATTESTATION
-      ? RequestStatus.REJECT
-      : RequestStatus.SUBMIT;
-  }, [message.body.type]);
-
   const credential = useMemo(() => {
     return message.body.type === MessageBodyType.SUBMIT_CREDENTIAL ? message.body.content[0] : null;
   }, [message.body.content, message.body.type]);
   const localCredential = useCredential(rootHash);
+  const status = useRequestStatus(rootHash);
 
   return useMemo(
     () => ({
       rootHash,
-      ctypeHash,
+      ctypeHash:
+        ctypeHash ||
+        credential?.request.claim.cTypeHash ||
+        localCredential?.request.claim.cTypeHash,
       status,
       credential: credential || localCredential
     }),

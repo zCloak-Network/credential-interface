@@ -61,6 +61,7 @@ const ReceivedMessages: React.FC = () => {
               background: alpha(palette.primary.main, 0.1)
             })}
           >
+            <TableCell>Type</TableCell>
             <TableCell>From</TableCell>
             <TableCell>Claim hash</TableCell>
             <TableCell>Credential type</TableCell>

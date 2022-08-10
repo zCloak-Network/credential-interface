@@ -42,11 +42,5 @@ export function useRequestStatus(rootHash?: Hash): RequestStatus {
 
   const attestation = useAttestation(rootHash);
 
-  return useMemo(() => {
-    if (attestation) {
-      return RequestStatus.SUBMIT;
-    } else {
-      return status;
-    }
-  }, [attestation, status]);
+  return useMemo(() => (attestation ? RequestStatus.SUBMIT : status), [attestation, status]);
 }

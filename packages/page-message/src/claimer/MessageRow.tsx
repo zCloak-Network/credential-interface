@@ -52,6 +52,7 @@ const MessageRow: React.FC<{
           }
         })}
       >
+        <TableCell>{message.body.type}</TableCell>
         <TableCell>
           <Box sx={{ width: 150, ...ellipsisMixin() }}>
             <DidName value={message.sender} />
