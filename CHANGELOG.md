@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.12.1 Aug 10, 2022
+
+Changes:
+
+- add address copy in did menu
+- split database with did authenticationKey and encryptionKey
+- refactor query messages
+- add CredentialFetcher to get messages
+
 ## 0.10.1 Aug 04, 2022
 
 Changes:
