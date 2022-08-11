@@ -89,13 +89,13 @@ jobs:
         strip_components: 5
         rm: true
 
-gh_pages:
-  environment:
-    name: github-pages
-    url: ${{ steps.deployment.outputs.page_url }}
-  runs-on: ubuntu-latest
-  needs: prerelease
-  steps:
-    - name: Deploy to GitHub Pages
-      id: deployment
-      uses: actions/deploy-pages@v1
+  gh_pages:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    needs: prerelease
+    steps:
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v1
