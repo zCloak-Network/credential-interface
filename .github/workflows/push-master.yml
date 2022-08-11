@@ -10,6 +10,11 @@ permissions:
   pages: write
   id-token: write
 
+# Allow one concurrent deployment
+concurrency:
+  group: "pages"
+  cancel-in-progress: true
+
 jobs:
   prerelease:
     if: "! startsWith(github.event.head_commit.message, '[CI Skip]')"
@@ -38,6 +43,9 @@ jobs:
         NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
       run: |
         yarn build:release
+
+    - name: Setup Pages
+      uses: actions/configure-pages@v1
 
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v1
