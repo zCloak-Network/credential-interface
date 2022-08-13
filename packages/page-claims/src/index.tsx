@@ -11,7 +11,7 @@ const Claims: React.FC = () => {
 
   const list = useMemo(() => {
     return type === 0
-      ? credentials?.filter(({ attestation }) => !attestation) ?? []
+      ? credentials ?? []
       : credentials?.filter(({ attestation }) => !!attestation && !attestation.revoked) ?? [];
   }, [credentials, type]);
 
@@ -20,8 +20,8 @@ const Claims: React.FC = () => {
       <Stack spacing={4}>
         <Typography variant="h2">Credentials</Typography>
         <Tabs onChange={(_, value) => setType(value)} value={type}>
-          <Tab label="My Claims" />
-          <Tab label="My Credentials" />
+          <Tab label="All credentials" />
+          <Tab label="Attested" />
         </Tabs>
         <Box>
           <Grid container spacing={3}>
