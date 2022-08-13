@@ -1,4 +1,4 @@
-import type { MessageBody } from '@kiltprotocol/sdk-js';
+import type { Hash, MessageBody } from '@kiltprotocol/sdk-js';
 import type { CType } from './ctype';
 import type { Message } from './message';
 
@@ -19,6 +19,8 @@ export interface CredentialWrite {
   };
   ctypes: {
     put: (ctype: CType) => Promise<void>;
+    batchPut: (ctypes: CType[]) => Promise<void>;
+    delete: (hash: Hash) => Promise<void>;
   };
 }
 

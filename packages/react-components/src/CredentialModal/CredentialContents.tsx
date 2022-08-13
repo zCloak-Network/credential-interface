@@ -1,4 +1,4 @@
-import type { DidUri, IClaimContents } from '@kiltprotocol/sdk-js';
+import type { DidUri, Hash, IClaimContents } from '@kiltprotocol/sdk-js';
 
 import {
   Box,
@@ -21,7 +21,7 @@ import CredentialStatus from '../CredentialStatus';
 import CTypeName from '../CTypeName';
 
 interface Props {
-  ctypeHash: string;
+  ctypeHash: Hash;
   owner: DidUri;
   status: RequestStatus;
   attester: DidUri;

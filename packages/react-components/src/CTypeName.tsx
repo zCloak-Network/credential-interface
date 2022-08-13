@@ -1,10 +1,12 @@
+import type { Hash } from '@kiltprotocol/sdk-js';
+
 import FileUploadOutlinedIcon from '@mui/icons-material/FileUploadOutlined';
 import { Button } from '@mui/material';
 import React, { useCallback, useContext, useMemo } from 'react';
 
 import { CTypeContext } from './CTypeProvider';
 
-const CTypeName: React.FC<{ cTypeHash?: string | null }> = ({ cTypeHash }) => {
+const CTypeName: React.FC<{ cTypeHash?: Hash | null }> = ({ cTypeHash }) => {
   const { cTypeList } = useContext(CTypeContext);
   const { importCType } = useContext(CTypeContext);
 

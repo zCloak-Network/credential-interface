@@ -13,7 +13,7 @@ export class DexieData extends Dexie {
   constructor(name: string) {
     super(`credential-db-${name}`);
     this.version(1).stores({
-      ctype: '&hash, owner, *schema',
+      ctype: '&hash, owner, *schema, description',
       messages:
         '&messageId, syncId, isRead, createdAt, *body, sender, receiver, receivedAt, inReplyTo, *references'
     });

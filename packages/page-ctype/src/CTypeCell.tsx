@@ -1,9 +1,11 @@
 import type { ICType } from '@kiltprotocol/sdk-js';
 
+import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import {
   alpha,
   Box,
   Button,
+  IconButton,
   Paper,
   Stack,
   styled,
@@ -11,10 +13,11 @@ import {
   Tooltip,
   Typography
 } from '@mui/material';
-import React, { useCallback } from 'react';
+import React, { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
+import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 
@@ -94,6 +97,11 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 
 const CTypeCell: React.FC<{ cType: ICType }> = ({ cType }) => {
   const navigate = useNavigate();
+  const { deleteCType } = useContext(CTypeContext);
+
+  const handleDelete = useCallback(() => {
+    deleteCType(cType.hash);
+  }, [cType.hash, deleteCType]);
 
   const submitClaim = useCallback(() => {
     navigate('/claimer/claims', {
@@ -105,6 +113,13 @@ const CTypeCell: React.FC<{ cType: ICType }> = ({ cType }) => {
 
   return (
     <Wrapper>
+      <IconButton
+        onClick={handleDelete}
+        size="small"
+        sx={{ position: 'absolute', right: 10, top: 10 }}
+      >
+        <DeleteOutlineOutlinedIcon />
+      </IconButton>
       <Stack spacing={1.5}>
         <Box className="CTypeCell_logo">
           <SvgIcon component={LogoCircleIcon} viewBox="0 0 60 60" />

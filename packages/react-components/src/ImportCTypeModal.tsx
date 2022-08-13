@@ -1,3 +1,4 @@
+import { Hash } from '@kiltprotocol/sdk-js';
 import {
   Button,
   Dialog,
@@ -16,7 +17,7 @@ const ImportCTypeModal: React.FC<{ open: boolean; onClose?: () => void }> = ({ o
 
   const handleClick = useCallback(() => {
     if (hash) {
-      importCType(hash);
+      importCType(hash as Hash);
       onClose?.();
     }
   }, [hash, importCType, onClose]);

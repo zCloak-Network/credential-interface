@@ -1,4 +1,4 @@
-import { MessageBody } from '@kiltprotocol/sdk-js';
+import { Hash, MessageBody } from '@kiltprotocol/sdk-js';
 
 import { CType } from './ctype';
 import { DexieData } from './DexieData';
@@ -46,6 +46,12 @@ function generateWrite(data: DexieData): CredentialWrite {
     ctypes: {
       put: async (ctype: CType) => {
         await data.ctype.put(ctype);
+      },
+      batchPut: async (ctypes: CType[]) => {
+        await data.ctype.bulkPut(ctypes);
+      },
+      delete: async (hash: Hash) => {
+        await data.ctype.delete(hash);
       }
     }
   };
