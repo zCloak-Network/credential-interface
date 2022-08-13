@@ -17,6 +17,7 @@ import { RequestStatus } from '@credential/react-hooks/types';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
+import RetweetButton from './button/RetweetButton';
 import ShareButton from './button/ShareButton';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
@@ -191,6 +192,7 @@ const CredentialCell: React.FC<{
               onClick={(e) => e.stopPropagation()}
               spacing={1}
             >
+              <RetweetButton credential={credential} />
               <ImportButton credential={credential} />
               <ShareButton credential={credential} />
               <DownloadButton credential={credential} />
