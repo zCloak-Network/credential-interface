@@ -8,26 +8,53 @@ import {
   MessageBody,
   MessageBodyType
 } from '@kiltprotocol/types';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+import {
+  alpha,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow
+} from '@mui/material';
 import React from 'react';
 
 import { Message } from '@credential/app-db/message';
 
-import MessageAcceptCredential from '../claimer/MessageAcceptCredential';
-import MessageRejectAttestation from '../claimer/MessageRejectAttestation';
-import MessageRejectCredential from '../claimer/MessageRejectCredential';
-import MessageRequestAttestation from '../claimer/MessageRequestAttestation';
-import MessageSubmitAttestation from '../claimer/MessageSubmitAttestation';
-import MessageSubmitCredential from '../claimer/MessageSubmitCredential';
+import MessageAcceptCredential from './MessageAcceptCredential';
+import MessageRejectAttestation from './MessageRejectAttestation';
+import MessageRejectCredential from './MessageRejectCredential';
+import MessageRequestAttestation from './MessageRequestAttestation';
+import MessageSubmitAttestation from './MessageSubmitAttestation';
+import MessageSubmitCredential from './MessageSubmitCredential';
 
-const Messages: React.FC<{
-  messages?: Message<MessageBody>[];
-}> = ({ messages }) => {
+function Messages({ messages }: { messages?: Message<MessageBody>[] }) {
   return (
     <TableContainer>
-      <Table>
+      <Table
+        sx={({ spacing }) => ({
+          borderCollapse: 'separate',
+
+          borderSpacing: `0px ${spacing(2)}`,
+          '.MuiTableCell-root': {
+            '&:nth-of-type(1)': {
+              borderTopLeftRadius: '10px',
+              borderBottomLeftRadius: '10px'
+            },
+            '&:nth-last-of-type(1)': {
+              borderTopRightRadius: '10px',
+              borderBottomRightRadius: '10px'
+            }
+          }
+        })}
+      >
         <TableHead>
-          <TableRow>
+          <TableRow
+            sx={({ palette }) => ({
+              border: 'none',
+              background: alpha(palette.primary.main, 0.1)
+            })}
+          >
             <TableCell>Sender</TableCell>
             <TableCell>Receiver</TableCell>
             <TableCell>Claim hash</TableCell>
@@ -36,7 +63,27 @@ const Messages: React.FC<{
             <TableCell>Time</TableCell>
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody
+          sx={({ palette }) => ({
+            'MuiTableRow-hover:hover': {
+              backgroundColor: palette.common.white
+            },
+            '.MuiTableRow-root': {
+              border: 'none',
+              background: palette.background.paper,
+              ':hover': {
+                border: '1px solid',
+                borderColor: palette.grey[200],
+                boxShadow: '0px 6px 20px rgba(153, 155, 168, 0.1)',
+                background: palette.common.white
+              },
+
+              '.MuiTableCell-root': {
+                height: 76
+              }
+            }
+          })}
+        >
           {messages?.map((message) => {
             if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
               return (
@@ -98,6 +145,6 @@ const Messages: React.FC<{
       </Table>
     </TableContainer>
   );
-};
+}
 
 export default React.memo(Messages);

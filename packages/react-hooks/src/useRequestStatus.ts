@@ -13,7 +13,7 @@ import { RequestStatus } from './types';
 import { useAttestation } from './useAttestation';
 import { useMessages } from './useMessage';
 
-export function useRequestStatus(rootHash?: Hash): RequestStatus {
+export function useRequestStatus(rootHash?: Hash | null): RequestStatus {
   const filter = useCallback(
     (message: Message<MessageBody>): boolean => {
       if (!rootHash) return false;
