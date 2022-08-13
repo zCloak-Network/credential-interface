@@ -50,7 +50,7 @@ const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
                 sx={({ palette }) => ({ color: palette.grey[500] })}
                 variant="inherit"
               >
-                Attested by
+                Created by
               </Typography>
               <Typography sx={{ ...ellipsisMixin() }} variant="inherit">
                 <DidName shorten={false} value={cType.owner} />

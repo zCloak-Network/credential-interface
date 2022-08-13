@@ -1,27 +1,45 @@
+import { MessageBody } from '@kiltprotocol/sdk-js';
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material';
-import React, { useState } from 'react';
+import { useCallback, useContext, useState } from 'react';
 
-import ReceivedMessages from './claimer/ReceivedMessages';
-import SentMessages from './claimer/SentMessages';
+import { Message } from '@credential/app-db/message';
+import { DidsContext } from '@credential/react-dids';
+import { useMessages } from '@credential/react-hooks';
 
-const Messages: React.FC = () => {
+import MessagesTable from './claimer/Messages';
+
+function Messages() {
+  const { didUri } = useContext(DidsContext);
   const [type, setType] = useState(0);
+
+  const filter = useCallback(
+    (message: Message<MessageBody>) => {
+      if (type === 1) return message.receiver === didUri;
+
+      if (type === 2) return message.sender === didUri;
+
+      return true;
+    },
+    [didUri, type]
+  );
+
+  const messages = useMessages(filter);
 
   return (
     <>
       <Stack spacing={4}>
         <Typography variant="h2">Messages</Typography>
         <Tabs onChange={(_, value) => setType(value)} value={type}>
+          <Tab label="All" />
           <Tab label="Received" />
           <Tab label="Sent" />
         </Tabs>
         <Box>
-          {type === 0 && <ReceivedMessages />}
-          {type === 1 && <SentMessages />}
+          <MessagesTable messages={messages} />
         </Box>
       </Stack>
     </>
   );
-};
+}
 
 export default Messages;

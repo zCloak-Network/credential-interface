@@ -1,13 +1,6 @@
-import {
-  Hash,
-  IRejectAttestation,
-  IRequestAttestation,
-  ISubmitAttestation,
-  ISubmitCredential,
-  MessageBodyType
-} from '@kiltprotocol/sdk-js';
+import { Hash, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
-import { alpha, Box, Button, Stack, Typography } from '@mui/material';
+import { alpha, Box, Button, Link, Stack, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -22,9 +15,7 @@ function Cell({
   message: { body, createdAt, isRead, sender },
   onRead
 }: {
-  message: Message<
-    IRejectAttestation | IRequestAttestation | ISubmitAttestation | ISubmitCredential
-  >;
+  message: Message<MessageBody>;
   onRead: () => void;
 }) {
   const navigate = useNavigate();
@@ -50,13 +41,13 @@ function Cell({
     if (body.type === MessageBodyType.REQUEST_ATTESTATION) {
       return (
         <>
-          <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
+          <Link>
             <DidName value={sender} />
-          </Box>{' '}
+          </Link>{' '}
           submitted{' '}
-          <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
+          <Link>
             <CTypeName cTypeHash={body.content.requestForAttestation.claim.cTypeHash} />
-          </Box>{' '}
+          </Link>{' '}
           verification request, Please deal with it in time!
         </>
       );
@@ -65,26 +56,55 @@ function Cell({
     } else if (body.type === MessageBodyType.SUBMIT_ATTESTATION) {
       return (
         <>
-          <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
+          <Link>
             <DidName value={sender} />
-          </Box>{' '}
+          </Link>{' '}
           submit{' '}
-          <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
+          <Link>
             <CTypeName cTypeHash={body.content.attestation.cTypeHash} />
-          </Box>{' '}
+          </Link>{' '}
           attestation
         </>
       );
-    } else {
+    } else if (body.type === MessageBodyType.REJECT_ATTESTATION) {
       return (
         <>
-          <Box component="span" sx={({ palette }) => ({ color: palette.primary.main })}>
+          <Link>
             <DidName value={sender} />
-          </Box>{' '}
+          </Link>{' '}
           reject attestation
         </>
       );
+    } else if (body.type === MessageBodyType.ACCEPT_CREDENTIAL) {
+      return (
+        <>
+          Verifier{' '}
+          <Link>
+            <DidName value={sender} />
+          </Link>{' '}
+          accept <CTypeName cTypeHash={body.content[0]} /> credential type.
+        </>
+      );
+    } else if (body.type === MessageBodyType.REJECT_CREDENTIAL) {
+      return (
+        <>
+          Verifier{' '}
+          <Link>
+            <DidName value={sender} />
+          </Link>{' '}
+          reject <CTypeName cTypeHash={body.content[0]} /> credential type.
+        </>
+      );
     }
+
+    return (
+      <>
+        Unknown type from{' '}
+        <Link>
+          <DidName value={sender} />
+        </Link>
+      </>
+    );
   }, [body, sender]);
 
   const handleClick = useCallback(() => {

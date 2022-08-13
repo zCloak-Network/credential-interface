@@ -22,6 +22,19 @@ export function useMessages<Body extends MessageBody>(
   }, [data]);
 }
 
+export function useReferenceMessages<Body extends MessageBody>(
+  referrences?: (string | undefined)[]
+) {
+  const filter = useCallback(
+    (message: Message<MessageBody>) => {
+      return !!message.messageId && !!referrences?.includes(message.messageId);
+    },
+    [referrences]
+  );
+
+  return useMessages<Body>(filter);
+}
+
 export function useAttesterRequests(attester?: DidUri) {
   const filter = useCallback(
     (message: Message<MessageBody>): boolean => {

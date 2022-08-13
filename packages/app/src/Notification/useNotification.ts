@@ -1,11 +1,4 @@
-import {
-  IRejectAttestation,
-  IRequestAttestation,
-  ISubmitAttestation,
-  ISubmitCredential,
-  MessageBody,
-  MessageBodyType
-} from '@kiltprotocol/sdk-js';
+import { IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import { useCallback, useContext, useMemo } from 'react';
 
 import { Message } from '@credential/app-db/message';
@@ -13,9 +6,9 @@ import { DidsContext } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
 export type UseNotification = {
-  all: Message<IRequestAttestation | ISubmitAttestation | IRejectAttestation | ISubmitCredential>[];
+  all: Message<MessageBody>[];
   task: Message<IRequestAttestation>[];
-  message: Message<ISubmitAttestation | IRejectAttestation | ISubmitCredential>[];
+  message: Message<MessageBody>[];
   allUnread: number;
   taskUnread: number;
   messageUnread: number;
@@ -24,19 +17,11 @@ export type UseNotification = {
 export function useNotification(): UseNotification {
   const { didUri } = useContext(DidsContext);
   const getAll = useCallback(
-    (message: Message<MessageBody>) =>
-      [
-        MessageBodyType.REQUEST_ATTESTATION,
-        MessageBodyType.SUBMIT_ATTESTATION,
-        MessageBodyType.REJECT_ATTESTATION,
-        MessageBodyType.SUBMIT_CREDENTIAL
-      ].includes(message.body.type) && message.receiver === didUri,
+    (message: Message<MessageBody>) => message.receiver === didUri,
     [didUri]
   );
 
-  const all = useMessages<
-    IRequestAttestation | ISubmitAttestation | IRejectAttestation | ISubmitCredential
-  >(getAll);
+  const all = useMessages<MessageBody>(getAll);
   const task = useMemo(
     (): Message<IRequestAttestation>[] =>
       all.filter(
@@ -45,14 +30,16 @@ export function useNotification(): UseNotification {
     [all]
   );
   const message = useMemo(
-    (): Message<ISubmitAttestation | IRejectAttestation | ISubmitCredential>[] =>
+    (): Message<MessageBody>[] =>
       all.filter((message) =>
         [
           MessageBodyType.SUBMIT_ATTESTATION,
           MessageBodyType.REJECT_ATTESTATION,
-          MessageBodyType.SUBMIT_CREDENTIAL
+          MessageBodyType.SUBMIT_CREDENTIAL,
+          MessageBodyType.ACCEPT_CREDENTIAL,
+          MessageBodyType.REJECT_CREDENTIAL
         ].includes(message.body.type)
-      ) as Message<ISubmitAttestation | IRejectAttestation | ISubmitCredential>[],
+      ),
     [all]
   );
 
