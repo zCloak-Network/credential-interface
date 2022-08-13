@@ -1,3 +1,5 @@
 import type { ICType } from '@kiltprotocol/types';
 
-export type CType = ICType;
+export interface CType extends ICType {
+  description?: string;
+}

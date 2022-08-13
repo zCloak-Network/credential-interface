@@ -11,7 +11,8 @@ const SubmitCType: React.FC<{
   title?: string;
   properties?: Record<string, { type: any }>;
   onDone: () => void;
-}> = ({ onDone, properties, title }) => {
+  description?: string;
+}> = ({ description, onDone, properties, title }) => {
   const [open, toggleOpen] = useToggle();
   const { keyring } = useKeystore();
   const { didUri } = useContext(DidsContext);
@@ -67,7 +68,7 @@ const SubmitCType: React.FC<{
               },
               {
                 label: 'Upload ctype',
-                exec: () => addCtype(ctype, attester?.uri)
+                exec: () => addCtype(ctype, attester?.uri, description)
               }
             ]}
             submitText="Submit ctype"

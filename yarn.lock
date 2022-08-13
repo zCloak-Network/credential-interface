@@ -1616,7 +1616,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.94
     "@mui/material": ^5.10.0
     "@mui/x-date-pickers": ^5.0.0-beta.4
-    "@zcloak/extension-core": ^0.0.2-26
+    "@zcloak/extension-core": ^0.1.2-0
   languageName: unknown
   linkType: soft
 
@@ -1647,7 +1647,7 @@ __metadata:
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
     "@credential/app-db": 0.12.2-6
-    "@zcloak/service": ^0.0.2-26
+    "@zcloak/service": ^0.1.2-0
     copy-to-clipboard: ^3.3.2
     dexie-react-hooks: ^1.1.1
     search-query-parser: ^1.6.0
@@ -4550,19 +4550,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/extension-core@npm:^0.0.2-26":
-  version: 0.0.2-26
-  resolution: "@zcloak/extension-core@npm:0.0.2-26"
+"@zcloak/extension-core@npm:^0.1.2-0":
+  version: 0.1.2-0
+  resolution: "@zcloak/extension-core@npm:0.1.2-0"
   dependencies:
     eventemitter3: ^4.0.7
-  checksum: 4cd28ee71d6d0c2aebfd2be0ce8f03e33dcf78d0a7afe1fab280ef552580506b0772510d8a5ed6cb494932a8eac3ae6b7ed6a4a5cde87df12cf7c4ac2eb5b76d
+  checksum: 9b9927ae7192961976e4c2a9302d2a0daef8a27ac017ca140aa8626e337be61b9c8a9b0de32976d5f09b74df320e9ac091866831f9c5b4caf425da953455c802
   languageName: node
   linkType: hard
 
-"@zcloak/service@npm:^0.0.2-26":
-  version: 0.0.2-26
-  resolution: "@zcloak/service@npm:0.0.2-26"
-  checksum: 6047041d6d9beb0e7e9cbaa51284631a5d12c3b295c167512c8e32cd560683f03a93c779d53ea3717a6a5d9a209496428b8233d8b530bc9e9b143ee58e900b6d
+"@zcloak/service@npm:^0.1.2-0":
+  version: 0.1.2-0
+  resolution: "@zcloak/service@npm:0.1.2-0"
+  checksum: 22b3961e049eb03e9f56ce4c3e02b3811f1a268ffc100c20bd010f2639aba8c375f355f99873073705e197b112e0ac33234ea00e96e044db3940be8b8242a8cb
   languageName: node
   linkType: hard
 
@@ -13636,7 +13636,7 @@ __metadata:
     "@types/react": ^18.0.17
     "@types/react-dom": ^18.0.6
     "@zcloak/dev": ^0.1.1
-    "@zcloak/service": ^0.0.2-26
+    "@zcloak/service": ^0.1.2-0
     concurrently: ^7.2.1
     devtron: ^1.4.0
     material-ui-popup-state: ^4.0.2

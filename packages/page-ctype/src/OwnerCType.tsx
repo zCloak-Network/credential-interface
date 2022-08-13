@@ -15,7 +15,7 @@ const OwnerCType: React.FC = () => {
 
   useEffect(() => {
     if (didUri) {
-      credentialApi.getUserCType(didUri).then((res) => {
+      credentialApi.getCreatedCtypes(didUri).then((res) => {
         setOwnCTypes(
           res.data.map((d) => CType.fromSchema(d.metadata as ICType['schema'], d.owner as DidUri))
         );

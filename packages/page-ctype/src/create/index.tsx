@@ -152,7 +152,12 @@ const CreateCType: React.FC = () => {
       </Container>
       <DialogActions>
         <Button variant="outlined">Save</Button>
-        <SubmitCType onDone={onDone} properties={properties} title={cTypeContent?.title} />
+        <SubmitCType
+          description={cTypeContent?.description}
+          onDone={onDone}
+          properties={properties}
+          title={cTypeContent?.title}
+        />
       </DialogActions>
     </Dialog>
   );
