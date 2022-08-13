@@ -192,10 +192,10 @@ const CredentialCell: React.FC<{
               onClick={(e) => e.stopPropagation()}
               spacing={1}
             >
-              <RetweetButton credential={credential} />
               <ImportButton credential={credential} />
               <ShareButton credential={credential} />
               <DownloadButton credential={credential} />
+              <RetweetButton credential={credential} />
             </Stack>
           )}
         </Wrapper>
