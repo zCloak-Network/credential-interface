@@ -2,6 +2,7 @@ import type { DidUri, Hash, ICType } from '@kiltprotocol/types';
 
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
+import { DidsContext } from '@credential/react-dids';
 import { useCTypes } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
 
@@ -16,13 +17,14 @@ export const CTypeContext = createContext<State>({} as State);
 
 const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { fetcher } = useContext(AppContext);
+  const { didUri } = useContext(DidsContext);
   const cTypeList = useCTypes();
 
   const importCType = useCallback(
     (hash: string) => {
-      const has = !!cTypeList?.find(({ hash: _hash }) => _hash === hash);
+      if (!didUri) return;
 
-      if (has) return;
+      credentialApi.importCtype(didUri, hash);
 
       credentialApi.getCType(hash).then((res) => {
         fetcher?.write.ctypes.put({
@@ -32,7 +34,7 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         });
       });
     },
-    [cTypeList, fetcher?.write.ctypes]
+    [didUri, fetcher?.write.ctypes]
   );
 
   const value = useMemo(() => {

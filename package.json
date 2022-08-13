@@ -67,7 +67,7 @@
     "@types/react": "^18.0.17",
     "@types/react-dom": "^18.0.6",
     "@zcloak/dev": "^0.1.1",
-    "@zcloak/service": "^0.0.2-26",
+    "@zcloak/service": "^0.1.2-0",
     "concurrently": "^7.2.1",
     "devtron": "^1.4.0",
     "material-ui-popup-state": "^4.0.2",
