@@ -113,7 +113,7 @@ const ShareModal: React.FC<{ credential: ICredential; open: boolean; onClose?: (
           ))}
         </Paper>
         <Button
-          disabled={!sender}
+          disabled={!sender || !receiver}
           fullWidth
           onClick={() => {
             if (sender) {

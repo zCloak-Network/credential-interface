@@ -42,7 +42,6 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   );
 
   useEffect(() => {
-    console.log(fetcher, address);
     if (!fetcher || !address) return;
 
     const onConnected = () => {

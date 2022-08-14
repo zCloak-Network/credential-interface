@@ -64,13 +64,14 @@ const InputDid: React.FC<Props> = ({ defaultValue, inputProps, onChange }) => {
     }
 
     return Did.FullDidDetails.fromChainInfo(didUri).then((didDetails) => {
-      setDidDetails(didDetails);
-
       if (!didDetails) {
-        setWarn(new Error("Can't found full did on chain, please make sure it is trusted"));
+        setDidDetails(null);
+        setError(new Error("Can't found full did on chain, please make sure it is trusted"));
       } else if (!didDetails.encryptionKey) {
-        setWarn(new Error('Input did does not set encryptionKey, you cannot send message to it'));
+        setDidDetails(null);
+        setError(new Error('Input did does not set encryptionKey, you cannot send message to it'));
       } else {
+        setDidDetails(didDetails);
         setWarn(null);
       }
     });
@@ -98,6 +99,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, inputProps, onChange }) => {
           }
         })
         .catch((error: Error) => {
+          setDidDetails(null);
           setError(error);
         })
         .finally(() => setFetching(false));

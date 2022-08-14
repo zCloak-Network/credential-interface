@@ -51,7 +51,7 @@ const SubmitClaim: React.FC<{
 
   return (
     <>
-      <Button onClick={toggleOpen} variant="contained">
+      <Button disabled={!attester || !ctype || !contents} onClick={toggleOpen} variant="contained">
         Submit
       </Button>
       <DidsModal

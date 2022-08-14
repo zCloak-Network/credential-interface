@@ -29,24 +29,28 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
   const [didDetails, setDidDetails] = useState<Did.FullDidDetails | null>(null);
   const [fetching, setFetching] = useState(false);
   const [error, setError] = useState<Error | null>(null);
-  const [warn, setWarn] = useState<Error | null>(null);
 
   useEffect(() => {
-    onChange?.(didDetails);
-  }, [didDetails, onChange]);
+    if (!error) {
+      onChange?.(didDetails);
+    } else {
+      onChange?.(null);
+    }
+  }, [didDetails, error, onChange]);
 
   const fetchDid = useCallback((didUri: DidUri) => {
     return Did.FullDidDetails.fromChainInfo(didUri).then((didDetails) => {
-      setDidDetails(didDetails);
-
       if (!didDetails) {
-        setWarn(new Error("Can't found full did on chain, please make sure attester is trusted"));
+        setDidDetails(null);
+        setError(new Error("Can't found full did on chain, please make sure attester is trusted"));
       } else if (!didDetails.encryptionKey) {
-        setWarn(
+        setDidDetails(null);
+        setError(
           new Error('Attester does not set encryptionKey, you cannot send message to attester')
         );
       } else {
-        setWarn(null);
+        setDidDetails(didDetails);
+        setError(null);
       }
     });
   }, []);
@@ -74,6 +78,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
           }
         })
         .catch((error: Error) => {
+          setDidDetails(null);
           setError(error);
         })
         .finally(() => setFetching(false));
@@ -130,9 +135,8 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
       options={options.current}
       renderInput={(params) => (
         <FormControl
-          color={error ? 'error' : warn ? 'warning' : undefined}
+          color={error ? 'error' : undefined}
           error={!!error}
-          focused={!!error || !!warn}
           fullWidth={params.fullWidth}
         >
           <InputLabel {...params.InputLabelProps} shrink>
@@ -152,11 +156,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
             }
             inputProps={params.inputProps}
           />
-          {error ? (
-            <FormHelperText>{error.message}</FormHelperText>
-          ) : warn ? (
-            <FormHelperText>{warn.message}</FormHelperText>
-          ) : null}
+          {error ? <FormHelperText>{error.message}</FormHelperText> : null}
         </FormControl>
       )}
       selectOnFocus
