@@ -14,10 +14,10 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.12.2-9",
+  "version": "0.13.0",
   "dependencies": {
-    "@credential/app-db": "0.12.2-9",
-    "@zcloak/service": "^0.1.2-1",
+    "@credential/app-db": "0.13.0",
+    "@zcloak/service": "^0.2.1",
     "copy-to-clipboard": "^3.3.2",
     "dexie-react-hooks": "^1.1.1",
     "search-query-parser": "^1.6.0"

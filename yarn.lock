@@ -1490,7 +1490,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/app-db@0.12.2-9, @credential/app-db@workspace:packages/app-db":
+"@credential/app-db@0.13.0, @credential/app-db@workspace:packages/app-db":
   version: 0.0.0-use.local
   resolution: "@credential/app-db@workspace:packages/app-db"
   dependencies:
@@ -1503,7 +1503,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/app-sync@workspace:packages/app-sync"
   dependencies:
-    "@credential/app-db": 0.12.2-9
+    "@credential/app-db": 0.13.0
     socket.io-client: ^4.5.1
   languageName: unknown
   linkType: soft
@@ -1557,7 +1557,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-account@workspace:packages/page-account"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
     file-saver: ^2.0.5
   languageName: unknown
   linkType: soft
@@ -1566,7 +1566,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-claims@workspace:packages/page-claims"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
   languageName: unknown
   linkType: soft
 
@@ -1574,7 +1574,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-ctype@workspace:packages/page-ctype"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
   languageName: unknown
   linkType: soft
 
@@ -1582,7 +1582,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-did@workspace:packages/page-did"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
   languageName: unknown
   linkType: soft
 
@@ -1590,7 +1590,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-message@workspace:packages/page-message"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
   languageName: unknown
   linkType: soft
 
@@ -1598,15 +1598,15 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-tasks@workspace:packages/page-tasks"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
   languageName: unknown
   linkType: soft
 
-"@credential/react-components@0.12.2-9, @credential/react-components@workspace:packages/react-components":
+"@credential/react-components@0.13.0, @credential/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@credential/react-components@workspace:packages/react-components"
   dependencies:
-    "@credential/react-hooks": 0.12.2-9
+    "@credential/react-hooks": 0.13.0
     "@date-io/date-fns": ^2.14.0
     "@date-io/moment": ^2.14.0
     "@emotion/react": ^11.10.0
@@ -1616,7 +1616,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.94
     "@mui/material": ^5.10.0
     "@mui/x-date-pickers": ^5.0.0-beta.4
-    "@zcloak/extension-core": ^0.1.2-1
+    "@zcloak/extension-core": ^0.2.1
   languageName: unknown
   linkType: soft
 
@@ -1624,37 +1624,37 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/react-ctype@workspace:packages/react-ctype"
   dependencies:
-    "@credential/react-components": 0.12.2-9
-    "@credential/react-dids": 0.12.2-9
+    "@credential/react-components": 0.13.0
+    "@credential/react-dids": 0.13.0
     "@mui/lab": ^5.0.0-alpha.94
     "@mui/material": ^5.10.0
   languageName: unknown
   linkType: soft
 
-"@credential/react-dids@0.12.2-9, @credential/react-dids@workspace:packages/react-dids":
+"@credential/react-dids@0.13.0, @credential/react-dids@workspace:packages/react-dids":
   version: 0.0.0-use.local
   resolution: "@credential/react-dids@workspace:packages/react-dids"
   dependencies:
-    "@credential/react-keystore": 0.12.2-9
+    "@credential/react-keystore": 0.13.0
     "@kiltprotocol/sdk-js": ^0.28.0
     "@mui/material": ^5.10.0
     "@polkadot/util": ^10.1.3
   languageName: unknown
   linkType: soft
 
-"@credential/react-hooks@0.12.2-9, @credential/react-hooks@workspace:packages/react-hooks":
+"@credential/react-hooks@0.13.0, @credential/react-hooks@workspace:packages/react-hooks":
   version: 0.0.0-use.local
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
-    "@credential/app-db": 0.12.2-9
-    "@zcloak/service": ^0.1.2-1
+    "@credential/app-db": 0.13.0
+    "@zcloak/service": ^0.2.1
     copy-to-clipboard: ^3.3.2
     dexie-react-hooks: ^1.1.1
     search-query-parser: ^1.6.0
   languageName: unknown
   linkType: soft
 
-"@credential/react-keystore@0.12.2-9, @credential/react-keystore@workspace:packages/react-keystore":
+"@credential/react-keystore@0.13.0, @credential/react-keystore@workspace:packages/react-keystore":
   version: 0.0.0-use.local
   resolution: "@credential/react-keystore@workspace:packages/react-keystore"
   dependencies:
@@ -4550,19 +4550,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/extension-core@npm:^0.1.2-1":
-  version: 0.1.2-1
-  resolution: "@zcloak/extension-core@npm:0.1.2-1"
+"@zcloak/extension-core@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@zcloak/extension-core@npm:0.2.1"
   dependencies:
     eventemitter3: ^4.0.7
-  checksum: 4a6ff1dc0412f00f9e370eb9979cdaade8febf8bfe8d8f50c6382f3a6d7a17255a4f3198cbc48d1fc4fb61cff001f6d3bcd83e0e2f342689738cbeacdd41ae88
+  checksum: ef5e0a0e97ba74b3fdfd745cbec1dc11ca47699f0cd7ffc44e69554c3882ceac54bed26ccbfd79f3540f51155f21a7b93809819c82e967aee415b4ad8bd7ab8a
   languageName: node
   linkType: hard
 
-"@zcloak/service@npm:^0.1.2-1":
-  version: 0.1.2-1
-  resolution: "@zcloak/service@npm:0.1.2-1"
-  checksum: 32616b47b9d45293685ddd847c45bf76b2f3bf27e985d65a6201a387664f6961253971d78d97aee9e2ff85827f3fba6001862244c9ebd6dec68d79a2459f705a
+"@zcloak/service@npm:^0.2.1":
+  version: 0.2.1
+  resolution: "@zcloak/service@npm:0.2.1"
+  checksum: b1e7544e6d7e4ea270666a6797ae54af11878f1f8a981f1dfd7393bd88ef6caad0bf597822ecd4c0cda99d2e156998ce521d6d3d631c8abd3ecfb23cc6de8cb4
   languageName: node
   linkType: hard
 
@@ -13636,7 +13636,7 @@ __metadata:
     "@types/react": ^18.0.17
     "@types/react-dom": ^18.0.6
     "@zcloak/dev": ^0.1.1
-    "@zcloak/service": ^0.1.2-1
+    "@zcloak/service": ^0.2.1
     concurrently: ^7.2.1
     devtron: ^1.4.0
     material-ui-popup-state: ^4.0.2

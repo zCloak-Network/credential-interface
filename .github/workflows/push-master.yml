@@ -64,7 +64,7 @@ jobs:
       uses: actions/deploy-pages@v1
 
   release:
-    if: "startsWith(github.event.head_commit.message, 'stable/deploy')"
+    if: "startsWith(github.event.head_commit.message, 'stable/deploy') | startsWith(github.event.head_commit.message, '[CI Skip] release/stable"
     runs-on: ubuntu-latest
     environment: master
     steps:

@@ -1,5 +1,14 @@
 # CHANGELOG
 
+## 0.13.1 Aug 10, 2022
+
+Changes:
+
+- official ctype display style
+- add `ACCEPT_CREDENTIAL` and `REJECT_CREDENTIAL` message type
+- message table style
+- retweet credential
+
 ## 0.12.1 Aug 10, 2022
 
 Changes:
