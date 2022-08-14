@@ -28,11 +28,11 @@ function validateAddress(address: string): boolean {
   }
 }
 
-export function getDidUri(uriOrAddress: string, didType: 'full' | 'light'): DidUri | null {
+export function getDidUri(uriOrAddress: string): DidUri | null {
   if (validateDidUri(uriOrAddress)) {
     return uriOrAddress;
   } else if (validateAddress(uriOrAddress)) {
-    return Did.Utils.getKiltDidFromIdentifier(uriOrAddress, didType);
+    return Did.Utils.getKiltDidFromIdentifier(uriOrAddress, 'full');
   } else {
     return null;
   }
@@ -41,13 +41,13 @@ export function getDidUri(uriOrAddress: string, didType: 'full' | 'light'): DidU
 interface Props {
   defaultValue?: string;
   inputProps?: OutlinedInputProps;
-  onChange?: (value: Did.FullDidDetails | null) => void;
+  onChange?: (value: Did.DidDetails | null) => void;
 }
 
 const InputDid: React.FC<Props> = ({ defaultValue, inputProps, onChange }) => {
   const [didOrAddress, setDidOrAddress] = useState(defaultValue);
   const [fetching, setFetching] = useState(false);
-  const [didDetails, setDidDetails] = useState<Did.FullDidDetails | null>(null);
+  const [didDetails, setDidDetails] = useState<Did.DidDetails | null>(null);
   const [error, setError] = useState<Error | null>(null);
   const [warn, setWarn] = useState<Error | null>(null);
 
@@ -56,6 +56,13 @@ const InputDid: React.FC<Props> = ({ defaultValue, inputProps, onChange }) => {
   }, [didDetails, onChange]);
 
   const fetchDid = useCallback((didUri: DidUri) => {
+    const { type } = Did.Utils.parseDidUri(didUri);
+
+    if (type === 'light') {
+      setWarn(new Error('This is a light did, please make sure it is trusted'));
+      setDidDetails(Did.LightDidDetails.fromUri(didUri));
+    }
+
     return Did.FullDidDetails.fromChainInfo(didUri).then((didDetails) => {
       setDidDetails(didDetails);
 
@@ -72,7 +79,7 @@ const InputDid: React.FC<Props> = ({ defaultValue, inputProps, onChange }) => {
   useEffect(() => {
     if (!didOrAddress) return;
 
-    const uri = getDidUri(didOrAddress, 'full');
+    const uri = getDidUri(didOrAddress);
 
     if (uri) {
       setError(null);
