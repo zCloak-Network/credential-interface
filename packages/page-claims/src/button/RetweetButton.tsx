@@ -3,30 +3,29 @@ import { IconButton, Stack, Tooltip, Typography } from '@mui/material';
 import React, { useCallback } from 'react';
 
 import { IconTwitter } from '@credential/app-config/icons';
+import { getW3Name } from '@credential/react-dids/getW3Name';
 
 const RetweetButton: React.FC<{ credential: ICredential; withText?: boolean }> = ({
   credential,
   withText = false
 }) => {
-  const retweet = useCallback(() => {
+  const retweet = useCallback(async () => {
     const search = new URLSearchParams();
+
+    const w3Name = await getW3Name(credential.attestation.owner);
 
     search.append(
       'text',
-      `My did: ${credential.request.claim.owner}
+      `I have claimed my @zCloakNetwork Membership Credential.
 
-Attester: ${credential.attestation.owner}
+      Credential type hash: ${credential.attestation.cTypeHash}
 
-Credential type hash: ${credential.attestation.cTypeHash}
+      Attester: ${w3Name || credential.attestation.owner}
 
-https://zkid.app`
+      Come get yours at: https://zkid.app`
     );
     window.open(`https://twitter.com/intent/tweet?${search}`);
-  }, [
-    credential.attestation.cTypeHash,
-    credential.attestation.owner,
-    credential.request.claim.owner
-  ]);
+  }, [credential.attestation.cTypeHash, credential.attestation.owner]);
 
   return (
     <Tooltip title="Retweet">
