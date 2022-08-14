@@ -10,7 +10,7 @@ import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 
 import MessageRow from './MessageRow';
-import Type from './Type';
+import MessageType from './MessageType';
 
 function MessageRequestAttestation({ message }: { message: Message<IRequestAttestation> }) {
   return (
@@ -41,7 +41,7 @@ function MessageRequestAttestation({ message }: { message: Message<IRequestAttes
           <CTypeName cTypeHash={message.body.content.requestForAttestation.claim.cTypeHash} />
         </TableCell>
         <TableCell>
-          <Type type={message.body.type} />
+          <MessageType message={message} />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </MessageRow>

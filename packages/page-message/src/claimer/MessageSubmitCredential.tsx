@@ -10,7 +10,7 @@ import { DidName } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import MessageRow from './MessageRow';
-import Type from './Type';
+import MessageType from './MessageType';
 
 function MessageSubmitCredential({ message }: { message: Message<ISubmitCredential> }) {
   const [open, toggleOpen] = useToggle();
@@ -43,7 +43,7 @@ function MessageSubmitCredential({ message }: { message: Message<ISubmitCredenti
           <CTypeName cTypeHash={credential.attestation.cTypeHash} />
         </TableCell>
         <TableCell>
-          <Type type={message.body.type} />
+          <MessageType message={message} />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </MessageRow>

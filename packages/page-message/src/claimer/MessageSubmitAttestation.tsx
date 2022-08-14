@@ -10,7 +10,7 @@ import { DidName } from '@credential/react-dids';
 import { useReferenceMessages, useToggle } from '@credential/react-hooks';
 
 import MessageRow from './MessageRow';
-import Type from './Type';
+import MessageType from './MessageType';
 
 function MessageSubmitAttestation({ message }: { message: Message<ISubmitAttestation> }) {
   const references = useReferenceMessages(message.references);
@@ -64,7 +64,7 @@ function MessageSubmitAttestation({ message }: { message: Message<ISubmitAttesta
           <CTypeName cTypeHash={message.body.content.attestation.cTypeHash} />
         </TableCell>
         <TableCell>
-          <Type type={message.body.type} />
+          <MessageType message={message} />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </MessageRow>
