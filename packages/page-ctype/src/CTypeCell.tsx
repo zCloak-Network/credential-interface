@@ -15,7 +15,7 @@ import React, { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
-import { BacCardImage, CatImage, CtypeOfficialImage } from '@credential/app-config/images';
+import { BacCardImage, CtypeOfficialImage } from '@credential/app-config/images';
 import { CType } from '@credential/app-db/ctype';
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
@@ -35,7 +35,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     },
 
     '.CTypeCell_title': {
-      transform: 'translate(60px, -56px) scale(0.8)'
+      transform: 'translate(60px, -62px) scale(0.8)'
     },
     '.CTypeCell_attester': {
       transform: 'translate(0, -50px)'
@@ -118,26 +118,12 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
         cType.type === 'official'
           ? {
               background: `url(${BacCardImage}) no-repeat, #fff`,
-              backgroundSize: '100% 66px',
-              backgroundPosition: 'left top'
+              backgroundSize: 'cover',
+              backgroundPosition: 'center'
             }
           : {}
       }
     >
-      {cType.type === 'official' && (
-        <Box
-          component="img"
-          src={CatImage}
-          sx={{
-            position: 'absolute',
-            right: 36,
-            bottom: 'calc(100% - 66px)',
-            width: '32%',
-            maxWidth: 130,
-            minWidth: 120
-          }}
-        />
-      )}
       {cType.type !== 'official' && (
         <IconButton
           onClick={handleDelete}
@@ -150,7 +136,7 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
       <Stack spacing={1.5}>
         <Box className="CTypeCell_logo">
           {cType.type === 'official' ? (
-            <Box component="img" src={CtypeOfficialImage} sx={{ width: 60, height: 60 }} />
+            <Box component="img" src={CtypeOfficialImage} sx={{ width: 50, height: 50 }} />
           ) : (
             <SvgIcon component={LogoCircleIcon} viewBox="0 0 60 60" />
           )}
@@ -160,16 +146,26 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
             {cType.schema.title}
           </Typography>
         </Tooltip>
-        <Box className="CTypeCell_attester">
-          <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
-            Attested by
-          </Typography>
-          <Tooltip placement="top" title={cType.owner ?? ''}>
-            <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-              <DidName value={cType.owner} />
+        <Stack className="CTypeCell_attester" direction="row" justifyContent="space-between">
+          <Box width="50%">
+            <Typography sx={({ palette }) => ({ color: palette.grey[600] })} variant="inherit">
+              Attested by
             </Typography>
-          </Tooltip>
-        </Box>
+            <Tooltip placement="top" title={cType.owner ?? ''}>
+              <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
+                <DidName value={cType.owner} />
+              </Typography>
+            </Tooltip>
+          </Box>
+          <Box width="50%">
+            <Typography sx={({ palette }) => ({ color: palette.grey[600] })} variant="inherit">
+              Hash
+            </Typography>
+            <Tooltip placement="top" title={cType.hash ?? ''}>
+              <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>{cType.hash}</Typography>
+            </Tooltip>
+          </Box>
+        </Stack>
         <Box className="CTypeCell_actions">
           <Button onClick={submitClaim} variant="contained">
             Create Claim
