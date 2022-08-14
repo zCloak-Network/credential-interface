@@ -1,4 +1,4 @@
-import type { DidUri, Hash, ICType } from '@kiltprotocol/types';
+import type { DidUri, Hash } from '@kiltprotocol/types';
 
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
@@ -23,21 +23,23 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const cTypeList = useCTypes();
 
   const importCType = useCallback(
-    (hash: Hash) => {
-      if (!didUri) return;
+    async (hash: Hash) => {
+      if (!didUri || !fetcher) return;
 
-      credentialApi.importCtype(didUri, hash);
-
-      credentialApi.getCType(hash).then((res) => {
-        fetcher?.write.ctypes.put({
-          schema: res.data.metadata as ICType['schema'],
-          owner: res.data.owner as DidUri,
-          hash: res.data.ctypeHash as Hash,
-          type: res.data.type
-        });
+      await credentialApi.importCtype(didUri, hash);
+      await credentialApi.getCtypes(didUri).then(({ data }) => {
+        fetcher.write.ctypes.batchPut(
+          data.map((d) => ({
+            hash: d.ctypeHash as Hash,
+            owner: d.owner as DidUri,
+            schema: d.metadata as CType['schema'],
+            description: d.description,
+            type: d.type
+          }))
+        );
       });
     },
-    [didUri, fetcher?.write.ctypes]
+    [didUri, fetcher]
   );
 
   const deleteCType = useCallback(
