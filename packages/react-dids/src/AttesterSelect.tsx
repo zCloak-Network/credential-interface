@@ -54,7 +54,7 @@ const AttesterSelect: React.FC<Props> = ({ defaultValue, disabled = false, onCha
   useEffect(() => {
     if (!attester) return;
 
-    const uri = getDidUri(attester, 'full');
+    const uri = getDidUri(attester);
 
     if (uri) {
       setError(null);

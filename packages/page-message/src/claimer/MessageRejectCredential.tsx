@@ -10,7 +10,7 @@ import { DidName } from '@credential/react-dids';
 import { useReferenceMessages, useToggle } from '@credential/react-hooks';
 
 import MessageRow from './MessageRow';
-import Type from './Type';
+import MessageType from './MessageType';
 
 function MessageRejectCredential({ message }: { message: Message<IRejectCredential> }) {
   const [open, toggleOpen] = useToggle();
@@ -54,7 +54,7 @@ function MessageRejectCredential({ message }: { message: Message<IRejectCredenti
           <CTypeName cTypeHash={message.body.content[0]} />
         </TableCell>
         <TableCell>
-          <Type type={message.body.type} />
+          <MessageType message={message} />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </MessageRow>

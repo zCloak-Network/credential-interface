@@ -1,4 +1,4 @@
-import { Hash, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
+import { Hash, IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
 import { alpha, Box, Button, Link, Stack, Typography } from '@mui/material';
 import moment from 'moment';
@@ -9,10 +9,10 @@ import { IconNewMessage, IconNewTask } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { CredentialModal, CTypeName } from '@credential/react-components';
 import { DidName } from '@credential/react-dids';
-import { useCredential, useToggle } from '@credential/react-hooks';
+import { useCredential, useReferenceMessages, useToggle } from '@credential/react-hooks';
 
 function Cell({
-  message: { body, createdAt, isRead, sender },
+  message: { body, createdAt, isRead, references, sender },
   onRead
 }: {
   message: Message<MessageBody>;
@@ -34,6 +34,8 @@ function Cell({
     () => (body.type === MessageBodyType.SUBMIT_CREDENTIAL ? body.content[0] : localCredential),
     [body.content, body.type, localCredential]
   );
+
+  const referenceMessages = useReferenceMessages(references);
 
   const [open, toggleOpen] = useToggle();
 
@@ -59,7 +61,7 @@ function Cell({
           <Link>
             <DidName value={sender} />
           </Link>{' '}
-          submit{' '}
+          approved{' '}
           <Link>
             <CTypeName cTypeHash={body.content.attestation.cTypeHash} />
           </Link>{' '}
@@ -67,12 +69,25 @@ function Cell({
         </>
       );
     } else if (body.type === MessageBodyType.REJECT_ATTESTATION) {
+      const requestMessage = referenceMessages.find<Message<IRequestAttestation>>(
+        (message): message is Message<IRequestAttestation> =>
+          message.body.type === MessageBodyType.REQUEST_ATTESTATION
+      );
+
       return (
         <>
           <Link>
             <DidName value={sender} />
           </Link>{' '}
-          reject attestation
+          rejected{' '}
+          {requestMessage ? (
+            <CTypeName
+              cTypeHash={requestMessage.body.content.requestForAttestation.claim.cTypeHash}
+            />
+          ) : (
+            ''
+          )}
+          attestation
         </>
       );
     } else if (body.type === MessageBodyType.ACCEPT_CREDENTIAL) {
@@ -105,7 +120,7 @@ function Cell({
         </Link>
       </>
     );
-  }, [body, sender]);
+  }, [body.content, body.type, referenceMessages, sender]);
 
   const handleClick = useCallback(() => {
     onRead();

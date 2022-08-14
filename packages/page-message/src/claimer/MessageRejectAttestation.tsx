@@ -10,7 +10,7 @@ import { DidName } from '@credential/react-dids';
 import { useReferenceMessages } from '@credential/react-hooks';
 
 import MessageRow from './MessageRow';
-import Type from './Type';
+import MessageType from './MessageType';
 
 function MessageRejectAttestation({ message }: { message: Message<IRejectAttestation> }) {
   const references = useReferenceMessages(message.references);
@@ -53,7 +53,7 @@ function MessageRejectAttestation({ message }: { message: Message<IRejectAttesta
           )}
         </TableCell>
         <TableCell>
-          <Type type={message.body.type} />
+          <MessageType message={message} />
         </TableCell>
         <TableCell>{moment(message.createdAt).format('YYYY-MM-DD HH:mm:ss')}</TableCell>
       </MessageRow>
