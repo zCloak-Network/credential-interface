@@ -1616,7 +1616,7 @@ __metadata:
     "@mui/lab": ^5.0.0-alpha.94
     "@mui/material": ^5.10.0
     "@mui/x-date-pickers": ^5.0.0-beta.4
-    "@zcloak/extension-core": ^0.1.2-0
+    "@zcloak/extension-core": ^0.1.2-1
   languageName: unknown
   linkType: soft
 
@@ -1647,7 +1647,7 @@ __metadata:
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
     "@credential/app-db": 0.12.2-7
-    "@zcloak/service": ^0.1.2-0
+    "@zcloak/service": ^0.1.2-1
     copy-to-clipboard: ^3.3.2
     dexie-react-hooks: ^1.1.1
     search-query-parser: ^1.6.0
@@ -4550,19 +4550,19 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/extension-core@npm:^0.1.2-0":
-  version: 0.1.2-0
-  resolution: "@zcloak/extension-core@npm:0.1.2-0"
+"@zcloak/extension-core@npm:^0.1.2-1":
+  version: 0.1.2-1
+  resolution: "@zcloak/extension-core@npm:0.1.2-1"
   dependencies:
     eventemitter3: ^4.0.7
-  checksum: 9b9927ae7192961976e4c2a9302d2a0daef8a27ac017ca140aa8626e337be61b9c8a9b0de32976d5f09b74df320e9ac091866831f9c5b4caf425da953455c802
+  checksum: 4a6ff1dc0412f00f9e370eb9979cdaade8febf8bfe8d8f50c6382f3a6d7a17255a4f3198cbc48d1fc4fb61cff001f6d3bcd83e0e2f342689738cbeacdd41ae88
   languageName: node
   linkType: hard
 
-"@zcloak/service@npm:^0.1.2-0":
-  version: 0.1.2-0
-  resolution: "@zcloak/service@npm:0.1.2-0"
-  checksum: 22b3961e049eb03e9f56ce4c3e02b3811f1a268ffc100c20bd010f2639aba8c375f355f99873073705e197b112e0ac33234ea00e96e044db3940be8b8242a8cb
+"@zcloak/service@npm:^0.1.2-1":
+  version: 0.1.2-1
+  resolution: "@zcloak/service@npm:0.1.2-1"
+  checksum: 32616b47b9d45293685ddd847c45bf76b2f3bf27e985d65a6201a387664f6961253971d78d97aee9e2ff85827f3fba6001862244c9ebd6dec68d79a2459f705a
   languageName: node
   linkType: hard
 
@@ -13636,7 +13636,7 @@ __metadata:
     "@types/react": ^18.0.17
     "@types/react-dom": ^18.0.6
     "@zcloak/dev": ^0.1.1
-    "@zcloak/service": ^0.1.2-0
+    "@zcloak/service": ^0.1.2-1
     concurrently: ^7.2.1
     devtron: ^1.4.0
     material-ui-popup-state: ^4.0.2

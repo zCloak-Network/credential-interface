@@ -1,5 +1,3 @@
-import type { ICType } from '@kiltprotocol/sdk-js';
-
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
 import {
   alpha,
@@ -17,6 +15,8 @@ import React, { useCallback, useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
+import { BacCardImage, CatImage, CtypeOfficialImage } from '@credential/app-config/images';
+import { CType } from '@credential/app-db/ctype';
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
@@ -26,6 +26,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   padding: theme.spacing(4),
   height: 240,
   borderRadius: theme.spacing(2.5),
+
   ':hover': {
     boxShadow: theme.shadows[3],
 
@@ -34,7 +35,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     },
 
     '.CTypeCell_title': {
-      transform: 'translate(60px, -62px) scale(0.8)'
+      transform: 'translate(60px, -56px) scale(0.8)'
     },
     '.CTypeCell_attester': {
       transform: 'translate(0, -50px)'
@@ -95,7 +96,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CTypeCell: React.FC<{ cType: ICType }> = ({ cType }) => {
+const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
   const navigate = useNavigate();
   const { deleteCType } = useContext(CTypeContext);
 
@@ -112,17 +113,47 @@ const CTypeCell: React.FC<{ cType: ICType }> = ({ cType }) => {
   }, [cType, navigate]);
 
   return (
-    <Wrapper>
-      <IconButton
-        onClick={handleDelete}
-        size="small"
-        sx={{ position: 'absolute', right: 10, top: 10 }}
-      >
-        <DeleteOutlineOutlinedIcon />
-      </IconButton>
+    <Wrapper
+      sx={
+        cType.type === 'official'
+          ? {
+              background: `url(${BacCardImage}) no-repeat, #fff`,
+              backgroundSize: '100% 66px',
+              backgroundPosition: 'left top'
+            }
+          : {}
+      }
+    >
+      {cType.type === 'official' && (
+        <Box
+          component="img"
+          src={CatImage}
+          sx={{
+            position: 'absolute',
+            right: 36,
+            bottom: 'calc(100% - 66px)',
+            width: '32%',
+            maxWidth: 130,
+            minWidth: 120
+          }}
+        />
+      )}
+      {cType.type !== 'official' && (
+        <IconButton
+          onClick={handleDelete}
+          size="small"
+          sx={{ position: 'absolute', right: 10, top: 10 }}
+        >
+          <DeleteOutlineOutlinedIcon />
+        </IconButton>
+      )}
       <Stack spacing={1.5}>
         <Box className="CTypeCell_logo">
-          <SvgIcon component={LogoCircleIcon} viewBox="0 0 60 60" />
+          {cType.type === 'official' ? (
+            <Box component="img" src={CtypeOfficialImage} sx={{ width: 60, height: 60 }} />
+          ) : (
+            <SvgIcon component={LogoCircleIcon} viewBox="0 0 60 60" />
+          )}
         </Box>
         <Tooltip title={cType.schema.title}>
           <Typography className="CTypeCell_title" variant="h3">

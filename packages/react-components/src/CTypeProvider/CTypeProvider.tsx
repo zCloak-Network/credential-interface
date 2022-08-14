@@ -10,7 +10,7 @@ import { credentialApi } from '@credential/react-hooks/api';
 import { AppContext } from '../AppProvider';
 
 interface State {
-  cTypeList: ICType[];
+  cTypeList: CType[];
   importCType: (hash: Hash) => void;
   deleteCType: (hash: Hash) => void;
 }
@@ -32,7 +32,8 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         fetcher?.write.ctypes.put({
           schema: res.data.metadata as ICType['schema'],
           owner: res.data.owner as DidUri,
-          hash: res.data.ctypeHash as Hash
+          hash: res.data.ctypeHash as Hash,
+          type: res.data.type
         });
       });
     },
@@ -51,7 +52,8 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
             hash: d.ctypeHash as Hash,
             owner: d.owner as DidUri,
             schema: d.metadata as CType['schema'],
-            description: d.description
+            description: d.description,
+            type: d.type
           }))
         );
       });

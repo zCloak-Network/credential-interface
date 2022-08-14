@@ -21,7 +21,8 @@ export function useCTypes() {
             hash: d.ctypeHash as Hash,
             owner: d.owner as DidUri,
             schema: d.metadata as CType['schema'],
-            description: d.description
+            description: d.description,
+            type: d.type
           }))
         );
       });
