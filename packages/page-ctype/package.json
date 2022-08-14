@@ -14,8 +14,8 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.13.0",
+  "version": "0.13.1",
   "dependencies": {
-    "@credential/react-keystore": "0.13.0"
+    "@credential/react-keystore": "0.13.1"
   }
 }
