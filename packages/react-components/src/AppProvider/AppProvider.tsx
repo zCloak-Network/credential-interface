@@ -28,41 +28,43 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { didDetails, isLocked } = useContext(DidsContext);
   const [unParsed, setUnParsed] = useState(0);
 
-  const fetcher = useMemo(() => {
-    if (didDetails && didDetails.encryptionKey) {
-      return new CredentialFetcher(
-        `${endpoint.name}-${didDetails.assembleKeyUri(didDetails.encryptionKey.id)}`
-      );
-    }
-
-    return null;
-  }, [didDetails]);
-
-  useEffect(() => {
-    return () => {
-      encryptedMessages.clear();
-      setUnParsed(0);
-    };
-  }, [didDetails]);
+  const { address, fetcher } = useMemo(
+    () => ({
+      address: didDetails?.identifier,
+      fetcher:
+        didDetails && didDetails.encryptionKey
+          ? new CredentialFetcher(
+              `${endpoint.name}-${didDetails.assembleKeyUri(didDetails.encryptionKey.id)}`
+            )
+          : null
+    }),
+    [didDetails]
+  );
 
   useEffect(() => {
-    if (fetcher && didDetails) {
+    console.log(fetcher, address);
+    if (!fetcher || !address) return;
+
+    const onConnected = () => {
       fetcher.query.messages.lastSync().then((message) => {
-        let startId: number;
-
-        if (!message?.syncId) {
-          startId = 0;
-        } else {
-          startId = message.syncId;
-        }
-
-        syncProvider.subscribe(didDetails, startId, (messages) => {
+        syncProvider.open();
+        syncProvider.subscribe(address, !message?.syncId ? 0 : message.syncId, (messages) => {
           messages.forEach((message) => encryptedMessages.set(message.id, message));
           setUnParsed(encryptedMessages.size);
         });
       });
-    }
-  }, [fetcher, didDetails]);
+    };
+
+    syncProvider.on('connect', onConnected);
+    syncProvider.open();
+
+    return () => {
+      encryptedMessages.clear();
+      setUnParsed(0);
+      syncProvider.off('connect', onConnected);
+      syncProvider.close();
+    };
+  }, [address, fetcher]);
 
   const parse = useCallback(async () => {
     if (didDetails && encryptedMessages.size > 0) {
