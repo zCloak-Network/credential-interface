@@ -1,5 +1,13 @@
 # CHANGELOG
 
+## 0.14.1 Aug 14, 2022
+
+Changes:
+
+- select attester and input did handle error
+- update retweet content
+- websocket reconnect
+
 ## 0.13.1 Aug 10, 2022
 
 Changes:
