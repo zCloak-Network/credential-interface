@@ -1,6 +1,7 @@
 import type { DidUri, Hash, IClaimContents } from '@kiltprotocol/sdk-js';
 
 import {
+  alpha,
   Box,
   Divider,
   lighten,
@@ -8,7 +9,6 @@ import {
   Paper,
   Stack,
   SvgIcon,
-  Switch,
   Typography
 } from '@mui/material';
 import React, { useMemo } from 'react';
@@ -43,7 +43,22 @@ const Item: React.FC<{
     if (['string', 'number', 'undefined'].includes(type)) {
       return <>{value}</>;
     } else if (typeof value === 'boolean') {
-      return <Switch checked={value} disabled />;
+      return (
+        <Box
+          sx={({ palette }) => ({
+            background: alpha(value ? palette.success.main : palette.error.main, 0.2),
+            color: value ? palette.success.main : palette.error.main,
+            borderRadius: 1,
+            width: 92,
+            height: 28,
+            display: 'flex',
+            alignItems: 'center',
+            justifyContent: 'center'
+          })}
+        >
+          {value ? 'True' : 'False'}
+        </Box>
+      );
     } else {
       return <>{JSON.stringify(value)}</>;
     }

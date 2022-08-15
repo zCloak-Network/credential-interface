@@ -18,11 +18,11 @@ const RetweetButton: React.FC<{ credential: ICredential; withText?: boolean }> =
       'text',
       `I have claimed my @zCloakNetwork Membership Credential.
 
-      Credential type hash: ${credential.attestation.cTypeHash}
+Credential type hash: ${credential.attestation.cTypeHash}
 
-      Attester: ${w3Name || credential.attestation.owner}
+Attester: ${w3Name || credential.attestation.owner}
 
-      Come get yours at: https://zkid.app`
+Come get yours at: https://zkid.app`
     );
     window.open(`https://twitter.com/intent/tweet?${search}`);
   }, [credential.attestation.cTypeHash, credential.attestation.owner]);

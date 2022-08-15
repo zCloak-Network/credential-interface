@@ -6,7 +6,7 @@ import React, { createContext, useCallback, useEffect, useMemo, useState } from 
 
 import { endpoint } from '@credential/app-config/endpoints';
 import UnlockModal from '@credential/react-dids/UnlockModal';
-import { useLocalStorage } from '@credential/react-hooks';
+import { useLocalStorage, useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 import { DidKeys$Json, DidsState } from './types';
@@ -22,12 +22,16 @@ init({
   address: endpoint.endpoint
 });
 
+let unlockPromiseResolve: () => void;
+let unlockPromiseReject: (error: Error) => void;
+
 const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [isReady, setIsReady] = useState(false);
-  const { addKeystore, keyring, queueUnlock, restoreKeystore, setQueueUnlock } = useKeystore();
+  const { addKeystore, keyring, restoreKeystore } = useKeystore();
   const [didUri, setDidUri, removeDidUri] = useLocalStorage<DidUri>(storageKey);
   const [isLocked, setIsLocked] = useState(true);
   const [needUpgrade, setNeedUpgrade] = useState(false);
+  const [unlockOpen, toggleUnlock] = useToggle();
   const didDetails = useDidDetails(didUri);
 
   const tryFetchFullDid = useCallback(async () => {
@@ -144,6 +148,8 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   );
 
   const logout = useCallback(() => {
+    setIsLocked(true);
+
     if (didDetails) {
       didDetails.getKeys().forEach((key) => {
         const account = keyring.getAccount(key.publicKey);
@@ -170,6 +176,14 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
     [keyring]
   );
 
+  const unlock = useCallback(() => {
+    return new Promise<void>((resolve, reject) => {
+      unlockPromiseResolve = resolve;
+      unlockPromiseReject = reject;
+      toggleUnlock();
+    });
+  }, [toggleUnlock]);
+
   useEffect(() => {
     connect().then((_blockchain) => {
       blockchain = _blockchain;
@@ -191,6 +205,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       backupDid,
       logout,
       unlockDid,
+      unlock,
       tryFetchFullDid
     }),
     [
@@ -205,30 +220,24 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
       needUpgrade,
       restoreDid,
       unlockDid,
+      unlock,
       tryFetchFullDid
     ]
   );
 
-  useEffect(() => {
-    if (!isLocked && queueUnlock.length > 0) {
-      queueUnlock.forEach((queue) => queue.callback(null));
-      setQueueUnlock([]);
-    }
-  }, [isLocked, queueUnlock, setQueueUnlock]);
-
   return (
     <DidsContext.Provider value={value}>
       {children}
-      {isLocked && queueUnlock.length > 0 && (
+      {unlockOpen && (
         <UnlockModal
           did={didUri}
           onClose={() => {
-            setQueueUnlock(queueUnlock.slice(1));
-            queueUnlock[0].callback(new Error('User reject'));
+            unlockPromiseReject(new Error('User reject'));
+            toggleUnlock();
           }}
           onUnlock={() => {
-            setQueueUnlock(queueUnlock.slice(1));
-            queueUnlock[0].callback(null);
+            unlockPromiseResolve();
+            toggleUnlock();
           }}
           open
           unlockDid={unlockDid}

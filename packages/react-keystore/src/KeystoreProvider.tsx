@@ -5,13 +5,10 @@ import { EncryptedJson } from '@polkadot/util-crypto/types';
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';
 
 import { Keyring } from './Keyring';
-import { QueueCallbackInput } from './types';
 
 interface KeystoreState {
   keyring: Keyring;
   allAccounts: KeyringAddress[];
-  queueUnlock: QueueCallbackInput[];
-  setQueueUnlock: (queue: QueueCallbackInput[]) => void;
   addKeystore: (mnemonic: string, password: string) => [KeyringPair$Json, KeyringPair$Json];
   restoreKeystore: (json: EncryptedJson | KeyringPair$Json[], password: string) => void;
 }
@@ -20,31 +17,10 @@ export const KeystoreContext = createContext<KeystoreState>({} as KeystoreState)
 
 export type ACCOUNT_TYPE = 'attester' | 'claimer';
 
-let queueCallback: (input: QueueCallbackInput) => void;
-
-export function unlock(): Promise<void> {
-  return new Promise((resolve, reject) => {
-    queueCallback({
-      callback: (error: Error | null) => {
-        if (error) {
-          reject(error);
-        } else {
-          resolve();
-        }
-      }
-    });
-  });
-}
-
-const keyring = new Keyring(unlock);
+const keyring = new Keyring();
 
 const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const [allAccounts, setAllAccounts] = useState<KeyringAddress[]>(keyring.getAccounts());
-  const [queueUnlock, setQueueUnlock] = useState<QueueCallbackInput[]>([]);
-
-  queueCallback = useCallback((input: QueueCallbackInput) => {
-    setQueueUnlock((queue) => [...queue, input]);
-  }, []);
 
   useEffect(() => {
     const subscription = keyring.accounts.subject.subscribe(() => {
@@ -72,8 +48,6 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
         json.forEach((j) => {
           const pair = keyring.createFromJson(j);
 
-          pair.unlock(password);
-          pair.lock();
           keyring.addPair(pair, password);
         });
       } else {
@@ -88,8 +62,6 @@ const KeystoreProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) =
       value={{
         allAccounts,
         keyring,
-        queueUnlock,
-        setQueueUnlock,
         addKeystore,
         restoreKeystore
       }}

@@ -15,10 +15,7 @@ import { KeypairType, KiltKeystore } from './types';
 const supportedAlgs = { ...EncryptionAlgorithms, ...SigningAlgorithms };
 
 export class Keyring extends PolkadotKeyring implements KiltKeystore {
-  #unlock: () => Promise<void>;
-
   constructor(
-    unlock: () => Promise<void>,
     injected?: {
       address: string;
       meta: KeyringJson$Meta;
@@ -32,7 +29,6 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
       },
       injected
     );
-    this.#unlock = unlock;
   }
 
   public supportedAlgs(): Promise<Set<SigningAlgorithms | EncryptionAlgorithms>> {
@@ -46,11 +42,9 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
   }: KeystoreSigningData<A>): Promise<ResponseData<A>> {
     const pair = this.getPair(publicKey);
 
-    await this.#unlock();
-
     const signature = pair.sign(data, { withType: false });
 
-    return { alg, data: signature };
+    return Promise.resolve({ alg, data: signature });
   }
 
   public async encrypt<A extends 'x25519-xsalsa20-poly1305'>({
@@ -63,12 +57,10 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
   > {
     const pair = this.getPair(publicKey);
 
-    await this.#unlock();
-
     const nonce = randomAsU8a(24);
     const sealed = pair.encryptMessage(data, peerPublicKey, nonce);
 
-    return { data: sealed, alg, nonce };
+    return Promise.resolve({ data: sealed, alg, nonce });
   }
 
   public async decrypt<A extends 'x25519-xsalsa20-poly1305'>({
@@ -83,8 +75,6 @@ export class Keyring extends PolkadotKeyring implements KiltKeystore {
   }): Promise<ResponseData<A>> {
     assert(nonce.length === 24, 'Nonce length error, expect to 24');
     const pair = this.getPair(publicKey);
-
-    await this.#unlock();
 
     const decrypted = pair.decryptMessage(data, peerPublicKey);
 
