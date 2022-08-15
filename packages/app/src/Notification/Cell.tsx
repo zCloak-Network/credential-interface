@@ -81,12 +81,14 @@ function Cell({
           </Link>{' '}
           rejected{' '}
           {requestMessage ? (
-            <CTypeName
-              cTypeHash={requestMessage.body.content.requestForAttestation.claim.cTypeHash}
-            />
+            <Link>
+              <CTypeName
+                cTypeHash={requestMessage.body.content.requestForAttestation.claim.cTypeHash}
+              />
+            </Link>
           ) : (
             ''
-          )}
+          )}{' '}
           attestation
         </>
       );
@@ -107,7 +109,11 @@ function Cell({
           <Link>
             <DidName value={sender} />
           </Link>{' '}
-          reject <CTypeName cTypeHash={body.content[0]} /> credential type.
+          reject{' '}
+          <Link>
+            <CTypeName cTypeHash={body.content[0]} />
+          </Link>{' '}
+          credential type.
         </>
       );
     }

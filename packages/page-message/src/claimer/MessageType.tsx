@@ -47,16 +47,16 @@ function MessageType({ message }: { message: IMessage }) {
       case MessageBodyType.SUBMIT_ATTESTATION:
         return message.body.content.attestation.revoked
           ? 'Revoke Attestation'
-          : 'Approved Attestation';
+          : 'Approve Attestation';
 
       case MessageBodyType.ACCEPT_CREDENTIAL:
-        return 'Accepted Credential';
+        return 'Accept Credential';
 
       case MessageBodyType.REJECT_ATTESTATION:
-        return 'Rejected Attestation';
+        return 'Reject Attestation';
 
       case MessageBodyType.REJECT_CREDENTIAL:
-        return 'Rejected Credential';
+        return 'Reject Credential';
 
       case MessageBodyType.REQUEST_ATTESTATION:
         return 'Request Attestation';
