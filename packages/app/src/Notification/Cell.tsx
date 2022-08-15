@@ -99,7 +99,7 @@ function Cell({
           <Link>
             <DidName value={sender} />
           </Link>{' '}
-          accept <CTypeName cTypeHash={body.content[0]} /> credential type.
+          accepted <CTypeName cTypeHash={body.content[0]} /> credential type.
         </>
       );
     } else if (body.type === MessageBodyType.REJECT_CREDENTIAL) {
@@ -109,7 +109,7 @@ function Cell({
           <Link>
             <DidName value={sender} />
           </Link>{' '}
-          reject{' '}
+          rejected{' '}
           <Link>
             <CTypeName cTypeHash={body.content[0]} />
           </Link>{' '}
