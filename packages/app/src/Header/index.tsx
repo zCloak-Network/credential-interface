@@ -1,4 +1,5 @@
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
+import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
 import { alpha, Badge, Box, Chip, IconButton, Link, Stack } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
@@ -54,20 +55,40 @@ function Header({
 
   return (
     <>
+      <Box
+        fontSize="small"
+        sx={({ palette }) => ({
+          zIndex: 999,
+          position: 'fixed',
+          top: 0,
+          width: '100%',
+          height: 30,
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          background: palette.warning.main,
+          color: palette.common.white
+        })}
+      >
+        <ReportProblemOutlinedIcon fontSize="small" sx={{ marginRight: 2 }} />
+        Please backup your DID account and your credential file before logging out and do not clear
+        local storage for the duration of this event.
+      </Box>
       <Stack
         alignItems="center"
         direction="row"
         height={70}
         justifyContent="space-between"
-        position="fixed"
         px={5}
         sx={({ palette }) => ({
+          zIndex: 999,
+          position: 'fixed',
+          top: 30,
+          width: '100%',
           background: palette.common.white,
           borderBottom: '1px solid',
           borderBottomColor: alpha(palette.primary.main, 0.1)
         })}
-        width="100%"
-        zIndex={999}
       >
         <Stack alignItems="center" direction="row" spacing={2}>
           <Logo />

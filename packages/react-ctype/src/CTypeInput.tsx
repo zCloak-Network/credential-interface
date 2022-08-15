@@ -20,7 +20,7 @@ const CTypeInput: React.FC<ItemProps> = ({
       <OutlinedInput
         defaultValue={defaultValue}
         disabled={disabled}
-        onChange={(e) => onChange?.(name, e.target.value)}
+        onChange={(e) => onChange?.(name, e.target.value.trim())}
         placeholder={`Please input ${type}`}
       />
     </FormControl>

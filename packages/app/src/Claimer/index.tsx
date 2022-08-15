@@ -61,7 +61,7 @@ const Claimer: React.FC = () => {
         minHeight="100vh"
         pl={open ? '220px' : '93px'}
         pr={0}
-        pt={'70px'}
+        pt={'100px'}
         sx={{
           position: 'relative',
           boxSizing: 'border-box',
