@@ -11,10 +11,15 @@ const CType: React.FC = () => {
 
   return (
     <Box>
-      <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Typography mb={3} variant="h2">
-          Credential type
-        </Typography>
+      <Box
+        sx={{
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'space-between',
+          marginBottom: 3
+        }}
+      >
+        <Typography variant="h2">Credential type</Typography>
         <ImportCType />
       </Box>
       <CTypeList list={cTypeList} />

@@ -1,5 +1,5 @@
-import { Box, styled } from '@mui/material';
-import React from 'react';
+import { Box, useMediaQuery, useTheme } from '@mui/material';
+import React, { useMemo } from 'react';
 import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
 
 import PageAccount from '@credential/page-account';
@@ -25,9 +25,42 @@ const NoMatch: React.FC<{ to: string }> = ({ to }) => {
   return <Navigate replace to={to} />;
 };
 
-const Container = styled(Box)(() => ({
-  paddingBottom: '44px'
-}));
+function Container({
+  children,
+  hasPaddingTop,
+  hasPaddingX
+}: {
+  hasPaddingTop?: boolean;
+  hasPaddingX?: boolean;
+  children: React.ReactNode;
+}) {
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const upSm = useMediaQuery(theme.breakpoints.up('sm'));
+
+  const paddingT = useMemo(
+    () =>
+      hasPaddingTop ? (upMd ? theme.spacing(4) : upSm ? theme.spacing(3) : theme.spacing(2)) : 0,
+    [hasPaddingTop, theme, upMd, upSm]
+  );
+  const paddingH = useMemo(
+    () =>
+      hasPaddingX ? (upMd ? theme.spacing(4) : upSm ? theme.spacing(3) : theme.spacing(2)) : 0,
+    [hasPaddingX, theme, upMd, upSm]
+  );
+
+  return (
+    <Box
+      sx={{
+        paddingBottom: '44px',
+        paddingTop: paddingT,
+        paddingX: paddingH
+      }}
+    >
+      {children}
+    </Box>
+  );
+}
 
 const createClaimerApp = () => (
   <Route
@@ -50,7 +83,7 @@ const createClaimerApp = () => (
     </Route>
     <Route
       element={
-        <Container p={4}>
+        <Container hasPaddingTop hasPaddingX>
           <PageCType />
         </Container>
       }
@@ -58,7 +91,7 @@ const createClaimerApp = () => (
     />
     <Route
       element={
-        <Container p={4}>
+        <Container hasPaddingTop hasPaddingX>
           <PageClaims />
         </Container>
       }
@@ -66,7 +99,7 @@ const createClaimerApp = () => (
     />
     <Route
       element={
-        <Container p={4}>
+        <Container hasPaddingTop hasPaddingX>
           <PageMessage />
         </Container>
       }
@@ -89,7 +122,7 @@ const createAttesterApp = () => (
     <Route path="did">
       <Route
         element={
-          <Container paddingTop={3}>
+          <Container hasPaddingTop>
             <PageUpgradeFullDid />
           </Container>
         }
@@ -107,7 +140,7 @@ const createAttesterApp = () => (
     <Route path="ctypes">
       <Route
         element={
-          <Container paddingTop={3}>
+          <Container hasPaddingTop>
             <PageOwnerCType />
           </Container>
         }
@@ -115,7 +148,7 @@ const createAttesterApp = () => (
       />
       <Route
         element={
-          <Container paddingTop={3}>
+          <Container hasPaddingTop>
             <PageCreateCType />
           </Container>
         }
@@ -125,7 +158,7 @@ const createAttesterApp = () => (
     <Route path="tasks">
       <Route
         element={
-          <Container paddingTop={3}>
+          <Container hasPaddingTop>
             <PageTasks />
           </Container>
         }
@@ -133,7 +166,7 @@ const createAttesterApp = () => (
       />
       <Route
         element={
-          <Container paddingTop={3}>
+          <Container hasPaddingTop>
             <PageRequestDetails />
           </Container>
         }
@@ -142,7 +175,7 @@ const createAttesterApp = () => (
     </Route>
     <Route
       element={
-        <Container paddingTop={3}>
+        <Container hasPaddingTop>
           <PageAttesterMessage />
         </Container>
       }
