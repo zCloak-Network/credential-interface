@@ -20,6 +20,7 @@
     "@zcloak/service": "^0.2.1",
     "copy-to-clipboard": "^3.3.2",
     "dexie-react-hooks": "^1.1.1",
-    "search-query-parser": "^1.6.0"
+    "search-query-parser": "^1.6.0",
+    "ua-parser-js": "^1.0.2"
   }
 }

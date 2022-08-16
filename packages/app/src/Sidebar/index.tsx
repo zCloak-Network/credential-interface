@@ -120,12 +120,12 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
   const navigate = useNavigate();
   const theme = useTheme();
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const downSm = useMediaQuery(theme.breakpoints.down('sm'));
   const Drawer = useMemo(() => (upMd ? DrawerMd : DrawerSm), [upMd]);
 
   return (
     <Drawer
       accountType={accountType}
-      keepMounted
       onClose={toggleOpen}
       open={open}
       variant={upMd ? 'permanent' : 'temporary'}
@@ -135,7 +135,7 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
           <IconButton onClick={toggleOpen}>
             <CloseIcon />
           </IconButton>
-          <Network />
+          {downSm && <Network />}
         </DrawerHeader>
       )}
       <List>
