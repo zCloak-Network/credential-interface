@@ -1,5 +1,4 @@
 import { ICredential } from '@kiltprotocol/sdk-js';
-import { Box, Stack, Typography } from '@mui/material';
 import React, { useMemo } from 'react';
 
 import {
@@ -35,18 +34,13 @@ const CredentialModal: React.FC<Props> = ({ credential, onClose }) => {
   );
 
   return (
-    <FullScreenDialog onClose={onClose} open>
-      <FullScreenDialogHeader>
-        <Stack alignItems="center" direction="row" spacing={3}>
-          <IdentityIcon diameter={50} value={owner} />
-          <Box sx={({ palette }) => ({ color: palette.common.white })}>
-            <Typography variant="h4">
-              <DidName value={owner} />
-            </Typography>
-            <Typography variant="inherit">{rootHash}</Typography>
-          </Box>
-        </Stack>
-      </FullScreenDialogHeader>
+    <FullScreenDialog open>
+      <FullScreenDialogHeader
+        desc={rootHash}
+        icon={<IdentityIcon diameter={50} value={owner} />}
+        onClose={onClose}
+        title={<DidName value={owner} />}
+      />
       <FullScreenDialogContent>
         <CredentialContents
           attester={attester}

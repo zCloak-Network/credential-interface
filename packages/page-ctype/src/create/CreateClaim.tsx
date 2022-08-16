@@ -1,6 +1,6 @@
 import type { Did } from '@kiltprotocol/sdk-js';
 
-import { Box, Button, Stack, SvgIcon, Typography } from '@mui/material';
+import { Box, Button, SvgIcon, Typography } from '@mui/material';
 import React, { useCallback, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
@@ -32,16 +32,13 @@ function CreateClaim({ ctype }: { ctype: CType }) {
       <Button onClick={toggleOpen} variant="contained">
         Create Claim
       </Button>
-      <FullScreenDialog onClose={toggleOpen} open={open}>
-        <FullScreenDialogHeader>
-          <Stack alignItems="center" direction="row" spacing={3}>
-            <SvgIcon component={LogoCircleIcon} sx={{ fontSize: 50 }} viewBox="0 0 60 60" />
-            <Box sx={({ palette }) => ({ color: palette.common.white })}>
-              <Typography variant="h4">{ctype.schema.title}</Typography>
-              <Typography variant="inherit">{ctype.owner}</Typography>
-            </Box>
-          </Stack>
-        </FullScreenDialogHeader>
+      <FullScreenDialog open={open}>
+        <FullScreenDialogHeader
+          desc={ctype.hash}
+          icon={<SvgIcon component={LogoCircleIcon} sx={{ fontSize: 50 }} viewBox="0 0 60 60" />}
+          onClose={toggleOpen}
+          title={ctype.schema.title}
+        />
         <FullScreenDialogContent>
           <Typography mb={4} textAlign="center" variant="h2">
             Create Claim

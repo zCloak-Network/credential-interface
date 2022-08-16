@@ -37,7 +37,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
   grey: {
     50: '#fafafa',
     100: '#f5f5f5',
-    200: '#eeeeee',
+    200: '#e6e6e6',
     300: '#d5d5d5',
     400: '#bdbdbd',
     500: '#999999',

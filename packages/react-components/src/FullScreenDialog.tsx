@@ -1,17 +1,15 @@
-import CloseIcon from '@mui/icons-material/Close';
-import { Container, IconButton, Modal } from '@mui/material';
+import { Box, Container, Modal, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
 interface Props {
-  open?: boolean;
-  onClose?: () => void;
+  children: React.ReactNode;
+  open: boolean;
 }
 
-const FullScreenDialog: React.FC<React.PropsWithChildren<Props>> = ({
-  children,
-  onClose,
-  open = false
-}) => {
+function FullScreenDialog({ children, open }: Props) {
+  const theme = useTheme();
+  const downMd = useMediaQuery(theme.breakpoints.down('md'));
+
   return (
     <Modal
       open={open}
@@ -19,24 +17,26 @@ const FullScreenDialog: React.FC<React.PropsWithChildren<Props>> = ({
         width: '100%',
 
         '.MuiBackdrop-root': {
-          background: 'rgba(0, 0, 0, 0.9)'
+          background: downMd ? '#fff' : 'rgba(0, 0, 0, 0.9)'
         }
       }}
     >
-      <>
-        {onClose && (
-          <IconButton
-            onClick={onClose}
-            sx={{
-              color: '#fff',
-              position: 'fixed',
-              right: '20px',
-              top: '20px'
-            }}
-          >
-            <CloseIcon />
-          </IconButton>
-        )}
+      {downMd ? (
+        <Box
+          sx={() => ({
+            position: 'absolute',
+            bottom: 0,
+            top: 0,
+            left: 0,
+            right: 0,
+            margin: 'auto',
+            display: 'flex',
+            flexDirection: 'column'
+          })}
+        >
+          {children}
+        </Box>
+      ) : (
         <Container
           maxWidth="lg"
           sx={({ spacing }) => ({
@@ -52,9 +52,9 @@ const FullScreenDialog: React.FC<React.PropsWithChildren<Props>> = ({
         >
           {children}
         </Container>
-      </>
+      )}
     </Modal>
   );
-};
+}
 
 export default React.memo<typeof FullScreenDialog>(FullScreenDialog);
