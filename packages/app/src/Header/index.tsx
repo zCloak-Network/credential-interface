@@ -56,11 +56,13 @@ function Logo() {
 function Header({
   isAttester = false,
   showUpgrade = false,
+  toggleOpen,
   unreads
 }: {
   isAttester?: boolean;
   showUpgrade?: boolean;
   unreads: UseNotification;
+  toggleOpen: () => void;
 }) {
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
@@ -113,7 +115,7 @@ function Header({
       >
         <Stack alignItems="center" direction="row" spacing={upMd ? 2 : 1}>
           {!upMd && (
-            <IconButton size="small">
+            <IconButton onClick={toggleOpen} size="small">
               <MenuIcon />
             </IconButton>
           )}

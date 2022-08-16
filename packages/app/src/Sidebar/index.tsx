@@ -1,3 +1,4 @@
+import CloseIcon from '@mui/icons-material/Close';
 import KeyboardArrowLeftRoundedIcon from '@mui/icons-material/KeyboardArrowLeftRounded';
 import KeyboardArrowRightRoundedIcon from '@mui/icons-material/KeyboardArrowRightRounded';
 import {
@@ -5,6 +6,7 @@ import {
   CSSObject,
   Drawer as MuiDrawer,
   Fab,
+  IconButton,
   lighten,
   List,
   ListItem,
@@ -13,12 +15,16 @@ import {
   ListItemText,
   Stack,
   styled,
-  Theme
+  Theme,
+  useMediaQuery,
+  useTheme
 } from '@mui/material';
-import React from 'react';
+import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
+
+import Network from '../Network';
 
 interface Item {
   to: string;
@@ -58,7 +64,7 @@ const closedMixin = (theme: Theme): CSSObject => ({
   overflow: 'visible'
 });
 
-const Drawer = styled(MuiDrawer, {
+const DrawerMd = styled(MuiDrawer, {
   shouldForwardProp: (prop) => !['open', 'accountType'].includes(prop as string)
 })<{
   accountType: ACCOUNT_TYPE;
@@ -71,7 +77,7 @@ const Drawer = styled(MuiDrawer, {
     background:
       accountType === 'attester' ? theme.palette.common.black : theme.palette.common.white,
     zIndex: 99,
-    padding: '130px 16px 0 16px',
+    padding: '130px 16px 0',
     borderRight: 'none',
     ...(open ? openedMixin(theme) : closedMixin(theme))
   },
@@ -83,11 +89,55 @@ const Drawer = styled(MuiDrawer, {
   })
 }));
 
+const DrawerSm = styled(MuiDrawer, {
+  shouldForwardProp: (prop) => !['accountType'].includes(prop as string)
+})<{
+  accountType: ACCOUNT_TYPE;
+}>(({ accountType, theme }) => ({
+  width: 240,
+  flexShrink: 0,
+  whiteSpace: 'nowrap',
+  boxSizing: 'border-box',
+  '& .MuiDrawer-paper': {
+    background:
+      accountType === 'attester' ? theme.palette.common.black : theme.palette.common.white,
+    zIndex: 99,
+    padding: '16px',
+    borderRight: 'none'
+  }
+}));
+
+const DrawerHeader = styled('div')(({ theme }) => ({
+  display: 'flex',
+  alignItems: 'center',
+  padding: 0,
+  marginBottom: theme.spacing(2),
+  ...theme.mixins.toolbar,
+  justifyContent: 'space-between'
+}));
+
 const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
   const navigate = useNavigate();
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const Drawer = useMemo(() => (upMd ? DrawerMd : DrawerSm), [upMd]);
 
   return (
-    <Drawer accountType={accountType} open={open} variant="permanent">
+    <Drawer
+      accountType={accountType}
+      keepMounted
+      onClose={toggleOpen}
+      open={open}
+      variant={upMd ? 'permanent' : 'temporary'}
+    >
+      {!upMd && (
+        <DrawerHeader>
+          <IconButton onClick={toggleOpen}>
+            <CloseIcon />
+          </IconButton>
+          <Network />
+        </DrawerHeader>
+      )}
       <List>
         {items.map(({ active, extra, svgIcon, text, to }, index) => (
           <ListItem
@@ -142,23 +192,25 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
           </ListItem>
         ))}
       </List>
-      <Fab
-        color="primary"
-        onClick={toggleOpen}
-        size="small"
-        sx={({ palette }) => ({
-          display: 'flex',
-          position: 'absolute',
-          marginTop: -3,
-          right: -15,
-          width: 30,
-          height: 30,
-          minHeight: 30,
-          background: lighten(palette.primary.main, 0.15)
-        })}
-      >
-        {open ? <KeyboardArrowLeftRoundedIcon /> : <KeyboardArrowRightRoundedIcon />}
-      </Fab>
+      {upMd && (
+        <Fab
+          color="primary"
+          onClick={toggleOpen}
+          size="small"
+          sx={({ palette }) => ({
+            display: 'flex',
+            position: 'absolute',
+            marginTop: -3,
+            right: -15,
+            width: 30,
+            height: 30,
+            minHeight: 30,
+            background: lighten(palette.primary.main, 0.15)
+          })}
+        >
+          {open ? <KeyboardArrowLeftRoundedIcon /> : <KeyboardArrowRightRoundedIcon />}
+        </Fab>
+      )}
     </Drawer>
   );
 };

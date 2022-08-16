@@ -1,4 +1,4 @@
-import { Box, CircularProgress, Stack, Typography, useTheme } from '@mui/material';
+import { Box, CircularProgress, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
@@ -11,9 +11,11 @@ import { useNotification } from '../Notification/useNotification';
 import Sidebar from '../Sidebar';
 
 const Claimer: React.FC = () => {
-  const [open, toggleOpen] = useToggle(true);
+  const { breakpoints, palette, transitions } = useTheme();
+  const upMd = useMediaQuery(breakpoints.up('md'));
+
+  const [open, toggleOpen] = useToggle(!!upMd);
   const { pathname } = useLocation();
-  const { palette, transitions } = useTheme();
   const { isReady } = useContext(DidsContext);
   const unreads = useNotification();
 
@@ -55,12 +57,11 @@ const Claimer: React.FC = () => {
 
   return (
     <Box bgcolor="#F5F6FA" minHeight="100vh">
-      <Header unreads={unreads} />
+      <Header toggleOpen={toggleOpen} unreads={unreads} />
       <Sidebar accountType="claimer" items={items} open={open} toggleOpen={toggleOpen} />
       <Box
         minHeight="100vh"
-        pl={open ? '220px' : '93px'}
-        pr={0}
+        pl={upMd ? (open ? '220px' : '93px') : 0}
         pt={'100px'}
         sx={{
           position: 'relative',
@@ -84,7 +85,7 @@ const Claimer: React.FC = () => {
               bottom: 0,
               right: 0,
               top: '100px',
-              left: open ? '274px' : '120px',
+              left: upMd ? (open ? '274px' : '120px') : 0,
               display: 'flex',
               alignItems: 'center',
               justifyContent: 'center'
