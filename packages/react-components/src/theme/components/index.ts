@@ -267,15 +267,15 @@ const createComponents: Func = () => ({
         minWidth: '140px'
       },
       sizeSmall: {
-        padding: '4px 10px',
+        padding: '4px 8px',
         fontSize: '0.9375rem'
       },
       sizeMedium: {
-        padding: '6px 16px',
+        padding: '8px 12px',
         fontSize: '0.9375rem'
       },
       sizeLarge: {
-        padding: '8px 22px',
+        padding: '12px 16px',
         fontSize: '1rem'
       }
     }

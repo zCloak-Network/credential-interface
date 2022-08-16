@@ -1,6 +1,15 @@
 import Circle from '@mui/icons-material/Circle';
 import KeyboardArrowDownIcon from '@mui/icons-material/KeyboardArrowDown';
-import { alpha, Button, CircularProgress, Menu, MenuItem, Typography } from '@mui/material';
+import {
+  alpha,
+  Button,
+  CircularProgress,
+  Menu,
+  MenuItem,
+  Typography,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
 import React, { useContext, useEffect, useRef, useState } from 'react';
 
 import { endpoints, storeEndpoint } from '@credential/app-config/endpoints';
@@ -12,6 +21,8 @@ const Network: React.FC = () => {
   const [runtimeChain, setRuntimeChain] = useState<string>();
   const anchorEl = useRef<HTMLButtonElement | null>(null);
   const [open, toggleOpen] = useToggle();
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
 
   useEffect(() => {
     if (isReady) {
@@ -25,6 +36,7 @@ const Network: React.FC = () => {
         endIcon={<KeyboardArrowDownIcon />}
         onClick={toggleOpen}
         ref={anchorEl}
+        size={upMd ? 'medium' : 'small'}
         startIcon={!isReady && <CircularProgress size={20} />}
         sx={({ palette }) => ({
           background: alpha(palette.primary.main, 0.2),
@@ -37,7 +49,7 @@ const Network: React.FC = () => {
         })}
         variant="contained"
       >
-        {isReady ? runtimeChain : 'Connecting to network'}
+        {isReady ? runtimeChain : upMd ? 'Connecting to network' : 'Connecting'}
       </Button>
       <Menu anchorEl={anchorEl.current} onClose={toggleOpen} open={open}>
         <Typography marginBottom={1.5}>Select a network</Typography>

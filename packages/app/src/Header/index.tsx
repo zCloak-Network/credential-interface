@@ -1,6 +1,17 @@
+import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
-import { alpha, Badge, Box, Chip, IconButton, Link, Stack } from '@mui/material';
+import {
+  alpha,
+  Badge,
+  Box,
+  Chip,
+  IconButton,
+  Link,
+  Stack,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
 import { LogoBlackIcon } from '@credential/app-config/icons';
@@ -16,6 +27,9 @@ import UpgradeFullDid from '../UpgradeFullDid';
 import AttesterIcon from './icon_attester.svg';
 
 function Logo() {
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+
   return (
     <Link
       sx={{
@@ -26,11 +40,15 @@ function Logo() {
         cursor: 'pointer'
       }}
     >
-      <Box component={LogoBlackIcon} mr={1.5} />
-      Credential&nbsp;
-      <Box color="black" component="span">
-        Platform
-      </Box>
+      <Box component={LogoBlackIcon} mr={upMd ? 1.5 : 1} />
+      {upMd && (
+        <>
+          Credential&nbsp;
+          <Box color="black" component="span">
+            Platform
+          </Box>
+        </>
+      )}
     </Link>
   );
 }
@@ -47,6 +65,9 @@ function Header({
   const { parse, unParsed } = useContext(AppContext);
   const { didUri, isFullDid } = useContext(DidsContext);
   const [notiOpen, toggleNotiOpen] = useToggle();
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+  const upSm = useMediaQuery(theme.breakpoints.up('sm'));
 
   const handleNotification = useCallback(() => {
     toggleNotiOpen();
@@ -79,8 +100,8 @@ function Header({
         direction="row"
         height={70}
         justifyContent="space-between"
-        px={5}
         sx={({ palette }) => ({
+          paddingX: upMd ? 5 : 2,
           zIndex: 999,
           position: 'fixed',
           top: 30,
@@ -90,9 +111,14 @@ function Header({
           borderBottomColor: alpha(palette.primary.main, 0.1)
         })}
       >
-        <Stack alignItems="center" direction="row" spacing={2}>
+        <Stack alignItems="center" direction="row" spacing={upMd ? 2 : 1}>
+          {!upMd && (
+            <IconButton size="small">
+              <MenuIcon />
+            </IconButton>
+          )}
           <Logo />
-          {isAttester && (
+          {upSm && isAttester && (
             <Chip
               color="primary"
               label={
@@ -104,15 +130,15 @@ function Header({
               variant="outlined"
             />
           )}
-          <Chip color="warning" label="Beta" variant="outlined" />
+          {upSm && <Chip color="warning" label="Beta" variant="outlined" />}
         </Stack>
-        <Stack alignItems="center" direction="row" spacing={2}>
-          <IconButton onClick={handleNotification} sx={{ marginRight: 3 }}>
+        <Stack alignItems="center" direction="row" spacing={upMd ? 2 : 1}>
+          <IconButton onClick={handleNotification} size={upMd ? 'medium' : 'small'}>
             <Badge badgeContent={unreads.allUnread + unParsed} color="warning" max={99}>
               <NotificationsNoneOutlinedIcon />
             </Badge>
           </IconButton>
-          <Network />
+          {upSm && <Network />}
           {didUri && <DidInfo did={didUri} />}
           {showUpgrade && !isFullDid && <UpgradeFullDid />}
         </Stack>
