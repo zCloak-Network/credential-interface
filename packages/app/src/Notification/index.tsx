@@ -1,15 +1,5 @@
 import CloseIcon from '@mui/icons-material/Close';
-import {
-  Badge,
-  Box,
-  Drawer,
-  IconButton,
-  Tab,
-  Tabs,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from '@mui/material';
+import { Badge, Box, Drawer, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
 import { AppContext } from '@credential/react-components';
@@ -28,8 +18,6 @@ const Notification: React.FC<Props> = ({
   open,
   unreads: { all, allUnread, message, messageUnread, task, taskUnread }
 }) => {
-  const theme = useTheme();
-  const upSm = useMediaQuery(theme.breakpoints.up('sm'));
   const [type, setType] = useState(0);
   const { fetcher } = useContext(AppContext);
 
@@ -54,7 +42,7 @@ const Notification: React.FC<Props> = ({
         sx={({ palette }) => ({
           position: 'relative',
           background: palette.grey[100],
-          paddingX: upSm ? 3 : 2,
+          paddingX: 2,
           paddingTop: 3
         })}
       >

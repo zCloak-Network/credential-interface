@@ -24,11 +24,12 @@ export const MessageCard = React.memo(function MessageCard({
   return (
     <Box
       className="Message_Card"
-      sx={({ palette }) => ({
+      sx={({ palette, typography }) => ({
         padding: 2.5,
         background: palette.common.white,
         boxShadow: '0px 6px 20px rgba(153,155,168,0.1)',
-        borderRadius: '20px'
+        borderRadius: '20px',
+        fontSize: typography.fontSize
       })}
     >
       <Stack spacing={3}>{children}</Stack>

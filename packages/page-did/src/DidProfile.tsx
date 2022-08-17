@@ -117,7 +117,7 @@ const DidProfile: React.FC = () => {
             <Typography color="white" variant="h1">
               {w3Name ?? 'web3name'}
             </Typography>
-            <Box fontSize="0.875rem" marginTop={3} width={400}>
+            <Box marginTop={3} width={400}>
               <DidCell copyable value={didUri} />
             </Box>
           </Box>

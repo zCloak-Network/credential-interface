@@ -268,11 +268,11 @@ const createComponents: Func = () => ({
       },
       sizeSmall: {
         padding: '4px 8px',
-        fontSize: '0.9375rem'
+        fontSize: '0.875rem'
       },
       sizeMedium: {
         padding: '8px 12px',
-        fontSize: '0.9375rem'
+        fontSize: '1rem'
       },
       sizeLarge: {
         padding: '12px 16px',
