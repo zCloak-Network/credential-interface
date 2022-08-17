@@ -1,6 +1,8 @@
 import { Box, Stack, TableCell, TableRow, useMediaQuery, useTheme } from '@mui/material';
 import React from 'react';
 
+import { ellipsisMixin } from '@credential/react-components/utils';
+
 export const MessageCard = React.memo(function MessageCard({
   children,
   onClick
@@ -45,7 +47,20 @@ export const MessageCardItem = React.memo(function MessageCardItem({
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
 
   if (upMd) {
-    return <TableCell>{content}</TableCell>;
+    return (
+      <TableCell>
+        <Box
+          className="Message_Card_Item_content"
+          sx={({ palette }) => ({
+            color: palette.text.primary,
+            maxWidth: 160,
+            ...ellipsisMixin()
+          })}
+        >
+          {content}
+        </Box>
+      </TableCell>
+    );
   }
 
   return (
@@ -69,7 +84,9 @@ export const MessageCardItem = React.memo(function MessageCardItem({
         className="Message_Card_Item_content"
         sx={({ palette }) => ({
           color: palette.text.primary,
-          textAlign: 'right'
+          textAlign: 'right',
+          maxWidth: 160,
+          ...ellipsisMixin()
         })}
       >
         {content}

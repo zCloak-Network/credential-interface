@@ -1,11 +1,10 @@
 import { type ISubmitAttestation, IRequestAttestation, MessageBodyType } from '@kiltprotocol/types';
-import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
+import { Link, useMediaQuery, useTheme } from '@mui/material';
 import moment from 'moment';
 import React, { useMemo } from 'react';
 
 import { Message } from '@credential/app-db/message';
 import { CredentialModal, CTypeName } from '@credential/react-components';
-import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useReferenceMessages, useToggle } from '@credential/react-hooks';
 
@@ -43,34 +42,27 @@ function MessageSubmitAttestation({ message }: { message: Message<ISubmitAttesta
       <MessageCard onClick={toggleOpen}>
         <MessageCardItem
           content={
-            <Box sx={{ width: 200, ...ellipsisMixin() }}>
+            <>
               {upMd && <span>Attester: </span>}
               <Link>
                 <DidName value={message.sender} />
               </Link>
-            </Box>
+            </>
           }
           label="Attester"
         />
         <MessageCardItem
           content={
-            <Box sx={{ width: 200, ...ellipsisMixin() }}>
+            <>
               {upMd && <span>Claimer: </span>}
               <Link>
                 <DidName value={message.receiver} />
               </Link>
-            </Box>
+            </>
           }
           label="Claimer"
         />
-        <MessageCardItem
-          content={
-            <Box sx={{ width: 150, ...ellipsisMixin() }}>
-              {message.body.content.attestation.claimHash}
-            </Box>
-          }
-          label="Claim hash"
-        />
+        <MessageCardItem content={message.body.content.attestation.claimHash} label="Claim hash" />
         <MessageCardItem
           content={<CTypeName cTypeHash={message.body.content.attestation.cTypeHash} />}
           label="Credential type"

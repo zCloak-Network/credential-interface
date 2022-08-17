@@ -1,12 +1,11 @@
 import type { IRequestAttestation } from '@kiltprotocol/types';
 
-import { Box, Link, useMediaQuery, useTheme } from '@mui/material';
+import { Link, useMediaQuery, useTheme } from '@mui/material';
 import moment from 'moment';
 import React from 'react';
 
 import { Message } from '@credential/app-db/message';
 import { CTypeName } from '@credential/react-components';
-import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 
 import { MessageCard, MessageCardItem } from './MessageCard';
@@ -21,32 +20,28 @@ function MessageRequestAttestation({ message }: { message: Message<IRequestAttes
       <MessageCard>
         <MessageCardItem
           content={
-            <Box sx={{ width: 200, ...ellipsisMixin() }}>
+            <>
               {upMd && <span>Claimer: </span>}
               <Link>
                 <DidName value={message.sender} />
               </Link>
-            </Box>
+            </>
           }
           label="Claimer"
         />
         <MessageCardItem
           content={
-            <Box sx={{ width: 200, ...ellipsisMixin() }}>
+            <>
               {upMd && <span>Attester: </span>}
               <Link>
                 <DidName value={message.receiver} />
               </Link>
-            </Box>
+            </>
           }
           label="Attester"
         />
         <MessageCardItem
-          content={
-            <Box sx={{ width: 150, ...ellipsisMixin() }}>
-              {message.body.content.requestForAttestation.rootHash}
-            </Box>
-          }
+          content={message.body.content.requestForAttestation.rootHash}
           label="Claim hash"
         />
         <MessageCardItem
