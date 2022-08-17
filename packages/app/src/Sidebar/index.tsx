@@ -131,8 +131,14 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
       variant={upMd ? 'permanent' : 'temporary'}
     >
       {!upMd && (
-        <DrawerHeader>
-          <IconButton onClick={toggleOpen}>
+        <DrawerHeader
+          sx={({ palette }) => ({
+            '.MuiButtonBase-root': {
+              color: accountType === 'attester' ? palette.common.white : null
+            }
+          })}
+        >
+          <IconButton onClick={toggleOpen} sx={{ color: 'inherit' }}>
             <CloseIcon />
           </IconButton>
           {downSm && <Network />}

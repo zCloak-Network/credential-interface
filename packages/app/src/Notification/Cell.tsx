@@ -1,6 +1,15 @@
 import { Hash, IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
-import { alpha, Box, Button, Link, Stack, Typography } from '@mui/material';
+import {
+  alpha,
+  Box,
+  Button,
+  Link,
+  Stack,
+  Typography,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
 import moment from 'moment';
 import React, { useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
@@ -18,6 +27,8 @@ function Cell({
   message: Message<MessageBody>;
   onRead: () => void;
 }) {
+  const theme = useTheme();
+  const upSm = useMediaQuery(theme.breakpoints.up('sm'));
   const navigate = useNavigate();
   const rootHash = useMemo((): Hash | null => {
     return body.type === MessageBodyType.SUBMIT_ATTESTATION
@@ -142,26 +153,37 @@ function Cell({
     <>
       <Stack
         alignItems="flex-start"
-        direction="row"
+        direction={upSm ? 'row' : 'column'}
         justifyContent="space-between"
         onClick={handleClick}
         paddingX={2}
         paddingY={1.5}
-        spacing={2.5}
+        spacing={upSm ? 2.5 : 1.5}
         sx={({ palette }) => ({
           ':hover': {
             background: alpha(palette.primary.main, 0.1)
           }
         })}
-        width={532}
       >
-        <Box sx={{ width: 24, display: 'flex', alignSelf: 'center', flex: '0 0 auto' }}>
-          {body.type === MessageBodyType.REQUEST_ATTESTATION ? <IconNewTask /> : <IconNewMessage />}
-        </Box>
-        <Box sx={{ width: 336 }}>
+        {upSm && (
+          <Box sx={{ width: 24, display: 'flex', alignSelf: 'center', flex: '0 0 auto' }}>
+            {body.type === MessageBodyType.REQUEST_ATTESTATION ? (
+              <IconNewTask />
+            ) : (
+              <IconNewMessage />
+            )}
+          </Box>
+        )}
+        <Box sx={{ width: upSm ? 'calc(100% - 24px) * 0.41' : '100%' }}>
           <Typography variant="inherit">{desc}</Typography>
         </Box>
-        <Box sx={{ width: 140, textAlign: 'right', whiteSpace: 'nowrap' }}>
+        <Box
+          sx={{
+            width: upSm ? 'calc(100% - 24px) * 0.59' : '100%',
+            textAlign: 'right',
+            whiteSpace: 'nowrap'
+          }}
+        >
           <Stack alignItems="center" direction="row" spacing={1.5}>
             <Typography
               sx={({ palette }) => ({
