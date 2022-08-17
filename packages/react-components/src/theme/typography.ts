@@ -22,6 +22,10 @@ const createTypography: Func = () => ({
     "'Segoe UI Emoji'",
     "'Segoe UI Symbol'"
   ].join(','),
+  body1: {
+    fontSize: 14
+  },
+  fontSize: 14,
   htmlFontSize: 16,
   h1: {
     fontSize: '2rem',

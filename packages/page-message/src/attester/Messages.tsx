@@ -13,12 +13,12 @@ import React from 'react';
 
 import { Message } from '@credential/app-db/message';
 
-import MessageAcceptCredential from '../claimer/MessageAcceptCredential';
-import MessageRejectAttestation from '../claimer/MessageRejectAttestation';
-import MessageRejectCredential from '../claimer/MessageRejectCredential';
-import MessageRequestAttestation from '../claimer/MessageRequestAttestation';
-import MessageSubmitAttestation from '../claimer/MessageSubmitAttestation';
-import MessageSubmitCredential from '../claimer/MessageSubmitCredential';
+import MessageAcceptCredential from '../messages/MessageAcceptCredential';
+import MessageRejectAttestation from '../messages/MessageRejectAttestation';
+import MessageRejectCredential from '../messages/MessageRejectCredential';
+import MessageRequestAttestation from '../messages/MessageRequestAttestation';
+import MessageSubmitAttestation from '../messages/MessageSubmitAttestation';
+import MessageSubmitCredential from '../messages/MessageSubmitCredential';
 
 const Messages: React.FC<{
   messages?: Message<MessageBody>[];

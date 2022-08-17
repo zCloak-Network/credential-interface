@@ -1,5 +1,5 @@
 import { type PaletteMode } from '@mui/material';
-import { type PaletteOptions } from '@mui/material/styles';
+import { type PaletteOptions, alpha } from '@mui/material/styles';
 
 /**
  * Customized Material UI color palette.
@@ -19,7 +19,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     main: '#00B69B',
     light: '#00B69B',
     dark: '#00B69B',
-    contrastText: 'rgba(0, 0, 0, 0.87)'
+    contrastText: '#1C1D21'
   },
   error: {
     main: '#EF3826',
@@ -31,7 +31,7 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
     main: '#FFA756',
     light: '#FFA756',
     dark: '#FFA756',
-    contrastText: 'rgba(0, 0, 0, 0.87)'
+    contrastText: '#1C1D21'
   },
   background: { default: '#F5F6FA', paper: '#fff' },
   grey: {
@@ -54,19 +54,19 @@ const createPalette = (mode: PaletteMode): PaletteOptions => ({
   secondary: { main: '#9c27b0', light: '#ba68c8', dark: '#7b1fa2', contrastText: '#fff' },
   info: { main: '#0288d1', light: '#03a9f4', dark: '#01579b', contrastText: '#fff' },
   text: {
-    primary: 'rgba(0, 0, 0, 0.87)',
-    secondary: 'rgba(0, 0, 0, 0.6)',
-    disabled: 'rgba(0, 0, 0, 0.38)'
+    primary: '#1C1D21',
+    secondary: alpha('#1C1D21', 0.6),
+    disabled: alpha('#1C1D21', 0.38)
   },
   divider: '#C5C5DE',
   action: {
-    active: 'rgba(0, 0, 0, 0.54)',
-    hover: 'rgba(0, 0, 0, 0.04)',
+    active: alpha('#1C1D21', 0.54),
+    hover: alpha('#1C1D21', 0.04),
     hoverOpacity: 0.04,
-    selected: 'rgba(0, 0, 0, 0.08)',
+    selected: alpha('#1C1D21', 0.08),
     selectedOpacity: 0.08,
-    disabled: 'rgba(0, 0, 0, 0.26)',
-    disabledBackground: 'rgba(0, 0, 0, 0.12)',
+    disabled: alpha('#1C1D21', 0.26),
+    disabledBackground: alpha('#1C1D21', 0.12),
     disabledOpacity: 0.38,
     focus: '#C5C5DE',
     focusOpacity: 0.12,
