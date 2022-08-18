@@ -10,7 +10,7 @@ import { useLocalStorage, useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 import { DidKeys$Json, DidsState } from './types';
-import { getDidDetails, useDidDetails } from './useDidDetails';
+import { useDidDetails } from './useDidDetails';
 
 export const DidsContext = createContext({} as DidsState);
 
@@ -162,9 +162,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [didDetails, keyring, removeDidUri]);
 
   const unlockDid = useCallback(
-    async (didUri: DidUri, password: string) => {
-      const didDetails = await getDidDetails(didUri);
-
+    (didUri: DidUri, password: string) => {
       if (!didDetails) throw new Error("Can't find did details");
 
       keyring.getPair(didDetails.authenticationKey.publicKey).unlock(password);
@@ -173,7 +171,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
 
       setIsLocked(false);
     },
-    [keyring]
+    [didDetails, keyring]
   );
 
   const unlock = useCallback(() => {

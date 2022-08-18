@@ -310,13 +310,6 @@ const createComponents: Func = () => ({
           justifyContent: 'center',
           padding: spacing(3)
         }
-      }),
-      paper: ({ theme: { breakpoints, spacing } }) => ({
-        borderRadius: '10px',
-        margin: spacing(3),
-        [breakpoints.down('md')]: {
-          margin: spacing(2)
-        }
       })
     }
   },

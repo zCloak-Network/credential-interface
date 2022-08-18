@@ -9,18 +9,18 @@ import { DialogHeader, InputPassword } from '@credential/react-components';
 const UnlockModal: React.FC<{
   open: boolean;
   did?: DidUri;
-  unlockDid: (didUri: DidUri, password: string) => Promise<void>;
+  unlockDid: (didUri: DidUri, password: string) => void;
   onClose?: () => void;
   onUnlock: () => void;
 }> = ({ did, onClose, onUnlock, open, unlockDid }) => {
   const [password, setPassword] = useState<string>();
 
-  const _onUnlock = useCallback(async () => {
+  const _onUnlock = useCallback(() => {
     if (!did) return;
     if (!password) return;
 
     try {
-      await unlockDid(did, password);
+      unlockDid(did, password);
 
       onUnlock();
     } catch (error) {}

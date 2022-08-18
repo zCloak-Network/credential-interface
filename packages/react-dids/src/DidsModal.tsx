@@ -17,10 +17,10 @@ const DidsModal: React.FC<
   const { didUri, isLocked, unlockDid } = useContext(DidsContext);
   const [password, setPassword] = useState<string>('');
 
-  const unlock = useCallback(async () => {
+  const unlock = useCallback(() => {
     if (!didUri) return;
 
-    await unlockDid(didUri, password);
+    unlockDid(didUri, password);
   }, [didUri, password, unlockDid]);
 
   return (
