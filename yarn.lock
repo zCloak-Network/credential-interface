@@ -1617,6 +1617,7 @@ __metadata:
     "@mui/material": ^5.10.0
     "@mui/x-date-pickers": ^5.0.0-beta.4
     "@zcloak/extension-core": ^0.2.1
+    qrcode-generator: ^1.4.4
   languageName: unknown
   linkType: soft
 
@@ -12933,6 +12934,13 @@ __metadata:
   version: 1.5.1
   resolution: "q@npm:1.5.1"
   checksum: 147baa93c805bc1200ed698bdf9c72e9e42c05f96d007e33a558b5fdfd63e5ea130e99313f28efc1783e90e6bdb4e48b67a36fcc026b7b09202437ae88a1fb12
+  languageName: node
+  linkType: hard
+
+"qrcode-generator@npm:^1.4.4":
+  version: 1.4.4
+  resolution: "qrcode-generator@npm:1.4.4"
+  checksum: 860cfdd2a7a608d34e92cab99774cc08182e1911432f30ed36d16f8a5cdabd7fdf40239caed91fa2691cfe66c8d95c1340a2fc9cc439eed07a9f2eb328c6f527
   languageName: node
   linkType: hard
 

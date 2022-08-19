@@ -8,6 +8,7 @@ export { default as ButtonWithError } from './ButtonWithError';
 export { default as ClaimDisplay } from './ClaimDisplay';
 export { default as Copy } from './Copy';
 export { default as CredentialModal } from './CredentialModal';
+export { default as CredentialQrcode } from './CredentialQrcode';
 export { default as CredentialStatus } from './CredentialStatus';
 export { default as CTypeName } from './CTypeName';
 export { default as DialogHeader } from './DialogHeader';

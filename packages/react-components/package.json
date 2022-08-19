@@ -26,6 +26,7 @@
     "@mui/lab": "^5.0.0-alpha.94",
     "@mui/material": "^5.10.0",
     "@mui/x-date-pickers": "^5.0.0-beta.4",
-    "@zcloak/extension-core": "^0.2.1"
+    "@zcloak/extension-core": "^0.2.1",
+    "qrcode-generator": "^1.4.4"
   }
 }
