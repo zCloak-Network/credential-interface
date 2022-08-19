@@ -18,6 +18,7 @@ import React, { useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
+import { IconScan } from '@credential/app-config/icons';
 import { Address, Copy, FormatBalance, IdentityIcon } from '@credential/react-components';
 import { DidName, DidsContext } from '@credential/react-dids';
 import { useBalances, useToggle } from '@credential/react-hooks';
@@ -133,6 +134,13 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
             Go to KILT faucet to get token
           </Button>
         )}
+        <Divider sx={{ marginY: 1 }} />
+        <MenuItem onClick={handleProfile}>
+          <ListItemIcon>
+            <IconScan />
+          </ListItemIcon>
+          <ListItemText>Scan QR code</ListItemText>
+        </MenuItem>
         <Divider sx={{ marginY: 1 }} />
         <MenuItem onClick={handleProfile}>
           <ListItemIcon>

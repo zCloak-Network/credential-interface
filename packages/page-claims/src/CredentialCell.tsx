@@ -1,5 +1,5 @@
 import { CType, IAttestation, IRequestAttestation } from '@kiltprotocol/sdk-js';
-import { alpha, Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
+import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
@@ -18,6 +18,7 @@ import { isMobile } from '@credential/react-hooks/utils/userAgent';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
+import QrcodeButton from './button/QrcodeButton';
 import RetweetButton from './button/RetweetButton';
 import ShareButton from './button/ShareButton';
 
@@ -199,35 +200,13 @@ const CredentialCell: React.FC<{
               <ShareButton credential={credential} />
               <DownloadButton credential={credential} />
               <RetweetButton credential={credential} />
+              <QrcodeButton credential={credential} />
             </Stack>
           )}
         </Wrapper>
       </Box>
       {cType && credential && open && (
-        <CredentialModal
-          actions={
-            <Stack
-              alignItems="center"
-              spacing={2}
-              sx={({ palette }) => ({
-                '.MuiButtonBase-root': {
-                  width: 44,
-                  height: 44,
-                  background: palette.common.white,
-                  border: '1px solid',
-                  borderColor: alpha(palette.primary.main, 0.38),
-                  borderRadius: 2.5
-                }
-              })}
-            >
-              <ShareButton credential={credential} withText />
-              <ImportButton credential={credential} withText />
-              <DownloadButton credential={credential} withText />
-            </Stack>
-          }
-          credential={credential}
-          onClose={toggleOpen}
-        />
+        <CredentialModal credential={credential} onClose={toggleOpen} />
       )}
     </>
   );
