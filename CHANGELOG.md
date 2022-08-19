@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.16.1 Aug 19, 2022
+
+Changes:
+
+- generate credential QR code
+- scan credential QR code
+
 ## 0.15.1 Aug 19, 2022
 
 Changes:
