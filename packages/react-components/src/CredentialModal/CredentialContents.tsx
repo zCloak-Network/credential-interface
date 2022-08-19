@@ -1,22 +1,13 @@
 import type { DidUri, Hash, IClaimContents } from '@kiltprotocol/sdk-js';
 
-import {
-  alpha,
-  Box,
-  Divider,
-  lighten,
-  Link,
-  Paper,
-  Stack,
-  SvgIcon,
-  Typography
-} from '@mui/material';
-import React, { useMemo } from 'react';
+import { Box, Divider, lighten, Link, Paper, Stack, SvgIcon, Typography } from '@mui/material';
+import React from 'react';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
 import { DidName } from '@credential/react-dids';
 import { RequestStatus } from '@credential/react-hooks/types';
 
+import ClaimDisplay, { ClaimItem } from '../ClaimDisplay';
 import CredentialStatus from '../CredentialStatus';
 import CTypeName from '../CTypeName';
 
@@ -28,55 +19,6 @@ interface Props {
   revoked: boolean;
   contents: IClaimContents;
 }
-
-const Item: React.FC<{
-  label: string;
-  value: React.ReactElement | string | number | boolean | Record<string, unknown>;
-}> = ({ label, value }) => {
-  const el = useMemo(() => {
-    if (value && React.isValidElement(value)) {
-      return value;
-    }
-
-    const type = typeof value;
-
-    if (['string', 'number', 'undefined'].includes(type)) {
-      return <>{value}</>;
-    } else if (typeof value === 'boolean') {
-      return (
-        <Box
-          sx={({ palette }) => ({
-            background: alpha(value ? palette.success.main : palette.error.main, 0.2),
-            color: value ? palette.success.main : palette.error.main,
-            borderRadius: 1,
-            width: 92,
-            height: 28,
-            display: 'flex',
-            alignItems: 'center',
-            justifyContent: 'center'
-          })}
-        >
-          {value ? 'True' : 'False'}
-        </Box>
-      );
-    } else {
-      return <>{JSON.stringify(value)}</>;
-    }
-  }, [value]);
-
-  return (
-    <Stack
-      alignItems="center"
-      direction="row"
-      height={24}
-      justifyContent="space-between"
-      paddingX={3}
-    >
-      <Typography sx={({ palette }) => ({ color: palette.grey[700] })}>{label}</Typography>
-      {el}
-    </Stack>
-  );
-};
 
 const CredentialContents: React.FC<Props> = ({
   attester,
@@ -109,13 +51,11 @@ const CredentialContents: React.FC<Props> = ({
           </Typography>
         </Box>
       </Stack>
-      <Item label="Credential owner" value={<DidName value={owner} />} />
+      <ClaimItem label="Credential owner" value={<DidName value={owner} />} />
       <Divider sx={({ palette }) => ({ marginY: 3, borderColor: palette.grey[300] })} />
-      <Stack paddingBottom={5} spacing={1}>
-        {Object.entries(contents).map(([key, value]) => (
-          <Item key={key} label={key} value={value} />
-        ))}
-      </Stack>
+      <Box paddingBottom={5}>
+        <ClaimDisplay contents={contents} />
+      </Box>
     </Paper>
   );
 };
