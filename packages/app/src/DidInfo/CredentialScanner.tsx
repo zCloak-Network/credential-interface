@@ -19,9 +19,10 @@ function CredentialScanner({ onClose }: { onClose: () => void }) {
         toggleOpen();
       } catch {
         notifyError('Not a credential');
+        onClose();
       }
     },
-    [notifyError, toggleOpen]
+    [notifyError, onClose, toggleOpen]
   );
 
   return open && credential ? (
