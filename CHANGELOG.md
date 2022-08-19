@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.15.1 Aug 19, 2022
+
+Changes:
+
+- reponsive ui
+
 ## 0.14.1 Aug 14, 2022
 
 Changes:

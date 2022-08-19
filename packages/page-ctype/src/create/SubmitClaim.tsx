@@ -54,37 +54,42 @@ const SubmitClaim: React.FC<{
       <Button disabled={!attester || !ctype || !contents} onClick={toggleOpen} variant="contained">
         Submit
       </Button>
-      <DidsModal
-        onClose={toggleOpen}
-        open={open}
-        steps={
-          <Steps
-            onDone={onDone}
-            steps={[
-              {
-                label: 'Request for attestation and sign',
-                exec: () =>
-                  requestAttestation(keyring, sender, ctype, contents as Record<string, any>).then(
-                    setRequest
-                  )
-              },
-              {
-                label: 'Encrypt message',
-                exec: () =>
-                  encryptMessage(keyring, message, sender, attester).then(setEncryptedMessage)
-              },
-              {
-                label: 'Send message',
-                paused: true,
-                content: <Recaptcha onCallback={setRecaptchaToken} />,
-                exec: () => sendMessage(fetcher, encryptedMessage, recaptchaToken, message)
-              }
-            ]}
-            submitText="Submit claim"
-          />
-        }
-        title="Submit claim"
-      />
+      {open && (
+        <DidsModal
+          onClose={toggleOpen}
+          open={open}
+          steps={
+            <Steps
+              onDone={onDone}
+              steps={[
+                {
+                  label: 'Request for attestation and sign',
+                  exec: () =>
+                    requestAttestation(
+                      keyring,
+                      sender,
+                      ctype,
+                      contents as Record<string, any>
+                    ).then(setRequest)
+                },
+                {
+                  label: 'Encrypt message',
+                  exec: () =>
+                    encryptMessage(keyring, message, sender, attester).then(setEncryptedMessage)
+                },
+                {
+                  label: 'Send message',
+                  paused: true,
+                  content: <Recaptcha onCallback={setRecaptchaToken} />,
+                  exec: () => sendMessage(fetcher, encryptedMessage, recaptchaToken, message)
+                }
+              ]}
+              submitText="Submit claim"
+            />
+          }
+          title="Submit claim"
+        />
+      )}
     </>
   );
 };

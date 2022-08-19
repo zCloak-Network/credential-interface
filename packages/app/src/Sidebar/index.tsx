@@ -22,6 +22,7 @@ import {
 import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
+import { isMobile } from '@credential/react-hooks/utils/userAgent';
 import { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
 
 import Network from '../Network';
@@ -125,6 +126,9 @@ const Sidebar: React.FC<Props> = ({ accountType, items, open, toggleOpen }) => {
 
   return (
     <Drawer
+      ModalProps={{
+        keepMounted: isMobile
+      }}
       accountType={accountType}
       onClose={toggleOpen}
       open={open}
