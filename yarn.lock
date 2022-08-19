@@ -1617,6 +1617,7 @@ __metadata:
     "@mui/material": ^5.10.0
     "@mui/x-date-pickers": ^5.0.0-beta.4
     "@zcloak/extension-core": ^0.2.1
+    qr-scanner: ^1.4.1
     qrcode-generator: ^1.4.4
   languageName: unknown
   linkType: soft
@@ -3930,6 +3931,13 @@ __metadata:
   version: 2.4.1
   resolution: "@types/normalize-package-data@npm:2.4.1"
   checksum: e87bccbf11f95035c89a132b52b79ce69a1e3652fe55962363063c9c0dae0fe2477ebc585e03a9652adc6f381d24ba5589cc5e51849df4ced3d3e004a7d40ed5
+  languageName: node
+  linkType: hard
+
+"@types/offscreencanvas@npm:^2019.6.4":
+  version: 2019.7.0
+  resolution: "@types/offscreencanvas@npm:2019.7.0"
+  checksum: 018cfcd19e0c59c44d14ba61caaca7246f77fbb512839c7881654b7f2b6591dbdd5857362eccbf49f29cdc93724e71a4b37c8b6cf203388f9c04e913a53ea390
   languageName: node
   linkType: hard
 
@@ -12934,6 +12942,15 @@ __metadata:
   version: 1.5.1
   resolution: "q@npm:1.5.1"
   checksum: 147baa93c805bc1200ed698bdf9c72e9e42c05f96d007e33a558b5fdfd63e5ea130e99313f28efc1783e90e6bdb4e48b67a36fcc026b7b09202437ae88a1fb12
+  languageName: node
+  linkType: hard
+
+"qr-scanner@npm:^1.4.1":
+  version: 1.4.1
+  resolution: "qr-scanner@npm:1.4.1"
+  dependencies:
+    "@types/offscreencanvas": ^2019.6.4
+  checksum: c3bab2a35153d2c64363b669dcf5cf3009c109b930d0c719da0e90efa6e62cf432b460478a264e71b6add35f53c0c9dc1e9a8fb09f75e133c0b7f03be5256bb0
   languageName: node
   linkType: hard
 

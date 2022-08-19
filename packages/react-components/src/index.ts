@@ -20,5 +20,6 @@ export { default as IdentityIcon } from './IdentityIcon';
 export { default as ImportCTypeModal } from './ImportCTypeModal';
 export { default as MnemonicCell } from './MnemonicCell';
 export { default as InputPassword } from './InputPassword';
+export { default as QrScanner } from './QrScanner';
 export { default as Recaptcha } from './Recaptcha';
 export { default as StepIcon } from './StepIcon';
