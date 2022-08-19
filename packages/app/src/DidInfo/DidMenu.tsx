@@ -18,11 +18,13 @@ import React, { useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
+import { IconScan } from '@credential/app-config/icons';
 import { Address, Copy, FormatBalance, IdentityIcon } from '@credential/react-components';
 import { DidName, DidsContext } from '@credential/react-dids';
 import { useBalances, useToggle } from '@credential/react-hooks';
 
 import AddressIcon from './address.svg';
+import CredentialScanner from './CredentialScanner';
 import ExportModal from './ExportModal';
 import ExportIcon from './icon_export.svg';
 import LogoutIcon from './icon_logout.svg';
@@ -39,9 +41,15 @@ interface Props {
 const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
   const { didDetails, logout } = useContext(DidsContext);
   const [exportOpen, toggleExportOpen] = useToggle();
+  const [scannerOpen, toggleScannerOpen] = useToggle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const balances = useBalances(didDetails?.identifier);
+
+  const handleScanner = useCallback(() => {
+    toggleScannerOpen();
+    onClose();
+  }, [onClose, toggleScannerOpen]);
 
   const handleExport = useCallback(() => {
     toggleExportOpen();
@@ -134,6 +142,13 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
           </Button>
         )}
         <Divider sx={{ marginY: 1 }} />
+        <MenuItem onClick={handleScanner}>
+          <ListItemIcon>
+            <IconScan />
+          </ListItemIcon>
+          <ListItemText>Scan QR code</ListItemText>
+        </MenuItem>
+        <Divider sx={{ marginY: 1 }} />
         <MenuItem onClick={handleProfile}>
           <ListItemIcon>
             <StarIcon />
@@ -155,6 +170,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         </MenuItem>
       </Menu>
       {exportOpen && <ExportModal onClose={toggleExportOpen} />}
+      {scannerOpen && <CredentialScanner onClose={toggleScannerOpen} />}
     </>
   );
 };

@@ -23,6 +23,6 @@ export interface DidsState {
   backupDid: (password: string) => DidKeys$Json | null;
   logout: () => void;
   unlock: () => Promise<void>;
-  unlockDid: (didUri: DidUri, password: string) => void;
+  unlockDid: (password: string) => void;
   tryFetchFullDid: () => Promise<void>;
 }

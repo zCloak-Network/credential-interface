@@ -10,7 +10,7 @@ const DidsModal: React.FC<
   React.PropsWithChildren<{
     title: React.ReactNode;
     open: boolean;
-    steps: React.ReactNode;
+    steps?: React.ReactNode;
     onClose?: () => void;
   }>
 > = ({ children, onClose, open, steps, title }) => {
@@ -20,7 +20,7 @@ const DidsModal: React.FC<
   const unlock = useCallback(() => {
     if (!didUri) return;
 
-    unlockDid(didUri, password);
+    unlockDid(password);
   }, [didUri, password, unlockDid]);
 
   return (

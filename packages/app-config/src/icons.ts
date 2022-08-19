@@ -7,3 +7,5 @@ export { default as IconTwitter } from './assets/icon_twitter.svg';
 export { default as IconImport } from './assets/icon_import.svg';
 export { default as IconNewMessage } from './assets/icon_new_message.svg';
 export { default as IconNewTask } from './assets/icon_new_task.svg';
+export { default as IconScan } from './assets/icon_scan.svg';
+export { default as IconQrcode } from './assets/icon_qrcode.svg';

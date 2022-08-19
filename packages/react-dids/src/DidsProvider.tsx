@@ -162,7 +162,7 @@ const DidsProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   }, [didDetails, keyring, removeDidUri]);
 
   const unlockDid = useCallback(
-    (didUri: DidUri, password: string) => {
+    (password: string) => {
       if (!didDetails) throw new Error("Can't find did details");
 
       keyring.getPair(didDetails.authenticationKey.publicKey).unlock(password);
