@@ -1,102 +1,72 @@
+import { MessageBody } from '@kiltprotocol/types';
 import {
-  IAcceptCredential,
-  IRejectAttestation,
-  IRejectCredential,
-  IRequestAttestation,
-  ISubmitAttestation,
-  ISubmitCredential,
-  MessageBody,
-  MessageBodyType
-} from '@kiltprotocol/types';
-import { Table, TableBody, TableCell, TableContainer, TableHead, TableRow } from '@mui/material';
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  useMediaQuery,
+  useTheme
+} from '@mui/material';
+import Grid from '@mui/material/Unstable_Grid2';
 import React from 'react';
 
 import { Message } from '@credential/app-db/message';
 
-import MessageAcceptCredential from '../claimer/MessageAcceptCredential';
-import MessageRejectAttestation from '../claimer/MessageRejectAttestation';
-import MessageRejectCredential from '../claimer/MessageRejectCredential';
-import MessageRequestAttestation from '../claimer/MessageRequestAttestation';
-import MessageSubmitAttestation from '../claimer/MessageSubmitAttestation';
-import MessageSubmitCredential from '../claimer/MessageSubmitCredential';
+import MessageRow from '../messages/MessageRow';
 
 const Messages: React.FC<{
   messages?: Message<MessageBody>[];
 }> = ({ messages }) => {
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
+
+  if (upMd) {
+    return (
+      <TableContainer>
+        <Table>
+          <TableHead>
+            <TableRow>
+              <TableCell>Sender</TableCell>
+              <TableCell>Receiver</TableCell>
+              <TableCell>Claim hash</TableCell>
+              <TableCell>Credential type</TableCell>
+              <TableCell>Type</TableCell>
+              <TableCell>Time</TableCell>
+            </TableRow>
+          </TableHead>
+          <TableBody>
+            {messages?.map((message) => (
+              <MessageRow key={message.messageId} message={message} />
+            ))}
+          </TableBody>
+        </Table>
+      </TableContainer>
+    );
+  }
+
   return (
-    <TableContainer>
-      <Table>
-        <TableHead>
-          <TableRow>
-            <TableCell>Sender</TableCell>
-            <TableCell>Receiver</TableCell>
-            <TableCell>Claim hash</TableCell>
-            <TableCell>Credential type</TableCell>
-            <TableCell>Type</TableCell>
-            <TableCell>Time</TableCell>
-          </TableRow>
-        </TableHead>
-        <TableBody>
-          {messages?.map((message) => {
-            if (message.body.type === MessageBodyType.REQUEST_ATTESTATION) {
-              return (
-                <MessageRequestAttestation
-                  key={message.messageId}
-                  message={message as Message<IRequestAttestation>}
-                />
-              );
-            }
-
-            if (message.body.type === MessageBodyType.SUBMIT_ATTESTATION) {
-              return (
-                <MessageSubmitAttestation
-                  key={message.messageId}
-                  message={message as Message<ISubmitAttestation>}
-                />
-              );
-            }
-
-            if (message.body.type === MessageBodyType.REJECT_ATTESTATION) {
-              return (
-                <MessageRejectAttestation
-                  key={message.messageId}
-                  message={message as Message<IRejectAttestation>}
-                />
-              );
-            }
-
-            if (message.body.type === MessageBodyType.SUBMIT_CREDENTIAL) {
-              return (
-                <MessageSubmitCredential
-                  key={message.messageId}
-                  message={message as Message<ISubmitCredential>}
-                />
-              );
-            }
-
-            if (message.body.type === MessageBodyType.ACCEPT_CREDENTIAL) {
-              return (
-                <MessageAcceptCredential
-                  key={message.messageId}
-                  message={message as Message<IAcceptCredential>}
-                />
-              );
-            }
-
-            if (message.body.type === MessageBodyType.REJECT_CREDENTIAL) {
-              return (
-                <MessageRejectCredential
-                  key={message.messageId}
-                  message={message as Message<IRejectCredential>}
-                />
-              );
-            }
-
-            return null;
-          })}
-        </TableBody>
-      </Table>
-    </TableContainer>
+    <Grid
+      columns={{ xs: 8 }}
+      container
+      spacing={3}
+      sx={({ palette }) => ({
+        '.MessageCard': {
+          background: palette.background.paper,
+          border: '1px solid',
+          borderColor: palette.grey[200],
+          boxShadow: '0px 3px 6px rgba(153,155,168,0.1)',
+          borderRadius: '5px'
+        }
+      })}
+    >
+      {messages?.map((message) => (
+        <Grid key={message.messageId} sm={4} xs={8}>
+          <MessageRow message={message} />
+        </Grid>
+      ))}
+    </Grid>
   );
 };
 

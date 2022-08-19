@@ -1,14 +1,19 @@
 import { Hash } from '@kiltprotocol/sdk-js';
-import { Container, Dialog, DialogActions, DialogContent } from '@mui/material';
+import { Box, Container, Dialog, DialogActions, DialogContent, Stack } from '@mui/material';
 import React, { useContext, useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 
 import { AppContext, DialogHeader } from '@credential/react-components';
+import { ellipsisMixin } from '@credential/react-components/utils';
 import { useAttestation, useRequest, useRequestStatus } from '@credential/react-hooks';
+import { RequestStatus } from '@credential/react-hooks/types';
 
 import { useMessageLinked } from '../useMessageLinked';
+import Approve from './Approve';
 import ClaimInfo from './ClaimInfo';
 import Details from './Details';
+import Reject from './Reject';
+import Revoke from './Revoke';
 
 const RequestDetails: React.FC = () => {
   const { fetcher } = useContext(AppContext);
@@ -33,7 +38,7 @@ const RequestDetails: React.FC = () => {
   return (
     <Dialog fullScreen open>
       <DialogHeader onClose={() => navigate('/attester/tasks', { replace: true })}>
-        {rootHash}
+        <Box sx={{ ...ellipsisMixin(), maxWidth: '80%' }}>{rootHash}</Box>
       </DialogHeader>
       <Container
         component={DialogContent}
@@ -52,7 +57,24 @@ const RequestDetails: React.FC = () => {
           messageLinked={messageLinked}
         />
       </Container>
-      <DialogActions></DialogActions>
+      <DialogActions>
+        <Stack
+          alignItems="center"
+          direction="row"
+          spacing={1.5}
+          sx={{ display: { md: 'none', xs: 'flex' } }}
+        >
+          {status === RequestStatus.INIT && (
+            <Approve messageLinked={messageLinked} request={request} />
+          )}
+          {status === RequestStatus.INIT && (
+            <Reject messageLinked={messageLinked} request={request} />
+          )}
+          {status === RequestStatus.SUBMIT && attestation && !attestation.revoked && (
+            <Revoke attestation={attestation} messageLinked={messageLinked} request={request} />
+          )}
+        </Stack>
+      </DialogActions>
     </Dialog>
   );
 };

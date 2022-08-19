@@ -1,8 +1,9 @@
-import type { CType, Did } from '@kiltprotocol/sdk-js';
+import type { Did } from '@kiltprotocol/sdk-js';
 
 import { Box, FormControl, InputLabel, OutlinedInput, Stack } from '@mui/material';
 import React, { useCallback, useEffect, useState } from 'react';
 
+import { CType } from '@credential/app-db/ctype';
 import { AttesterSelect } from '@credential/react-dids';
 
 import CTypeItem from './CTypeItem';

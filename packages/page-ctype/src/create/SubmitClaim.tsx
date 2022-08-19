@@ -1,6 +1,6 @@
 import {
-  CType,
   Did,
+  ICType,
   IEncryptedMessage,
   Message,
   RequestForAttestation
@@ -22,7 +22,7 @@ import { useKeystore } from '@credential/react-keystore';
 const SubmitClaim: React.FC<{
   contents: Record<string, unknown>;
   attester: Did.FullDidDetails | null;
-  ctype?: CType;
+  ctype?: ICType;
   onDone?: () => void;
 }> = ({ attester, contents, ctype, onDone }) => {
   const { keyring } = useKeystore();

@@ -59,7 +59,10 @@ const DidsModal: React.FC<{
       .then(() => {
         nextStep();
       })
-      .catch(report)
+      .catch((error) => {
+        report(error);
+        setExecing(false);
+      })
       .finally(() => {
         setStatus({ loading: false });
       });

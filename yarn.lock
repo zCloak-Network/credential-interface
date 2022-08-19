@@ -1651,6 +1651,7 @@ __metadata:
     copy-to-clipboard: ^3.3.2
     dexie-react-hooks: ^1.1.1
     search-query-parser: ^1.6.0
+    ua-parser-js: ^1.0.2
   languageName: unknown
   linkType: soft
 
@@ -4075,6 +4076,13 @@ __metadata:
   version: 2.0.1
   resolution: "@types/stack-utils@npm:2.0.1"
   checksum: 205fdbe3326b7046d7eaf5e494d8084f2659086a266f3f9cf00bccc549c8e36e407f88168ad4383c8b07099957ad669f75f2532ed4bc70be2b037330f7bae019
+  languageName: node
+  linkType: hard
+
+"@types/ua-parser-js@npm:^0.7.36":
+  version: 0.7.36
+  resolution: "@types/ua-parser-js@npm:0.7.36"
+  checksum: 8c24d4dc12ed1b8b98195838093391c358c81bf75e9cae0ecec8f7824b441e069daaa17b974a3e257172caddb671439f0c0b44bf43bfcf409b7a574a25aab948
   languageName: node
   linkType: hard
 
@@ -13635,6 +13643,7 @@ __metadata:
     "@types/moment": ^2.13.0
     "@types/react": ^18.0.17
     "@types/react-dom": ^18.0.6
+    "@types/ua-parser-js": ^0.7.36
     "@zcloak/dev": ^0.1.1
     "@zcloak/service": ^0.2.1
     concurrently: ^7.2.1
@@ -15170,6 +15179,13 @@ __metadata:
     tsc: bin/tsc
     tsserver: bin/tsserver
   checksum: 9096d8f6c16cb80ef3bf96fcbbd055bf1c4a43bd14f3b7be45a9fbe7ada46ec977f604d5feed3263b4f2aa7d4c7477ce5f9cd87de0d6feedec69a983f3a4f93e
+  languageName: node
+  linkType: hard
+
+"ua-parser-js@npm:^1.0.2":
+  version: 1.0.2
+  resolution: "ua-parser-js@npm:1.0.2"
+  checksum: ff7f6d79a9c1a38aa85a0e751040fc7e17a0b621bda876838d14ebe55aca4e50e68da0350f181e58801c2d8a35e7db4e12473776e558910c4b7cabcec96aa3bf
   languageName: node
   linkType: hard
 

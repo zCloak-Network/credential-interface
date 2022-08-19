@@ -8,7 +8,7 @@ import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
-import { useToggle } from '@credential/react-hooks';
+import { useStopPropagation, useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 import IconApprove from '../icons/icon_approve.svg';
@@ -74,11 +74,13 @@ const Approve: React.FC<{
 
   const claimer = useDidDetails(request.body.content.requestForAttestation.claim.owner);
 
+  const _toggleOpen = useStopPropagation(toggleOpen);
+
   return (
     <>
       {type === 'button' ? (
         <Button
-          onClick={toggleOpen}
+          onClick={_toggleOpen}
           startIcon={<IconApprove />}
           sx={({ palette }) => ({
             background: alpha(palette.success.main, 0.1),
@@ -93,7 +95,7 @@ const Approve: React.FC<{
           Approve
         </Button>
       ) : (
-        <MenuItem onClick={toggleOpen} sx={({ palette }) => ({ color: palette.success.main })}>
+        <MenuItem onClick={_toggleOpen} sx={({ palette }) => ({ color: palette.success.main })}>
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
             <IconApprove />
           </ListItemIcon>
@@ -101,11 +103,11 @@ const Approve: React.FC<{
         </MenuItem>
       )}
       <DidsModal
-        onClose={toggleOpen}
+        onClose={_toggleOpen}
         open={open}
         steps={
           <Steps
-            onDone={toggleOpen}
+            onDone={_toggleOpen}
             steps={[
               {
                 label: 'Sign and submit attestation',

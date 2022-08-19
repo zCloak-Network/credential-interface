@@ -100,30 +100,37 @@ const DidProfile: React.FC = () => {
           backgroundSize: 'cover',
           backgroundPosition: 'center'
         }}
+      />
+      <Stack
+        alignItems="center"
+        direction={{ xs: 'column', md: 'row' }}
+        justifyContent={{ xs: 'center', md: 'flex-start' }}
+        sx={{
+          position: 'relative',
+          zIndex: 1,
+          marginLeft: { xs: 0, md: '56px' },
+          marginTop: '-80px'
+        }}
       >
-        <Stack
-          alignItems="center"
-          direction="row"
-          sx={{
-            position: 'absolute',
-            left: '56px',
-            bottom: '-80px'
-          }}
-        >
-          <Box sx={{ width: 168, height: 168, borderRadius: '84px', border: '4px solid #fff' }}>
-            <IdentityIcon diameter={160} value={didUri} />
+        <Box sx={{ width: 168, height: 168, borderRadius: '84px', border: '4px solid #fff' }}>
+          <IdentityIcon diameter={160} value={didUri} />
+        </Box>
+        <Box marginLeft={{ md: 3, xs: 0 }} maxWidth="80%" width={400}>
+          <Typography
+            sx={{
+              textAlign: { md: 'left', xs: 'center' },
+              color: { md: 'white', xs: 'inherit' }
+            }}
+            variant="h1"
+          >
+            {w3Name ?? 'web3name'}
+          </Typography>
+          <Box marginTop={3}>
+            <DidCell copyable value={didUri} />
           </Box>
-          <Box marginLeft={3}>
-            <Typography color="white" variant="h1">
-              {w3Name ?? 'web3name'}
-            </Typography>
-            <Box fontSize="0.875rem" marginTop={3} width={400}>
-              <DidCell copyable value={didUri} />
-            </Box>
-          </Box>
-        </Stack>
-      </Box>
-      <Container maxWidth="md" sx={{ marginTop: 19 }}>
+        </Box>
+      </Stack>
+      <Container maxWidth="md" sx={{ marginTop: { xs: 7, md: 14 } }}>
         <Tabs value={0}>
           <Tab label="Keys" />
         </Tabs>

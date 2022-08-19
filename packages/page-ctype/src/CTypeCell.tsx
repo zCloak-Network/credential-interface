@@ -2,7 +2,6 @@ import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined
 import {
   alpha,
   Box,
-  Button,
   IconButton,
   Paper,
   Stack,
@@ -12,7 +11,6 @@ import {
   Typography
 } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
-import { useNavigate } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
 import { BacCardImage, CtypeOfficialImage } from '@credential/app-config/images';
@@ -20,6 +18,9 @@ import { CType } from '@credential/app-db/ctype';
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
+import { isMobile } from '@credential/react-hooks/utils/userAgent';
+
+import CreateClaim from './create/CreateClaim';
 
 const Wrapper = styled(Paper)(({ theme }) => ({
   position: 'relative',
@@ -52,6 +53,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     borderRadius: 30,
     padding: theme.spacing(0.6),
     transformOrigin: 'top left',
+    transform: isMobile ? 'scale(0.8)' : null,
 
     transition: theme.transitions.create(['transform'], {
       easing: theme.transitions.easing.sharp,
@@ -65,6 +67,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   },
   '.CTypeCell_title': {
     transformOrigin: 'top left',
+    transform: isMobile ? 'translate(60px, -62px) scale(0.8)' : null,
     ...ellipsisMixin(),
 
     transition: theme.transitions.create(['transform'], {
@@ -74,6 +77,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   },
   '.CTypeCell_attester': {
     transformOrigin: 'top left',
+    transform: isMobile ? 'translate(0, -50px)' : null,
 
     transition: theme.transitions.create(['transform'], {
       easing: theme.transitions.easing.sharp,
@@ -84,10 +88,10 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     left: theme.spacing(4),
     right: theme.spacing(4),
     bottom: theme.spacing(4),
-    opacity: 0,
     position: 'absolute',
-    transform: 'translateY(20px)',
     textAlign: 'center',
+    opacity: isMobile ? 1 : 0,
+    transform: isMobile ? 'translateY(0)' : 'translateY(20px)',
 
     transition: theme.transitions.create(['transform', 'opacity'], {
       easing: theme.transitions.easing.sharp,
@@ -97,20 +101,11 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 }));
 
 const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
-  const navigate = useNavigate();
   const { deleteCType } = useContext(CTypeContext);
 
   const handleDelete = useCallback(() => {
     deleteCType(cType.hash);
   }, [cType.hash, deleteCType]);
-
-  const submitClaim = useCallback(() => {
-    navigate('/claimer/claims', {
-      state: {
-        cType
-      }
-    });
-  }, [cType, navigate]);
 
   return (
     <Wrapper
@@ -167,9 +162,7 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
           </Box>
         </Stack>
         <Box className="CTypeCell_actions">
-          <Button onClick={submitClaim} variant="contained">
-            Create Claim
-          </Button>
+          <CreateClaim ctype={cType} />
         </Box>
       </Stack>
     </Wrapper>

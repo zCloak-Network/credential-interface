@@ -1,5 +1,5 @@
 import { DidUri } from '@kiltprotocol/sdk-js';
-import { alpha, Button } from '@mui/material';
+import { alpha, Button, useMediaQuery, useTheme } from '@mui/material';
 import React, { useRef } from 'react';
 
 import { IdentityIcon } from '@credential/react-components';
@@ -15,6 +15,8 @@ interface Props {
 const AccountInfo: React.FC<Props> = ({ did }) => {
   const [open, toggleOpen] = useToggle();
   const anchorEl = useRef<HTMLButtonElement | null>(null);
+  const theme = useTheme();
+  const upMd = useMediaQuery(theme.breakpoints.up('md'));
 
   return (
     <>
@@ -22,6 +24,7 @@ const AccountInfo: React.FC<Props> = ({ did }) => {
         endIcon={<IdentityIcon value={did} />}
         onClick={toggleOpen}
         ref={anchorEl}
+        size={upMd ? 'medium' : 'small'}
         sx={({ palette }) => ({
           border: '1px solid',
           borderColor: alpha(palette.primary.main, 0.12),

@@ -1,4 +1,5 @@
-import { Badge, Box, Drawer, Tab, Tabs, Typography } from '@mui/material';
+import CloseIcon from '@mui/icons-material/Close';
+import { Badge, Box, Drawer, IconButton, Tab, Tabs, Typography } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
 import { AppContext } from '@credential/react-components';
@@ -26,15 +27,28 @@ const Notification: React.FC<Props> = ({
   );
 
   return (
-    <Drawer anchor="right" onClose={onClose} open={open}>
+    <Drawer
+      anchor="right"
+      onClose={onClose}
+      open={open}
+      sx={{
+        '.MuiPaper-root': {
+          width: 532,
+          maxWidth: '100%'
+        }
+      }}
+    >
       <Box
         sx={({ palette }) => ({
-          minWidth: 532,
+          position: 'relative',
           background: palette.grey[100],
-          paddingX: 3,
+          paddingX: 2,
           paddingTop: 3
         })}
       >
+        <IconButton onClick={onClose} sx={{ position: 'absolute', right: 0, top: 0 }}>
+          <CloseIcon />
+        </IconButton>
         <Typography sx={{ fontWeight: 500 }}>Notification</Typography>
         <Tabs onChange={(_, value) => setType(value)} value={type}>
           <Tab

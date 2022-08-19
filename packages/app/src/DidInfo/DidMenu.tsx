@@ -50,7 +50,8 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
 
   const handleProfile = useCallback(() => {
     navigate(pathname.startsWith('/attester') ? '/attester/did/profile' : '/claimer/did/profile');
-  }, [navigate, pathname]);
+    onClose();
+  }, [navigate, onClose, pathname]);
 
   const handleLogout = useCallback(() => {
     logout();
@@ -62,6 +63,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
       <Menu
         MenuListProps={{
           sx: {
+            fontSize: '1rem',
             '.MuiMenuItem-root,.MuiListItem-root': {
               paddingY: 1.5,
               paddingX: '5px'
@@ -75,7 +77,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         onClose={onClose}
         open={open}
       >
-        <Typography fontWeight={500} variant="inherit">
+        <Typography fontWeight={500} variant="h6">
           Did
         </Typography>
         <ListItem

@@ -17,16 +17,16 @@ const DidsModal: React.FC<
   const { didUri, isLocked, unlockDid } = useContext(DidsContext);
   const [password, setPassword] = useState<string>('');
 
-  const unlock = useCallback(async () => {
+  const unlock = useCallback(() => {
     if (!didUri) return;
 
-    await unlockDid(didUri, password);
+    unlockDid(didUri, password);
   }, [didUri, password, unlockDid]);
 
   return (
     <Dialog maxWidth="sm" open={open}>
       <DialogHeader onClose={onClose}>{title}</DialogHeader>
-      <DialogContent sx={{ minWidth: 325, width: 578, maxWidth: '100%', padding: 7.5 }}>
+      <DialogContent sx={{ minWidth: 280, width: 578, maxWidth: '100%', padding: 7.5 }}>
         <Stack spacing={3}>
           {isLocked && (
             <>

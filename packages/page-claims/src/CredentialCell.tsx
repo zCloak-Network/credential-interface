@@ -14,6 +14,7 @@ import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 import { useRequestStatus, useToggle } from '@credential/react-hooks';
 import { RequestStatus } from '@credential/react-hooks/types';
+import { isMobile } from '@credential/react-hooks/utils/userAgent';
 
 import DownloadButton from './button/DownloadButton';
 import ImportButton from './button/ImportButton';
@@ -30,8 +31,6 @@ const Wrapper = styled(Paper)(({ theme }) => ({
 
   ':hover': {
     boxShadow: theme.shadows[3],
-
-    '.CredentialCell_Status': {},
 
     '.CredentialCell_title': {
       transform: 'translate(90px, -40px)',
@@ -54,10 +53,13 @@ const Wrapper = styled(Paper)(({ theme }) => ({
     alignItems: 'center'
   },
   '.CredentialCell_Time': {
-    color: theme.palette.grey[500]
+    color: theme.palette.grey[500],
+    opacity: isMobile ? 0 : 1
   },
   '.CredentialCell_title': {
     transformOrigin: 'top left',
+    transform: isMobile ? 'translate(90px, -40px)' : null,
+    fontSize: isMobile ? 18 : null,
     ...ellipsisMixin(),
 
     transition: theme.transitions.create(['transform', 'font-size'], {
@@ -67,6 +69,7 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   },
   '.CredentialCell_attester': {
     transformOrigin: 'top left',
+    transform: isMobile ? 'translate(0, -30px)' : null,
 
     transition: theme.transitions.create(['transform'], {
       easing: theme.transitions.easing.sharp,
@@ -76,10 +79,10 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   '.CredentialCell_actions': {
     right: theme.spacing(4),
     bottom: theme.spacing(4),
-    opacity: 0,
     position: 'absolute',
-    transform: 'translateY(20px)',
     textAlign: 'right',
+    opacity: isMobile ? 1 : 0,
+    transform: isMobile ? 'translateY(0)' : 'translateY(20px)',
 
     '.MuiButtonBase-root': {
       border: `1px solid ${theme.palette.grey[300]}`,

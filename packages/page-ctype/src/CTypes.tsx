@@ -36,7 +36,16 @@ const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
             }}
             variant="outlined"
           >
-            <Stack alignItems="center" direction="row" spacing={2} width="20%">
+            <Stack
+              alignItems="center"
+              direction="row"
+              spacing={2}
+              sx={({ breakpoints }) => ({
+                width: '20%',
+                [breakpoints.down('lg')]: { width: '40%' },
+                [breakpoints.down('md')]: { width: '100%' }
+              })}
+            >
               <SvgIcon
                 component={LogoCircleIcon}
                 sx={{ width: 35, height: 35 }}
@@ -44,7 +53,13 @@ const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
               />
               <Typography fontWeight={500}>{cType.schema.title}</Typography>
             </Stack>
-            <Stack spacing={0.5} width="40%">
+            <Stack
+              spacing={0.5}
+              sx={({ breakpoints }) => ({
+                width: '40%',
+                [breakpoints.down('lg')]: { display: 'none' }
+              })}
+            >
               <Typography
                 fontWeight={300}
                 sx={({ palette }) => ({ color: palette.grey[500] })}
@@ -56,7 +71,13 @@ const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
                 <DidName shorten={false} value={cType.owner} />
               </Typography>
             </Stack>
-            <Stack spacing={0.5} width="40%">
+            <Stack
+              spacing={0.5}
+              sx={({ breakpoints }) => ({
+                width: '40%',
+                [breakpoints.down('md')]: { display: 'none' }
+              })}
+            >
               <Typography
                 fontWeight={300}
                 sx={({ palette }) => ({ color: palette.grey[500] })}

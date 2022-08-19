@@ -267,15 +267,15 @@ const createComponents: Func = () => ({
         minWidth: '140px'
       },
       sizeSmall: {
-        padding: '4px 10px',
-        fontSize: '0.9375rem'
+        padding: '4px 8px',
+        fontSize: '0.875rem'
       },
       sizeMedium: {
-        padding: '6px 16px',
-        fontSize: '0.9375rem'
+        padding: '8px 12px',
+        fontSize: '1rem'
       },
       sizeLarge: {
-        padding: '8px 22px',
+        padding: '12px 16px',
         fontSize: '1rem'
       }
     }
@@ -291,7 +291,7 @@ const createComponents: Func = () => ({
 
   MuiDialog: {
     styleOverrides: {
-      paperFullScreen: ({ theme: { palette, spacing } }) => ({
+      paperFullScreen: ({ theme: { breakpoints, palette, spacing } }) => ({
         margin: 0,
         background: palette.grey[100],
         borderRadius: 0,
@@ -303,19 +303,15 @@ const createComponents: Func = () => ({
           margin: spacing(3),
           marginLeft: 'auto',
           marginRight: 'auto',
-          background: palette.common.white
+          background: palette.common.white,
+          [breakpoints.down('sm')]: {
+            padding: 0
+          }
         },
         '& .MuiDialogActions-root': {
           background: palette.common.white,
           justifyContent: 'center',
           padding: spacing(3)
-        }
-      }),
-      paper: ({ theme: { breakpoints, spacing } }) => ({
-        borderRadius: '10px',
-        margin: spacing(3),
-        [breakpoints.down('md')]: {
-          margin: spacing(2)
         }
       })
     }
