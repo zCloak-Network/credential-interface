@@ -1,13 +1,12 @@
 import { Credential, ICredential } from '@kiltprotocol/sdk-js';
-import React, { useCallback, useContext, useState } from 'react';
+import React, { useCallback, useState } from 'react';
 
-import { CredentialModal, NotificationContext, QrScanner } from '@credential/react-components';
+import { CredentialModal, QrScanner } from '@credential/react-components';
 import { useToggle } from '@credential/react-hooks';
 
 function CredentialScanner({ onClose }: { onClose: () => void }) {
   const [credential, setCredential] = useState<ICredential>();
   const [open, toggleOpen] = useToggle();
-  const { notifyError } = useContext(NotificationContext);
 
   const onResult = useCallback(
     (result: string) => {
@@ -17,12 +16,9 @@ function CredentialScanner({ onClose }: { onClose: () => void }) {
 
         setCredential(credential);
         toggleOpen();
-      } catch {
-        notifyError('Not a credential');
-        onClose();
-      }
+      } catch {}
     },
-    [notifyError, onClose, toggleOpen]
+    [toggleOpen]
   );
 
   return open && credential ? (
