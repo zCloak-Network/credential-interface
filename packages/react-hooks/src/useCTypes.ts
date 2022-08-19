@@ -1,4 +1,4 @@
-import { DidUri, Hash } from '@kiltprotocol/sdk-js';
+import { CType as CTypeKilt, DidUri } from '@kiltprotocol/sdk-js';
 import { useLiveQuery } from 'dexie-react-hooks';
 import { useContext, useEffect, useMemo } from 'react';
 
@@ -17,13 +17,15 @@ export function useCTypes() {
     if (didUri && fetcher) {
       credentialApi.getCtypes(didUri).then(({ data }) => {
         fetcher.write.ctypes.batchPut(
-          data.map((d) => ({
-            hash: d.ctypeHash as Hash,
-            owner: d.owner as DidUri,
-            schema: d.metadata as CType['schema'],
-            description: d.description,
-            type: d.type
-          }))
+          data.map((d) => {
+            const ctype = CTypeKilt.fromSchema(d.metadata as CType['schema'], d.owner as DidUri);
+
+            return {
+              ...ctype,
+              description: d.description,
+              type: d.type
+            };
+          })
         );
       });
     }
