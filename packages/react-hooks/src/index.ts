@@ -6,6 +6,7 @@ export * from './useToggle';
 export * from './useBalances';
 export * from './useAttestation';
 export * from './useQueryParams';
+export * from './useStopPropagation';
 
 // db query
 export * from './useMessage';

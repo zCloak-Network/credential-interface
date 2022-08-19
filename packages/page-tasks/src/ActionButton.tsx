@@ -1,4 +1,9 @@
-import { IAttestation, IRequestAttestation } from '@kiltprotocol/sdk-js';
+import {
+  IAttestation,
+  IRejectAttestation,
+  IRequestAttestation,
+  ISubmitAttestation
+} from '@kiltprotocol/sdk-js';
 import MoreHorizIcon from '@mui/icons-material/MoreHoriz';
 import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/material';
 import React, { useCallback } from 'react';
@@ -11,15 +16,14 @@ import IconDetails from './icons/icon_details.svg';
 import Approve from './RequestDetails/Approve';
 import Reject from './RequestDetails/Reject';
 import Revoke from './RequestDetails/Revoke';
-import { useMessageLinked } from './useMessageLinked';
 
 const ActionButton: React.FC<{
   request: Message<IRequestAttestation>;
   attestation?: IAttestation | null;
   status: RequestStatus;
-}> = ({ attestation, request, status }) => {
+  messageLinked?: Message<ISubmitAttestation | IRequestAttestation | IRejectAttestation>[];
+}> = ({ attestation, messageLinked, request, status }) => {
   const [anchorEl, setAnchorEl] = React.useState<null | HTMLElement>(null);
-  const messageLinked = useMessageLinked(request.body.content.requestForAttestation.rootHash);
 
   const handleClick = useCallback((event: React.MouseEvent<HTMLElement>) => {
     setAnchorEl(event.currentTarget);

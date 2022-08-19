@@ -15,7 +15,7 @@ const Tasks: React.FC = () => {
       >
         <Tab label="Tasks" />
       </Tabs>
-      <Box px={4}>
+      <Box px={{ md: 4, xs: 2 }}>
         <RequestTable />
       </Box>
     </Stack>

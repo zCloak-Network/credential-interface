@@ -52,7 +52,7 @@ const Messages: React.FC<{
       container
       spacing={3}
       sx={({ palette }) => ({
-        '.Message_Card': {
+        '.MessageCard': {
           background: palette.background.paper,
           border: '1px solid',
           borderColor: palette.grey[200],

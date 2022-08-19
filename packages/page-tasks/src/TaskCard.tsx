@@ -3,12 +3,14 @@ import React from 'react';
 
 import { ellipsisMixin } from '@credential/react-components/utils';
 
-export const MessageCard = React.memo(function MessageCard({
+export const TaskCard = React.memo(function TaskCard({
   children,
-  onClick
+  onClick,
+  operate
 }: {
   onClick?: () => void;
   children: React.ReactNode;
+  operate: React.ReactNode;
 }) {
   const theme = useTheme();
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
@@ -17,28 +19,43 @@ export const MessageCard = React.memo(function MessageCard({
     return (
       <TableRow hover onClick={onClick}>
         {children}
+        <TaskCardItem content={operate} label="Operate" />
       </TableRow>
     );
   }
 
   return (
     <Box
-      className="MessageCard"
+      className="TaskCard"
       onClick={onClick}
       sx={({ palette, typography }) => ({
         padding: 2.5,
-        background: palette.common.white,
+        border: '1px solid',
+        borderColor: palette.grey[200],
         boxShadow: '0px 6px 20px rgba(153,155,168,0.1)',
-        borderRadius: '20px',
+        borderRadius: '5px',
         fontSize: typography.fontSize
       })}
     >
-      <Stack spacing={3}>{children}</Stack>
+      <Stack spacing={3}>
+        {children}
+        <Stack
+          direction="row"
+          spacing={1.5}
+          sx={{
+            '> *': {
+              flex: 1
+            }
+          }}
+        >
+          {operate}
+        </Stack>
+      </Stack>
     </Box>
   );
 });
 
-export const MessageCardItem = React.memo(function MessageCardItem({
+export const TaskCardItem = React.memo(function TaskCardItem({
   content,
   label
 }: {
@@ -52,7 +69,7 @@ export const MessageCardItem = React.memo(function MessageCardItem({
     return (
       <TableCell>
         <Box
-          className="MessageCard_Item_content"
+          className="TaskCard_Item_content"
           sx={({ palette }) => ({
             color: palette.text.primary,
             maxWidth: 160,
@@ -67,7 +84,7 @@ export const MessageCardItem = React.memo(function MessageCardItem({
 
   return (
     <Box
-      className="MessageCard_Item"
+      className="TaskCard_Item"
       sx={{
         display: 'flex',
         alignItems: 'center',
@@ -75,7 +92,7 @@ export const MessageCardItem = React.memo(function MessageCardItem({
       }}
     >
       <Box
-        className="MessageCard_Item_label"
+        className="TaskCard_Item_label"
         sx={({ palette }) => ({
           color: palette.grey[500]
         })}
@@ -83,7 +100,7 @@ export const MessageCardItem = React.memo(function MessageCardItem({
         {label}
       </Box>
       <Box
-        className="MessageCard_Item_content"
+        className="TaskCard_Item_content"
         sx={({ palette }) => ({
           color: palette.text.primary,
           textAlign: 'right',

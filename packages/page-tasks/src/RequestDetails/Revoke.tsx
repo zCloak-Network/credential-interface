@@ -13,7 +13,7 @@ import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
-import { useToggle } from '@credential/react-hooks';
+import { useStopPropagation, useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 import IconRevoke from '../icons/icon_revok.svg';
@@ -83,12 +83,13 @@ const Revoke: React.FC<{
   }, [attestation, didUri, messageLinked, request.body.content.requestForAttestation.claim.owner]);
 
   const claimer = useDidDetails(request.body.content.requestForAttestation.claim.owner);
+  const _toggleOpen = useStopPropagation(toggleOpen);
 
   return (
     <>
       {type === 'button' ? (
         <Button
-          onClick={toggleOpen}
+          onClick={_toggleOpen}
           startIcon={<IconRevoke />}
           sx={({ palette }) => ({
             background: alpha(palette.error.main, 0),
@@ -103,7 +104,7 @@ const Revoke: React.FC<{
           Revoke
         </Button>
       ) : (
-        <MenuItem onClick={toggleOpen} sx={({ palette }) => ({ color: palette.error.main })}>
+        <MenuItem onClick={_toggleOpen} sx={({ palette }) => ({ color: palette.error.main })}>
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
             <IconRevoke />
           </ListItemIcon>
@@ -111,11 +112,11 @@ const Revoke: React.FC<{
         </MenuItem>
       )}
       <DidsModal
-        onClose={toggleOpen}
+        onClose={_toggleOpen}
         open={open}
         steps={
           <Steps
-            onDone={toggleOpen}
+            onDone={_toggleOpen}
             steps={[
               {
                 label: 'Sign and submit attestation',
