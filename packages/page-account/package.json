@@ -14,9 +14,9 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.14.2-4",
+  "version": "0.14.2-5",
   "dependencies": {
-    "@credential/react-keystore": "0.14.2-4",
+    "@credential/react-keystore": "0.14.2-5",
     "file-saver": "^2.0.5"
   }
 }
