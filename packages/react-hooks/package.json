@@ -14,9 +14,9 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.16.2-1",
+  "version": "0.16.2-2",
   "dependencies": {
-    "@credential/app-db": "0.16.2-1",
+    "@credential/app-db": "0.16.2-2",
     "@zcloak/service": "^0.2.1",
     "copy-to-clipboard": "^3.3.2",
     "dexie-react-hooks": "^1.1.1",
