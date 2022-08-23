@@ -6,8 +6,7 @@ import React, { useEffect } from 'react';
 const CTypeBool: React.FC<ItemProps> = ({ defaultValue, disabled = false, name, onChange }) => {
   useEffect(() => {
     onChange?.(name, false);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  }, [name, onChange]);
 
   return (
     <FormControl fullWidth>

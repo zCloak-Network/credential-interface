@@ -20,11 +20,12 @@ import { useToggle } from '@credential/react-hooks';
 import { useKeystore } from '@credential/react-keystore';
 
 const SubmitClaim: React.FC<{
+  hasError?: boolean;
   contents: Record<string, unknown>;
   attester: Did.FullDidDetails | null;
   ctype?: ICType;
   onDone?: () => void;
-}> = ({ attester, contents, ctype, onDone }) => {
+}> = ({ attester, contents, ctype, hasError, onDone }) => {
   const { keyring } = useKeystore();
   const { didUri } = useContext(DidsContext);
   const { fetcher } = useContext(AppContext);
@@ -51,7 +52,11 @@ const SubmitClaim: React.FC<{
 
   return (
     <>
-      <Button disabled={!attester || !ctype || !contents} onClick={toggleOpen} variant="contained">
+      <Button
+        disabled={!attester || !ctype || !contents || hasError}
+        onClick={toggleOpen}
+        variant="contained"
+      >
         Submit
       </Button>
       {open && (

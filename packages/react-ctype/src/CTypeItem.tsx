@@ -9,6 +9,7 @@ const CTypeItem: React.FC<ItemProps> = ({
   disabled = false,
   name,
   onChange,
+  onError,
   type
 }) => {
   const Component = useMemo(() => findItem(type), [type]);
@@ -19,6 +20,7 @@ const CTypeItem: React.FC<ItemProps> = ({
       disabled={disabled}
       name={name}
       onChange={onChange}
+      onError={onError}
       type={type}
     />
   );

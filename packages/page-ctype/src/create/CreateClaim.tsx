@@ -1,7 +1,7 @@
 import type { Did } from '@kiltprotocol/sdk-js';
 
 import { Box, Button, SvgIcon, Typography } from '@mui/material';
-import React, { useCallback, useState } from 'react';
+import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { LogoCircleIcon } from '@credential/app-config/icons';
@@ -20,12 +20,21 @@ function CreateClaim({ ctype }: { ctype: CType }) {
   const [open, toggleOpen] = useToggle();
   const [attester, setAttester] = useState<Did.FullDidDetails | null>(null);
   const [contents, setContents] = useState<Record<string, unknown>>({});
+  const [contentsError, setContentsError] = useState<Record<string, Error | null | undefined>>({});
   const navigate = useNavigate();
 
   const onDone = useCallback(() => {
     toggleOpen();
     navigate('/claimer/claims');
   }, [navigate, toggleOpen]);
+
+  const hasError = useMemo(() => {
+    const values = Object.values(contentsError);
+
+    if (values.length === 0) return false;
+
+    return values.reduce((l, r) => l || r);
+  }, [contentsError]);
 
   return (
     <>
@@ -48,9 +57,16 @@ function CreateClaim({ ctype }: { ctype: CType }) {
             defaultAttester={ctype.owner ?? undefined}
             handleAttester={setAttester}
             onChange={setContents}
+            onError={setContentsError}
           />
           <Box mt={4} textAlign="center">
-            <SubmitClaim attester={attester} contents={contents} ctype={ctype} onDone={onDone} />
+            <SubmitClaim
+              attester={attester}
+              contents={contents}
+              ctype={ctype}
+              hasError={!!hasError}
+              onDone={onDone}
+            />
           </Box>
         </FullScreenDialogContent>
       </FullScreenDialog>

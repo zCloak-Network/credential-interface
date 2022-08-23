@@ -6,6 +6,7 @@ export interface ItemProps {
   disabled?: boolean;
   type?: InstanceType;
   defaultValue?: unknown;
+  onError?: (key: string, error: Error | null) => void;
   onChange?: (key: string, value: unknown) => void;
 }
 

@@ -1,28 +1,47 @@
 import type { ItemProps } from './types';
 
-import { FormControl, InputLabel, OutlinedInput } from '@mui/material';
-import React, { useEffect } from 'react';
+import { FormControl, FormHelperText, InputLabel, OutlinedInput } from '@mui/material';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
 const CTypeInput: React.FC<ItemProps> = ({
   defaultValue,
   disabled = false,
   name,
   onChange,
+  onError,
   type
 }) => {
+  const [_value, _setValue] = useState<string>();
+  const error = useMemo(() => {
+    if (!_value) {
+      return new Error('Not be empty');
+    }
+
+    return null;
+  }, [_value]);
+
+  const _onChange = useCallback(
+    (e: any) => {
+      _setValue(e.target.value.trim());
+      onChange?.(name, _value);
+    },
+    [_value, name, onChange]
+  );
+
   useEffect(() => {
-    onChange?.(name, '');
-  }, [name, onChange]);
+    onError?.(name, error);
+  }, [error, name, onError]);
 
   return (
-    <FormControl fullWidth>
+    <FormControl error={!!error} fullWidth>
       <InputLabel shrink>{name}</InputLabel>
       <OutlinedInput
         defaultValue={defaultValue}
         disabled={disabled}
-        onChange={(e) => onChange?.(name, e.target.value.trim())}
+        onChange={_onChange}
         placeholder={`Please input ${type}`}
       />
+      {error && <FormHelperText>{error.message}</FormHelperText>}
     </FormControl>
   );
 };

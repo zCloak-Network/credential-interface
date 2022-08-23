@@ -8,12 +8,13 @@ const CTypeInputNumber: React.FC<ItemProps> = ({
   disabled = false,
   name,
   onChange,
+  onError,
   type
 }) => {
-  const [_value, _setValue] = useState<number>();
+  const [_value, _setValue] = useState<string>();
   const error = useMemo(() => {
     if (!_value) {
-      return null;
+      return new Error('Not be empty');
     }
 
     if (type === 'number') {
@@ -29,15 +30,17 @@ const CTypeInputNumber: React.FC<ItemProps> = ({
     return null;
   }, [type, _value]);
 
-  const _onChange = useCallback((e: any) => {
-    _setValue(e.target.value);
-  }, []);
+  const _onChange = useCallback(
+    (e: any) => {
+      _setValue(e.target.value);
+      onChange?.(name, Number(_value));
+    },
+    [_value, name, onChange]
+  );
 
   useEffect(() => {
-    if (!error) {
-      onChange?.(name, Number(_value));
-    }
-  }, [_value, error, name, onChange]);
+    onError?.(name, error);
+  }, [error, name, onError]);
 
   return (
     <FormControl error={!!error} fullWidth>
