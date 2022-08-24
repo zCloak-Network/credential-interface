@@ -16,6 +16,7 @@ export interface CredentialWrite {
   messages: {
     read: (messageId?: string) => Promise<void>;
     put: (message: Message<MessageBody>) => Promise<void>;
+    batchPut: (messages: Message<MessageBody>[]) => Promise<void>;
   };
   ctypes: {
     put: (ctype: CType) => Promise<void>;

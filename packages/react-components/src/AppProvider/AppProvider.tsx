@@ -43,7 +43,22 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   useEffect(() => {
     if (!fetcher || !address) return;
 
-    const onConnected = () => {
+    const onConnected = async () => {
+      // transform old messages syncId
+      // old socket sent error type, the right type is number
+      await fetcher.query.messages
+        .all((message) => typeof message.syncId === 'string')
+        .then((messages) =>
+          fetcher.write.messages.batchPut(
+            messages.map((message) => ({
+              ...message,
+              syncId:
+                message.syncId !== undefined && message.syncId !== null
+                  ? Number(message.syncId)
+                  : undefined
+            }))
+          )
+        );
       fetcher.query.messages.lastSync().then((message) => {
         syncProvider.subscribe(address, !message?.syncId ? 0 : message.syncId, (messages) => {
           messages.forEach((message) => encryptedMessages.set(message.id, message));

@@ -41,6 +41,9 @@ function generateWrite(data: DexieData): CredentialWrite {
       },
       put: async (message: Message<MessageBody>) => {
         await data.messages.put(message);
+      },
+      batchPut: async (messages: Message<MessageBody>[]) => {
+        await data.messages.bulkPut(messages);
       }
     },
     ctypes: {
