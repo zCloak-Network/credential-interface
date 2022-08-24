@@ -33,9 +33,9 @@ const CTypeInputNumber: React.FC<ItemProps> = ({
   const _onChange = useCallback(
     (e: any) => {
       _setValue(e.target.value);
-      onChange?.(name, Number(_value));
+      onChange?.(name, Number(e.target.value));
     },
-    [_value, name, onChange]
+    [name, onChange]
   );
 
   useEffect(() => {

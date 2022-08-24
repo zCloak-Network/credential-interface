@@ -23,9 +23,9 @@ const CTypeInput: React.FC<ItemProps> = ({
   const _onChange = useCallback(
     (e: any) => {
       _setValue(e.target.value.trim());
-      onChange?.(name, _value);
+      onChange?.(name, e.target.value.trim());
     },
-    [_value, name, onChange]
+    [name, onChange]
   );
 
   useEffect(() => {
