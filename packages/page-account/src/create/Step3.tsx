@@ -1,9 +1,9 @@
 import ArrowBackIosIcon from '@mui/icons-material/ArrowBackIos';
 import { Box, Button, FormControl, Grid, InputLabel, OutlinedInput } from '@mui/material';
 import FileSaver from 'file-saver';
-import React, { useCallback, useContext, useEffect, useMemo, useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 
-import { DidsContext } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 
 function random(min = 0, max = 11): number {
   return Math.floor(Math.random() * (max - min + 1)) + min;
@@ -17,7 +17,6 @@ const Step3: React.FC<{
 }> = ({ mnemonic, nextStep, password, prevStep }) => {
   const [keyWordsIndex, setKeyWordsIndex] = useState<number[]>([]);
   const [keyWords, setKeyWords] = useState<string[]>([]);
-  const { generateDid } = useContext(DidsContext);
 
   useEffect(() => {
     const set = new Set<number>();
@@ -45,7 +44,8 @@ const Step3: React.FC<{
   const toggleContinue = useCallback(() => {
     if (!password) return;
 
-    const json = generateDid(mnemonic, password);
+    const didDetails = didManager.addDidFromMnemonic(mnemonic);
+    const json = didManager.backupDid(didDetails, password);
     const blobSiningJson = new Blob([JSON.stringify(json)], {
       type: 'text/plain;charset=utf-8'
     });
@@ -53,7 +53,7 @@ const Step3: React.FC<{
     FileSaver.saveAs(blobSiningJson, `${json.didUri}.json`);
 
     nextStep();
-  }, [generateDid, mnemonic, nextStep, password]);
+  }, [mnemonic, nextStep, password]);
 
   return (
     <>

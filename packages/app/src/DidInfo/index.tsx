@@ -1,4 +1,4 @@
-import { DidUri } from '@kiltprotocol/sdk-js';
+import { Did } from '@kiltprotocol/sdk-js';
 import { alpha, Button, useMediaQuery, useTheme } from '@mui/material';
 import React, { useRef } from 'react';
 
@@ -9,7 +9,7 @@ import { useToggle } from '@credential/react-hooks';
 import DidMenu from './DidMenu';
 
 interface Props {
-  did: DidUri;
+  did: Did.DidDetails;
 }
 
 const AccountInfo: React.FC<Props> = ({ did }) => {
@@ -21,7 +21,7 @@ const AccountInfo: React.FC<Props> = ({ did }) => {
   return (
     <>
       <Button
-        endIcon={<IdentityIcon value={did} />}
+        endIcon={<IdentityIcon value={did.uri} />}
         onClick={toggleOpen}
         ref={anchorEl}
         size={upMd ? 'medium' : 'small'}
@@ -38,7 +38,7 @@ const AccountInfo: React.FC<Props> = ({ did }) => {
         })}
         variant="contained"
       >
-        <DidName value={did} />
+        <DidName value={did.uri} />
       </Button>
       <DidMenu anchorEl={anchorEl.current} did={did} onClose={toggleOpen} open={open} />
     </>

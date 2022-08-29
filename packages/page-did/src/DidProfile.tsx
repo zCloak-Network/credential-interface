@@ -1,11 +1,11 @@
 import { KeyRelationship } from '@kiltprotocol/sdk-js';
 import { Box, Container, Stack, Tab, Tabs, Typography } from '@mui/material';
 import { u8aToHex } from '@polkadot/util';
-import React, { useContext, useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 
 import { Copy, IdentityIcon } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
-import { DidsContext, useDidDetails } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import DidCell from '@credential/react-dids/DidCell';
 import { getW3Name } from '@credential/react-dids/getW3Name';
 
@@ -52,9 +52,8 @@ const KeyCell: React.FC<{ name: string; publicKeys?: Uint8Array[] }> = ({ name, 
 };
 
 const DidProfile: React.FC = () => {
-  const { didUri } = useContext(DidsContext);
   const [w3Name, setW3Name] = useState<string | null>(null);
-  const didDetails = useDidDetails(didUri);
+  const didDetails = useDerivedDid();
 
   const authenticationKeys = useMemo(
     () =>
@@ -84,10 +83,10 @@ const DidProfile: React.FC = () => {
   );
 
   useEffect(() => {
-    if (didUri) {
-      getW3Name(didUri).then(setW3Name);
+    if (didDetails) {
+      getW3Name(didDetails.uri).then(setW3Name);
     }
-  }, [didUri]);
+  }, [didDetails]);
 
   return (
     <Box>
@@ -113,7 +112,7 @@ const DidProfile: React.FC = () => {
         }}
       >
         <Box sx={{ width: 168, height: 168, borderRadius: '84px', border: '4px solid #fff' }}>
-          <IdentityIcon diameter={160} value={didUri} />
+          <IdentityIcon diameter={160} value={didDetails?.uri} />
         </Box>
         <Box marginLeft={{ md: 3, xs: 0 }} maxWidth="80%" width={400}>
           <Typography
@@ -126,7 +125,7 @@ const DidProfile: React.FC = () => {
             {w3Name ?? 'web3name'}
           </Typography>
           <Box marginTop={3}>
-            <DidCell copyable value={didUri} />
+            <DidCell copyable value={didDetails?.uri} />
           </Box>
         </Box>
       </Stack>

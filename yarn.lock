@@ -1557,7 +1557,6 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/page-account@workspace:packages/page-account"
   dependencies:
-    "@credential/react-keystore": 0.16.2-4
     file-saver: ^2.0.5
   languageName: unknown
   linkType: soft
@@ -1565,40 +1564,30 @@ __metadata:
 "@credential/page-claims@workspace:packages/page-claims":
   version: 0.0.0-use.local
   resolution: "@credential/page-claims@workspace:packages/page-claims"
-  dependencies:
-    "@credential/react-keystore": 0.16.2-4
   languageName: unknown
   linkType: soft
 
 "@credential/page-ctype@workspace:packages/page-ctype":
   version: 0.0.0-use.local
   resolution: "@credential/page-ctype@workspace:packages/page-ctype"
-  dependencies:
-    "@credential/react-keystore": 0.16.2-4
   languageName: unknown
   linkType: soft
 
 "@credential/page-did@workspace:packages/page-did":
   version: 0.0.0-use.local
   resolution: "@credential/page-did@workspace:packages/page-did"
-  dependencies:
-    "@credential/react-keystore": 0.16.2-4
   languageName: unknown
   linkType: soft
 
 "@credential/page-message@workspace:packages/page-message":
   version: 0.0.0-use.local
   resolution: "@credential/page-message@workspace:packages/page-message"
-  dependencies:
-    "@credential/react-keystore": 0.16.2-4
   languageName: unknown
   linkType: soft
 
 "@credential/page-tasks@workspace:packages/page-tasks":
   version: 0.0.0-use.local
   resolution: "@credential/page-tasks@workspace:packages/page-tasks"
-  dependencies:
-    "@credential/react-keystore": 0.16.2-4
   languageName: unknown
   linkType: soft
 
@@ -1637,10 +1626,10 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/react-dids@workspace:packages/react-dids"
   dependencies:
-    "@credential/react-keystore": 0.16.2-4
     "@kiltprotocol/sdk-js": ^0.28.0
     "@mui/material": ^5.10.0
     "@polkadot/util": ^10.1.3
+    "@zcloak/ui-did-keyring": ^0.2.2-7
   languageName: unknown
   linkType: soft
 
@@ -1654,18 +1643,6 @@ __metadata:
     dexie-react-hooks: ^1.1.1
     search-query-parser: ^1.6.0
     ua-parser-js: ^1.0.2
-  languageName: unknown
-  linkType: soft
-
-"@credential/react-keystore@0.16.2-4, @credential/react-keystore@workspace:packages/react-keystore":
-  version: 0.0.0-use.local
-  resolution: "@credential/react-keystore@workspace:packages/react-keystore"
-  dependencies:
-    "@kiltprotocol/types": ^0.28.0
-    "@mui/material": ^5.10.0
-    "@polkadot/ui-keyring": ^2.9.4
-    "@polkadot/util": ^10.1.3
-    "@polkadot/util-crypto": ^10.1.3
   languageName: unknown
   linkType: soft
 
@@ -2305,7 +2282,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@kiltprotocol/did@npm:0.28.1":
+"@kiltprotocol/did@npm:0.28.1, @kiltprotocol/did@npm:^0.28.0":
   version: 0.28.1
   resolution: "@kiltprotocol/did@npm:0.28.1"
   dependencies:
@@ -3049,42 +3026,6 @@ __metadata:
     "@polkadot/util-crypto": ^10.1.3
     rxjs: ^7.5.6
   checksum: d33cf8c48bf03185bd57a45b7de8fdf9c8668513073c91af12eb841752f2f2a2771ec54cbf759870b11351a5add12fc24a0fb96cbe6dc99dc6e2f5b61ffc6a1f
-  languageName: node
-  linkType: hard
-
-"@polkadot/ui-keyring@npm:^2.9.4":
-  version: 2.9.4
-  resolution: "@polkadot/ui-keyring@npm:2.9.4"
-  dependencies:
-    "@babel/runtime": ^7.18.9
-    "@polkadot/keyring": ^10.1.3
-    "@polkadot/ui-settings": 2.9.4
-    "@polkadot/util": ^10.1.3
-    "@polkadot/util-crypto": ^10.1.3
-    mkdirp: ^1.0.4
-    rxjs: ^7.5.6
-    store: ^2.0.12
-  peerDependencies:
-    "@polkadot/keyring": "*"
-    "@polkadot/ui-settings": "*"
-    "@polkadot/util": "*"
-  checksum: 5b60cca09353656f2424ddb15d68cc85aa53ec350d1317930012958ad0bb70ad7227bc561c5cba253c9e883181d5eaa381bb2cedc0e45284e563146a3882a6be
-  languageName: node
-  linkType: hard
-
-"@polkadot/ui-settings@npm:2.9.4":
-  version: 2.9.4
-  resolution: "@polkadot/ui-settings@npm:2.9.4"
-  dependencies:
-    "@babel/runtime": ^7.18.9
-    "@polkadot/networks": ^10.1.3
-    "@polkadot/util": ^10.1.3
-    eventemitter3: ^4.0.7
-    store: ^2.0.12
-  peerDependencies:
-    "@polkadot/networks": "*"
-    "@polkadot/util": "*"
-  checksum: e658aa89f0ab8cd92c694318409af585de68ea074ebcde57c17c795320e71359368083f1a24a2e6ad4326590660ad9b3741137213abcb55be34f1f80c4495bf6
   languageName: node
   linkType: hard
 
@@ -4567,6 +4508,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"@zcloak/did-keyring@npm:^0.2.2-7":
+  version: 0.2.2-7
+  resolution: "@zcloak/did-keyring@npm:0.2.2-7"
+  dependencies:
+    "@kiltprotocol/types": ^0.28.0
+    "@polkadot/keyring": ^10.1.6
+    "@polkadot/util": ^10.1.6
+    "@polkadot/util-crypto": ^10.1.6
+    eventemitter3: ^4.0.7
+  checksum: f402db4d974411bee91e8102c756828cf59f8f911a5677961a2fb1638f2dbbe270e6cb8a9d41f24120d22c583ef1817fabb91ed6e27aeb64a823c8b4fc0f4c03
+  languageName: node
+  linkType: hard
+
 "@zcloak/extension-core@npm:^0.2.1":
   version: 0.2.1
   resolution: "@zcloak/extension-core@npm:0.2.1"
@@ -4580,6 +4534,28 @@ __metadata:
   version: 0.2.1
   resolution: "@zcloak/service@npm:0.2.1"
   checksum: b1e7544e6d7e4ea270666a6797ae54af11878f1f8a981f1dfd7393bd88ef6caad0bf597822ecd4c0cda99d2e156998ce521d6d3d631c8abd3ecfb23cc6de8cb4
+  languageName: node
+  linkType: hard
+
+"@zcloak/ui-did-keyring@npm:^0.2.2-7":
+  version: 0.2.2-7
+  resolution: "@zcloak/ui-did-keyring@npm:0.2.2-7"
+  dependencies:
+    "@kiltprotocol/did": ^0.28.0
+    "@polkadot/keyring": ^10.1.6
+    "@polkadot/util": ^10.1.6
+    "@zcloak/did-keyring": ^0.2.2-7
+    "@zcloak/ui-store": ^0.2.2-7
+  checksum: 9ed537f36ece70856397f6571f6bcc269e98664d5a2591e8075618b3004d1ee8710ccfb32988266a0ecb644a40f167630433917f7a676e69e53d1247a50c7f08
+  languageName: node
+  linkType: hard
+
+"@zcloak/ui-store@npm:^0.2.2-7":
+  version: 0.2.2-7
+  resolution: "@zcloak/ui-store@npm:0.2.2-7"
+  dependencies:
+    store: ^2.0.12
+  checksum: 3f4b44cec86d6245ad25cec2135ade49a19c320dcd3171bb2425a6c2887dc813c0aa085fd0c590dd5dfaa777227932f15e44db8aa7faec47af8ec697b24e4e3d
   languageName: node
   linkType: hard
 

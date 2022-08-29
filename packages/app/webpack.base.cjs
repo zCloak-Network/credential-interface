@@ -128,7 +128,7 @@ function createWebpack(context, mode = 'production') {
           ...mapChunks('kilt', [/node_modules\/(@kiltprotocol)/]),
           ...mapChunks('credential', [
             /* 00 */ /packages\/(app|app-config|app-db|app-sync)/,
-            /* 01 */ /packages\/(react-components|react-hooks|react-ctype|react-dids|react-keystore)/,
+            /* 01 */ /packages\/(react-components|react-hooks|react-ctype|react-dids)/,
             /* 01 */ /packages\/(page-account|page-claims|page-ctype|page-did|page-message|page-tasks)/
           ]),
           ...mapChunks('zcloak', [/packages\/(service|extension-core)/]),

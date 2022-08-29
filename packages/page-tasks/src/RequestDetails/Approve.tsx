@@ -6,10 +6,10 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
-import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { DidsModal, useDerivedDid, useDidDetails } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useStopPropagation, useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 import IconApprove from '../icons/icon_approve.svg';
 
@@ -20,18 +20,16 @@ const Approve: React.FC<{
 }> = ({ messageLinked, request, type = 'button' }) => {
   const [open, toggleOpen] = useToggle();
   const { fetcher } = useContext(AppContext);
-  const { didUri } = useContext(DidsContext);
-  const attester = useDidDetails(didUri);
-  const { keyring } = useKeystore();
+  const attester = useDerivedDid();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
   const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const attestation = useMemo(
     () =>
-      didUri
-        ? Attestation.fromRequestAndDid(request.body.content.requestForAttestation, didUri)
+      attester
+        ? Attestation.fromRequestAndDid(request.body.content.requestForAttestation, attester.uri)
         : null,
-    [didUri, request]
+    [attester, request]
   );
 
   const getExtrinsic = useCallback(async () => {
@@ -44,13 +42,13 @@ const Approve: React.FC<{
     }
 
     const tx = await attestation.getStoreTx();
-    const extrinsic = await attester.authorizeExtrinsic(tx, keyring, attester.identifier);
+    const extrinsic = await attester.authorizeExtrinsic(tx, didManager, attester.identifier);
 
     return extrinsic;
-  }, [attestation, attester, keyring]);
+  }, [attestation, attester]);
 
   const message = useMemo(() => {
-    if (!didUri) {
+    if (!attester) {
       return null;
     }
 
@@ -63,14 +61,19 @@ const Approve: React.FC<{
         content: { attestation },
         type: MessageKilt.BodyType.SUBMIT_ATTESTATION
       },
-      didUri,
+      attester.uri,
       request.body.content.requestForAttestation.claim.owner
     );
 
     message.references = messageLinked?.map((message) => message.messageId);
 
     return message;
-  }, [attestation, didUri, messageLinked, request.body.content.requestForAttestation.claim.owner]);
+  }, [
+    attestation,
+    attester,
+    messageLinked,
+    request.body.content.requestForAttestation.claim.owner
+  ]);
 
   const claimer = useDidDetails(request.body.content.requestForAttestation.claim.owner);
 
@@ -113,12 +116,17 @@ const Approve: React.FC<{
                 label: 'Sign and submit attestation',
                 paused: true,
                 exec: (report) =>
-                  signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
+                  signAndSend(
+                    report,
+                    didManager,
+                    attester?.authenticationKey.publicKey,
+                    getExtrinsic
+                  )
               },
               {
                 label: 'Encrypt message',
                 exec: () =>
-                  encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
+                  encryptMessage(didManager, message, attester, claimer).then(setEncryptedMessage)
               },
               {
                 label: 'Send message',

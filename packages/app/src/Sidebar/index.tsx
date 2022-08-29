@@ -23,7 +23,6 @@ import React, { useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { isMobile } from '@credential/react-hooks/utils/userAgent';
-import { ACCOUNT_TYPE } from '@credential/react-keystore/KeystoreProvider';
 
 import Network from '../Network';
 
@@ -34,6 +33,8 @@ interface Item {
   text: string;
   extra?: React.ReactNode;
 }
+
+type ACCOUNT_TYPE = 'claimer' | 'attester';
 
 interface Props {
   accountType: ACCOUNT_TYPE;

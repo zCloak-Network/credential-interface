@@ -1,8 +1,8 @@
 import { IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
-import { useCallback, useContext, useMemo } from 'react';
+import { useCallback, useMemo } from 'react';
 
 import { Message } from '@credential/app-db/message';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
 export type UseNotification = {
@@ -15,10 +15,10 @@ export type UseNotification = {
 };
 
 export function useNotification(): UseNotification {
-  const { didUri } = useContext(DidsContext);
+  const did = useDerivedDid();
   const getAll = useCallback(
-    (message: Message<MessageBody>) => message.receiver === didUri,
-    [didUri]
+    (message: Message<MessageBody>) => message.receiver === did?.uri,
+    [did?.uri]
   );
 
   const all = useMessages<MessageBody>(getAll);

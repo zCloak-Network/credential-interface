@@ -34,8 +34,6 @@
       "@credential/react-dids/*": ["react-dids/src/*"],
       "@credential/react-hooks": ["react-hooks/src"],
       "@credential/react-hooks/*": ["react-hooks/src/*"],
-      "@credential/react-keystore": ["react-keystore/src"],
-      "@credential/react-keystore/*": ["react-keystore/src/*"]
     },
     "skipLibCheck": true
   }

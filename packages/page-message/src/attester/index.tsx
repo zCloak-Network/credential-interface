@@ -1,19 +1,19 @@
 import { ISubmitCredential, MessageBody, MessageBodyType } from '@kiltprotocol/types';
 import { Box, Stack, Tab, Tabs } from '@mui/material';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 
 import { Message } from '@credential/app-db/message';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
 import Messages from './Messages';
 
 const AttesterMessage: React.FC = () => {
-  const { didUri } = useContext(DidsContext);
+  const did = useDerivedDid();
   const filter = useCallback(
     (message: Message<MessageBody>) =>
-      message.body.type === MessageBodyType.SUBMIT_CREDENTIAL && didUri === message.receiver,
-    [didUri]
+      message.body.type === MessageBodyType.SUBMIT_CREDENTIAL && did?.uri === message.receiver,
+    [did]
   );
   const messages = useMessages<ISubmitCredential>(filter);
 

@@ -9,7 +9,8 @@ import { Button } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
 import { AppContext, Recaptcha } from '@credential/react-components';
-import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { DidsModal, useDerivedDid } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 import {
   encryptMessage,
   requestAttestation,
@@ -17,7 +18,6 @@ import {
   Steps
 } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 const SubmitClaim: React.FC<{
   hasError?: boolean;
@@ -26,11 +26,9 @@ const SubmitClaim: React.FC<{
   ctype?: ICType;
   onDone?: () => void;
 }> = ({ attester, contents, ctype, hasError, onDone }) => {
-  const { keyring } = useKeystore();
-  const { didUri } = useContext(DidsContext);
   const { fetcher } = useContext(AppContext);
   const [open, toggleOpen] = useToggle();
-  const sender = useDidDetails(didUri);
+  const sender = useDerivedDid();
   const [request, setRequest] = useState<RequestForAttestation>();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
   const [recaptchaToken, setRecaptchaToken] = useState<string>();
@@ -71,7 +69,7 @@ const SubmitClaim: React.FC<{
                   label: 'Request for attestation and sign',
                   exec: () =>
                     requestAttestation(
-                      keyring,
+                      didManager,
                       sender,
                       ctype,
                       contents as Record<string, any>
@@ -80,7 +78,7 @@ const SubmitClaim: React.FC<{
                 {
                   label: 'Encrypt message',
                   exec: () =>
-                    encryptMessage(keyring, message, sender, attester).then(setEncryptedMessage)
+                    encryptMessage(didManager, message, sender, attester).then(setEncryptedMessage)
                 },
                 {
                   label: 'Send message',

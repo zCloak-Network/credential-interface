@@ -12,12 +12,12 @@ import {
 } from '@mui/material';
 import Grid from '@mui/material/Unstable_Grid2';
 import moment from 'moment';
-import React, { useCallback, useContext } from 'react';
+import React, { useCallback } from 'react';
 import { Link as LinkRouter, useNavigate } from 'react-router-dom';
 
 import { Message } from '@credential/app-db/message';
 import { CredentialStatus, CTypeName } from '@credential/react-components';
-import { DidName, DidsContext } from '@credential/react-dids';
+import { DidName, useDerivedDid } from '@credential/react-dids';
 import { useAttestation, useAttesterRequests, useRequestStatus } from '@credential/react-hooks';
 import { RequestStatus } from '@credential/react-hooks/types';
 
@@ -116,8 +116,8 @@ const RequestTable: React.FC = () => {
   const theme = useTheme();
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
 
-  const { didUri } = useContext(DidsContext);
-  const list = useAttesterRequests(didUri);
+  const did = useDerivedDid();
+  const list = useAttesterRequests(did?.uri);
 
   if (upMd) {
     return (

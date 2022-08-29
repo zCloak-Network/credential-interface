@@ -7,12 +7,12 @@ import {
   Stepper,
   Typography
 } from '@mui/material';
+import { mnemonicGenerate } from '@polkadot/util-crypto';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { StepIcon } from '@credential/react-components';
 import { useQueryParam } from '@credential/react-hooks';
-import { generateMnemonic } from '@credential/react-keystore';
 
 import Step1 from './create/Step1';
 import Step2 from './create/Step2';
@@ -22,7 +22,7 @@ import Success from './Success';
 const Create: React.FC = () => {
   const [step, setStep] = useState(0);
   const [password, setPassword] = useState<string>();
-  const mnemonic = useMemo(() => generateMnemonic(), []);
+  const mnemonic = useMemo(() => mnemonicGenerate(12), []);
   const navigate = useNavigate();
   const [redirect] = useQueryParam<string>('redirect');
 

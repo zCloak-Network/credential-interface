@@ -13,7 +13,7 @@ export async function getDidDetails(didUri: DidUri): Promise<Did.DidDetails | nu
   }
 }
 
-export function useDidDetails(didUri?: DidUri): Did.DidDetails | null {
+export function useDidDetails(didUri?: DidUri | null): Did.DidDetails | null {
   const [didDetails, setDidDetails] = useState<Did.DidDetails | null>(null);
 
   useEffect(() => {

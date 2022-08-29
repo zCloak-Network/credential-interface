@@ -9,9 +9,9 @@ const AccountAuth: React.FC<React.PropsWithChildren<{ didRole: DidRole }>> = ({
   children,
   didRole
 }) => {
-  const { didUri } = useContext(DidsContext);
+  const { all } = useContext(DidsContext);
 
-  return didUri ? (
+  return all.length > 0 ? (
     <>{children}</>
   ) : (
     <Navigate

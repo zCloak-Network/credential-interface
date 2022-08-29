@@ -6,10 +6,10 @@ import React, { useContext, useMemo, useState } from 'react';
 
 import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
-import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { DidsModal, useDerivedDid, useDidDetails } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
 import { useStopPropagation, useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 import IconReject from '../icons/icon_reject.svg';
 
@@ -18,16 +18,14 @@ const Reject: React.FC<{
   request: Message<IRequestAttestation>;
   messageLinked?: IMessage[];
 }> = ({ messageLinked, request, type = 'button' }) => {
-  const { keyring } = useKeystore();
   const [open, toggleOpen] = useToggle();
   const { fetcher } = useContext(AppContext);
-  const { didUri } = useContext(DidsContext);
-  const attester = useDidDetails(didUri);
+  const attester = useDerivedDid();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
   const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const message = useMemo(() => {
-    if (!didUri) {
+    if (!attester) {
       return null;
     }
 
@@ -36,7 +34,7 @@ const Reject: React.FC<{
         content: request.body.content.requestForAttestation.rootHash,
         type: MessageKilt.BodyType.REJECT_ATTESTATION
       },
-      didUri,
+      attester.uri,
       request.body.content.requestForAttestation.claim.owner
     );
 
@@ -44,7 +42,7 @@ const Reject: React.FC<{
 
     return message;
   }, [
-    didUri,
+    attester,
     messageLinked,
     request.body.content.requestForAttestation.claim.owner,
     request.body.content.requestForAttestation.rootHash
@@ -88,7 +86,7 @@ const Reject: React.FC<{
               {
                 label: 'Encrypt message',
                 exec: () =>
-                  encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
+                  encryptMessage(didManager, message, attester, claimer).then(setEncryptedMessage)
               },
               {
                 label: 'Send message',

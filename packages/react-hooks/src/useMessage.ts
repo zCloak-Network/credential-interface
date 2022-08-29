@@ -35,7 +35,7 @@ export function useReferenceMessages<Body extends MessageBody>(
   return useMessages<Body>(filter);
 }
 
-export function useAttesterRequests(attester?: DidUri) {
+export function useAttesterRequests(attester?: DidUri | null) {
   const filter = useCallback(
     (message: Message<MessageBody>): boolean => {
       if (!attester) return false;
@@ -50,7 +50,7 @@ export function useAttesterRequests(attester?: DidUri) {
   return useMessages<IRequestAttestation>(filter);
 }
 
-export function useClaimerRequests(claimer?: DidUri) {
+export function useClaimerRequests(claimer?: DidUri | null) {
   const filter = useCallback(
     (message: Message<MessageBody>): boolean => {
       if (!claimer) return false;

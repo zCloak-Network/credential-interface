@@ -11,10 +11,10 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
-import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { DidsModal, useDerivedDid, useDidDetails } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useStopPropagation, useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 import IconRevoke from '../icons/icon_revok.svg';
 
@@ -26,41 +26,31 @@ const Revoke: React.FC<{
 }> = ({ attestation: _attestation, messageLinked, request, type = 'button' }) => {
   const [open, toggleOpen] = useToggle();
   const { fetcher } = useContext(AppContext);
-  const { didUri } = useContext(DidsContext);
-  const attester = useDidDetails(didUri);
-  const { keyring } = useKeystore();
+  const attester = useDerivedDid();
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
   const [recaptchaToken, setRecaptchaToken] = useState<string>();
 
   const attestation = useMemo(() => {
-    if (didUri) {
-      const attestation = Attestation.fromAttestation(_attestation);
+    const attestation = Attestation.fromAttestation(_attestation);
 
-      attestation.revoked = true;
+    attestation.revoked = true;
 
-      return attestation;
-    } else {
-      return null;
-    }
-  }, [_attestation, didUri]);
+    return attestation;
+  }, [_attestation]);
 
   const getExtrinsic = useCallback(async () => {
-    if (!attestation) {
-      throw new Error('no attestation found');
-    }
-
     if (!(attester instanceof Did.FullDidDetails)) {
       throw new Error('The DID with the given identifier is not on chain.');
     }
 
     const tx = await attestation.getRevokeTx(0);
-    const extrinsic = await attester.authorizeExtrinsic(tx, keyring, attester.identifier);
+    const extrinsic = await attester.authorizeExtrinsic(tx, didManager, attester.identifier);
 
     return extrinsic;
-  }, [attestation, attester, keyring]);
+  }, [attestation, attester]);
 
   const message = useMemo(() => {
-    if (!didUri) {
+    if (!attester) {
       return null;
     }
 
@@ -73,14 +63,19 @@ const Revoke: React.FC<{
         content: { attestation },
         type: MessageKilt.BodyType.SUBMIT_ATTESTATION
       },
-      didUri,
+      attester.uri,
       request.body.content.requestForAttestation.claim.owner
     );
 
     message.references = messageLinked?.map((message) => message.messageId);
 
     return message;
-  }, [attestation, didUri, messageLinked, request.body.content.requestForAttestation.claim.owner]);
+  }, [
+    attestation,
+    attester,
+    messageLinked,
+    request.body.content.requestForAttestation.claim.owner
+  ]);
 
   const claimer = useDidDetails(request.body.content.requestForAttestation.claim.owner);
   const _toggleOpen = useStopPropagation(toggleOpen);
@@ -122,12 +117,17 @@ const Revoke: React.FC<{
                 label: 'Sign and submit attestation',
                 paused: true,
                 exec: (report) =>
-                  signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
+                  signAndSend(
+                    report,
+                    didManager,
+                    attester?.authenticationKey.publicKey,
+                    getExtrinsic
+                  )
               },
               {
                 label: 'Encrypt message',
                 exec: () =>
-                  encryptMessage(keyring, message, attester, claimer).then(setEncryptedMessage)
+                  encryptMessage(didManager, message, attester, claimer).then(setEncryptedMessage)
               },
               {
                 label: 'Send message',
