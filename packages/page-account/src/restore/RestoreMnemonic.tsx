@@ -3,12 +3,11 @@ import { mnemonicValidate } from '@polkadot/util-crypto';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { InputPassword, NotificationContext } from '@credential/react-components';
-import { DidsContext } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 
 const RestoreMnemonic: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [password, setPassword] = useState<string>();
   const { notifyError } = useContext(NotificationContext);
-  const { generateDid } = useContext(DidsContext);
   const [mnemonic, setMnemonic] = useState<string>();
 
   const isMnemonic = useMemo(() => mnemonic && mnemonicValidate(mnemonic), [mnemonic]);
@@ -19,12 +18,12 @@ const RestoreMnemonic: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => 
     if (!isMnemonic) return;
 
     try {
-      generateDid(mnemonic, password);
+      didManager.addDidFromMnemonic(mnemonic, password);
       onSuccess();
     } catch (error) {
       notifyError(error);
     }
-  }, [generateDid, isMnemonic, mnemonic, notifyError, onSuccess, password]);
+  }, [isMnemonic, mnemonic, notifyError, onSuccess, password]);
 
   return (
     <Stack spacing={5.5}>

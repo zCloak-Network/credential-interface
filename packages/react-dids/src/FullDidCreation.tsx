@@ -15,12 +15,12 @@ import React, { useCallback, useContext, useMemo, useState } from 'react';
 
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 import DidsModal from './DidsModal';
 import { DidsContext } from './DidsProvider';
+import { didManager } from './initManager';
 import { signAndSend, Steps } from './steps';
-import { useDidDetails } from './useDidDetails';
+import { useDerivedDid } from './useDerivedDid';
 
 const Item: React.FC<{
   disabled?: boolean;
@@ -53,9 +53,8 @@ const Item: React.FC<{
 };
 
 const FullDidCreator: React.FC = () => {
-  const { keyring } = useKeystore();
-  const { blockchain, didUri, tryFetchFullDid } = useContext(DidsContext);
-  const didDetails = useDidDetails(didUri);
+  const { blockchain, fetchFullDid } = useContext(DidsContext);
+  const didDetails = useDerivedDid();
   const [checkeds] = useState<[true, true, true, true]>([true, true, true, true]);
   const [open, toggleOpen] = useToggle();
 
@@ -90,13 +89,13 @@ const FullDidCreator: React.FC = () => {
       .setAttestationKey(didDetails.authenticationKey)
       .setDelegationKey(didDetails.authenticationKey);
 
-    return creation.build(keyring, didDetails?.identifier);
-  }, [blockchain.api, didDetails, keyring]);
+    return creation.build(didManager, didDetails?.identifier);
+  }, [blockchain.api, didDetails]);
 
   const onDone = useCallback(() => {
     toggleOpen();
-    tryFetchFullDid();
-  }, [toggleOpen, tryFetchFullDid]);
+    fetchFullDid();
+  }, [toggleOpen, fetchFullDid]);
 
   if (didDetails instanceof Did.FullDidDetails) {
     return <Alert severity="warning">You are already has full did</Alert>;
@@ -135,7 +134,7 @@ const FullDidCreator: React.FC = () => {
                 exec: (report) =>
                   signAndSend(
                     report,
-                    keyring,
+                    didManager,
                     didDetails?.authenticationKey.publicKey,
                     getExtrinsic
                   )

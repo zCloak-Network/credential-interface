@@ -16,7 +16,6 @@
   "type": "module",
   "version": "0.16.2-4",
   "dependencies": {
-    "@credential/react-keystore": "0.16.2-4",
     "file-saver": "^2.0.5"
   }
 }

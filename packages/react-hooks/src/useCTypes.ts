@@ -4,18 +4,18 @@ import { useContext, useEffect, useMemo } from 'react';
 
 import { CType } from '@credential/app-db/ctype';
 import { AppContext } from '@credential/react-components';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 
 import { credentialApi } from './api';
 
 export function useCTypes() {
   const { fetcher } = useContext(AppContext);
-  const { didUri } = useContext(DidsContext);
+  const did = useDerivedDid();
   const data = useLiveQuery(() => fetcher?.query.ctypes.all(), [fetcher]);
 
   useEffect(() => {
-    if (didUri && fetcher) {
-      credentialApi.getCtypes(didUri).then(({ data }) => {
+    if (did && fetcher) {
+      credentialApi.getCtypes(did.uri).then(({ data }) => {
         fetcher.write.ctypes.batchPut(
           data.map((d) => {
             const ctype = CTypeKilt.fromSchema(d.metadata as CType['schema'], d.owner as DidUri);
@@ -29,7 +29,7 @@ export function useCTypes() {
         );
       });
     }
-  }, [didUri, fetcher]);
+  }, [did, fetcher]);
 
   return useMemo(() => data || [], [data]);
 }

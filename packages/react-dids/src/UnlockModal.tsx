@@ -8,8 +8,8 @@ import { DialogHeader, InputPassword } from '@credential/react-components';
 
 const UnlockModal: React.FC<{
   open: boolean;
-  did?: DidUri;
-  unlockDid: (password: string) => void;
+  did?: DidUri | null;
+  unlockDid: (didUri: DidUri, password: string) => void;
   onClose?: () => void;
   onUnlock: () => void;
 }> = ({ did, onClose, onUnlock, open, unlockDid }) => {
@@ -20,7 +20,7 @@ const UnlockModal: React.FC<{
     if (!password) return;
 
     try {
-      unlockDid(password);
+      unlockDid(did, password);
 
       onUnlock();
     } catch (error) {}

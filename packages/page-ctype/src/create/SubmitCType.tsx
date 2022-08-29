@@ -1,11 +1,11 @@
 import { CType, Did } from '@kiltprotocol/sdk-js';
 import { Button } from '@mui/material';
-import React, { useCallback, useContext, useMemo } from 'react';
+import React, { useCallback, useMemo } from 'react';
 
-import { DidsContext, DidsModal, useDidDetails } from '@credential/react-dids';
+import { DidsModal, useDerivedDid } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 import { addCtype, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useToggle } from '@credential/react-hooks';
-import { useKeystore } from '@credential/react-keystore';
 
 const SubmitCType: React.FC<{
   title?: string;
@@ -14,9 +14,7 @@ const SubmitCType: React.FC<{
   description?: string;
 }> = ({ description, onDone, properties, title }) => {
   const [open, toggleOpen] = useToggle();
-  const { keyring } = useKeystore();
-  const { didUri } = useContext(DidsContext);
-  const attester = useDidDetails(didUri);
+  const attester = useDerivedDid();
 
   const ctype = useMemo(() => {
     if (!properties || !title) return null;
@@ -43,10 +41,10 @@ const SubmitCType: React.FC<{
     }
 
     const tx = await ctype.getStoreTx();
-    const extrinsic = await attester.authorizeExtrinsic(tx, keyring, attester.identifier);
+    const extrinsic = await attester.authorizeExtrinsic(tx, didManager, attester.identifier);
 
     return extrinsic;
-  }, [attester, ctype, keyring]);
+  }, [attester, ctype]);
 
   return (
     <>
@@ -64,7 +62,12 @@ const SubmitCType: React.FC<{
                 label: 'Sign and submit ctype',
                 paused: true,
                 exec: (report) =>
-                  signAndSend(report, keyring, attester?.authenticationKey.publicKey, getExtrinsic)
+                  signAndSend(
+                    report,
+                    didManager,
+                    attester?.authenticationKey.publicKey,
+                    getExtrinsic
+                  )
               },
               {
                 label: 'Upload ctype',

@@ -7,8 +7,8 @@ import { endpoint } from '@credential/app-config/endpoints';
 import { CredentialFetcher } from '@credential/app-db';
 import { SyncProvider } from '@credential/app-sync';
 import { MessageType } from '@credential/app-sync/type';
-import { DidsContext } from '@credential/react-dids';
-import { useKeystore } from '@credential/react-keystore';
+import { DidsContext, useDerivedDid } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 
 interface State {
   fetcher: CredentialInterface | null;
@@ -23,9 +23,9 @@ const syncProvider = new SyncProvider(endpoint.messageWs);
 const encryptedMessages = new Map<number, MessageType>();
 
 const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
-  const { keyring } = useKeystore();
-  const { didDetails, isLocked, unlock } = useContext(DidsContext);
+  const { isLocked, unlock } = useContext(DidsContext);
   const [unParsed, setUnParsed] = useState(0);
+  const didDetails = useDerivedDid();
 
   const { address, fetcher } = useMemo(
     () => ({
@@ -92,7 +92,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
               ciphertext: encryptedMessage.ciphertext,
               nonce: encryptedMessage.nonce
             },
-            keyring,
+            didManager,
             didDetails
           ).then((message) => {
             return fetcher?.write.messages
@@ -112,7 +112,7 @@ const AppProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         setUnParsed(encryptedMessages.size);
       });
     }
-  }, [didDetails, isLocked, unlock, keyring, fetcher]);
+  }, [didDetails, isLocked, unlock, fetcher]);
 
   return <AppContext.Provider value={{ fetcher, unParsed, parse }}>{children}</AppContext.Provider>;
 };

@@ -3,21 +3,21 @@ import { Box, Button, Checkbox, FormControlLabel, lighten, Paper, Stack } from '
 import React, { useContext, useMemo, useState } from 'react';
 
 import { AppContext, Recaptcha } from '@credential/react-components';
-import { DidsContext, DidsModal, InputDid } from '@credential/react-dids';
+import { DidsModal, InputDid, useDerivedDid } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
-import { useKeystore } from '@credential/react-keystore';
 
 const ShareModal: React.FC<{ credential: ICredential; open: boolean; onClose?: () => void }> = ({
   credential,
   onClose,
   open
 }) => {
-  const { keyring } = useKeystore();
-  const { didDetails: sender } = useContext(DidsContext);
   const { fetcher } = useContext(AppContext);
   const [receiver, setReceiver] = useState<Did.DidDetails | null>(null);
   const [encryptedMessage, setEncryptedMessage] = useState<IEncryptedMessage>();
   const [recaptchaToken, setRecaptchaToken] = useState<string>();
+
+  const sender = useDerivedDid();
 
   const attributes = useMemo(
     () => Array.from(Credential.fromCredential(credential).getAttributes().keys()),
@@ -53,7 +53,7 @@ const ShareModal: React.FC<{ credential: ICredential; open: boolean; onClose?: (
               {
                 label: 'Encrypt message',
                 exec: () =>
-                  encryptMessage(keyring, message, sender, receiver).then(setEncryptedMessage)
+                  encryptMessage(didManager, message, sender, receiver).then(setEncryptedMessage)
               },
               {
                 label: 'Send message',
@@ -118,7 +118,7 @@ const ShareModal: React.FC<{ credential: ICredential; open: boolean; onClose?: (
           onClick={() => {
             if (sender) {
               Credential.fromCredential(credential)
-                .createPresentation({ selectedAttributes, signer: keyring, claimerDid: sender })
+                .createPresentation({ selectedAttributes, signer: didManager, claimerDid: sender })
                 .then(setPresentation);
             }
           }}

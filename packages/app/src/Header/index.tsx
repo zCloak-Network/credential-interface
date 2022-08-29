@@ -1,3 +1,4 @@
+import { Did } from '@kiltprotocol/sdk-js';
 import MenuIcon from '@mui/icons-material/Menu';
 import NotificationsNoneOutlinedIcon from '@mui/icons-material/NotificationsNoneOutlined';
 import ReportProblemOutlinedIcon from '@mui/icons-material/ReportProblemOutlined';
@@ -16,7 +17,7 @@ import React, { useCallback, useContext } from 'react';
 
 import { LogoBlackIcon } from '@credential/app-config/icons';
 import { AppContext } from '@credential/react-components';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import DidInfo from '../DidInfo';
@@ -55,17 +56,15 @@ function Logo() {
 
 function Header({
   isAttester = false,
-  showUpgrade = false,
   toggleOpen,
   unreads
 }: {
   isAttester?: boolean;
-  showUpgrade?: boolean;
   unreads: UseNotification;
   toggleOpen: () => void;
 }) {
   const { parse, unParsed } = useContext(AppContext);
-  const { didUri, isFullDid } = useContext(DidsContext);
+  const did = useDerivedDid();
   const [notiOpen, toggleNotiOpen] = useToggle();
   const theme = useTheme();
   const upMd = useMediaQuery(theme.breakpoints.up('md'));
@@ -141,8 +140,8 @@ function Header({
             </Badge>
           </IconButton>
           {upSm && <Network />}
-          {didUri && <DidInfo did={didUri} />}
-          {showUpgrade && !isFullDid && <UpgradeFullDid />}
+          {did && <DidInfo did={did} />}
+          {isAttester && !(did instanceof Did.FullDidDetails) && <UpgradeFullDid />}
         </Stack>
       </Stack>
       <Notification onClose={toggleNotiOpen} open={notiOpen} unreads={unreads} />

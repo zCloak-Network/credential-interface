@@ -1,26 +1,26 @@
 import { MessageBody } from '@kiltprotocol/sdk-js';
 import { Box, Stack, Tab, Tabs, Typography } from '@mui/material';
-import { useCallback, useContext, useState } from 'react';
+import { useCallback, useState } from 'react';
 
 import { Message } from '@credential/app-db/message';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import { useMessages } from '@credential/react-hooks';
 
 import MessagesTable from './claimer/Messages';
 
 function Messages() {
-  const { didUri } = useContext(DidsContext);
+  const did = useDerivedDid();
   const [type, setType] = useState(0);
 
   const filter = useCallback(
     (message: Message<MessageBody>) => {
-      if (type === 1) return message.receiver === didUri;
+      if (type === 1) return message.receiver === did?.uri;
 
-      if (type === 2) return message.sender === didUri;
+      if (type === 2) return message.sender === did?.uri;
 
       return true;
     },
-    [didUri, type]
+    [did, type]
   );
 
   const messages = useMessages(filter);

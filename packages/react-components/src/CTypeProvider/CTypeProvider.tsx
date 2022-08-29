@@ -4,7 +4,7 @@ import { CType as CTypeKilt } from '@kiltprotocol/sdk-js';
 import React, { createContext, useCallback, useContext, useMemo } from 'react';
 
 import { CType } from '@credential/app-db/ctype';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import { useCTypes } from '@credential/react-hooks';
 import { credentialApi } from '@credential/react-hooks/api';
 
@@ -20,15 +20,15 @@ export const CTypeContext = createContext<State>({} as State);
 
 const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
   const { fetcher } = useContext(AppContext);
-  const { didUri } = useContext(DidsContext);
+  const did = useDerivedDid();
   const cTypeList = useCTypes();
 
   const importCType = useCallback(
     async (hash: Hash) => {
-      if (!didUri || !fetcher) return;
+      if (!did || !fetcher) return;
 
-      await credentialApi.importCtype(didUri, hash);
-      await credentialApi.getCtypes(didUri).then(({ data }) => {
+      await credentialApi.importCtype(did.uri, hash);
+      await credentialApi.getCtypes(did.uri).then(({ data }) => {
         fetcher.write.ctypes.batchPut(
           data.map((d) => {
             const ctype = CTypeKilt.fromSchema(d.metadata as CType['schema'], d.owner as any);
@@ -42,16 +42,16 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         );
       });
     },
-    [didUri, fetcher]
+    [did, fetcher]
   );
 
   const deleteCType = useCallback(
     async (hash: Hash) => {
-      if (!didUri || !fetcher) return;
+      if (!did || !fetcher) return;
 
       fetcher.write.ctypes.delete(hash);
-      await credentialApi.deleteCtype(didUri, hash);
-      await credentialApi.getCtypes(didUri).then(({ data }) => {
+      await credentialApi.deleteCtype(did.uri, hash);
+      await credentialApi.getCtypes(did.uri).then(({ data }) => {
         fetcher.write.ctypes.batchPut(
           data.map((d) => ({
             hash: d.ctypeHash as Hash,
@@ -63,7 +63,7 @@ const CTypeProvider: React.FC<React.PropsWithChildren<{}>> = ({ children }) => {
         );
       });
     },
-    [didUri, fetcher]
+    [did, fetcher]
   );
 
   const value = useMemo(() => {

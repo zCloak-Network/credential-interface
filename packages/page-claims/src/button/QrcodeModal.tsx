@@ -1,18 +1,17 @@
 import { Credential, ICredential } from '@kiltprotocol/sdk-js';
 import { Box, Button, Checkbox, FormControlLabel, Paper, Stack, Typography } from '@mui/material';
-import React, { useContext, useMemo, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 
 import { CredentialQrcode } from '@credential/react-components';
-import { DidsContext, DidsModal } from '@credential/react-dids';
-import { useKeystore } from '@credential/react-keystore';
+import { DidsModal, useDerivedDid } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 
 const QrcodeModal: React.FC<{ credential: ICredential; open: boolean; onClose?: () => void }> = ({
   credential,
   onClose,
   open
 }) => {
-  const { keyring } = useKeystore();
-  const { didDetails: sender } = useContext(DidsContext);
+  const sender = useDerivedDid();
   const attributes = useMemo(
     () => Array.from(Credential.fromCredential(credential).getAttributes().keys()),
     [credential]
@@ -90,7 +89,11 @@ const QrcodeModal: React.FC<{ credential: ICredential; open: boolean; onClose?: 
             onClick={() => {
               if (sender) {
                 Credential.fromCredential(credential)
-                  .createPresentation({ selectedAttributes, signer: keyring, claimerDid: sender })
+                  .createPresentation({
+                    selectedAttributes,
+                    signer: didManager,
+                    claimerDid: sender
+                  })
                   .then(setPresentation);
               }
             }}

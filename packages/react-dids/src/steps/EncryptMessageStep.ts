@@ -1,10 +1,10 @@
 import { Did, IEncryptedMessage, Message } from '@kiltprotocol/sdk-js';
 import { assert } from '@polkadot/util';
 
-import { Keyring } from '@credential/react-keystore/Keyring';
+import { DidManager } from '@zcloak/did-keyring';
 
 export async function encryptMessage(
-  keyring: Keyring,
+  keyring: DidManager,
   message?: Message | null,
   sender?: Did.DidDetails | null,
   receiver?: Did.DidDetails | null

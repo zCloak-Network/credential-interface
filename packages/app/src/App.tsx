@@ -1,6 +1,6 @@
 import { Box, useMediaQuery, useTheme } from '@mui/material';
 import React, { useMemo } from 'react';
-import { HashRouter, Navigate, Route, Routes } from 'react-router-dom';
+import { Navigate, Route, Routes } from 'react-router-dom';
 
 import PageAccount from '@credential/page-account';
 import PageCreateAccount from '@credential/page-account/Create';
@@ -191,18 +191,16 @@ const AppAttester = createAttesterApp();
 
 const App: React.FC = () => {
   return (
-    <HashRouter>
-      <Routes>
-        {AppClaimer}
-        {AppAttester}
-        <Route element={<Account />} path="account">
-          <Route element={<PageCreateAccount />} path="create" />
-          <Route element={<PageRestoreAccount />} path="restore" />
-          <Route element={<PageAccount />} index />
-        </Route>
-        <Route element={<NoMatch to="/claimer" />} path="*" />
-      </Routes>
-    </HashRouter>
+    <Routes>
+      {AppClaimer}
+      {AppAttester}
+      <Route element={<Account />} path="account">
+        <Route element={<PageCreateAccount />} path="create" />
+        <Route element={<PageRestoreAccount />} path="restore" />
+        <Route element={<PageAccount />} index />
+      </Route>
+      <Route element={<NoMatch to="/claimer" />} path="*" />
+    </Routes>
   );
 };
 

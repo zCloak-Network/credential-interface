@@ -3,11 +3,11 @@ import type { Report } from './types';
 import { BlockchainUtils, SubmittableExtrinsic } from '@kiltprotocol/sdk-js';
 import { assert } from '@polkadot/util';
 
-import { Keyring } from '@credential/react-keystore/Keyring';
+import { DidManager } from '@zcloak/did-keyring';
 
 export async function signAndSend(
   report: Report,
-  keyring: Keyring,
+  keyring: DidManager,
   sender?: string | Uint8Array | null,
   getExtrinsic?: () => Promise<SubmittableExtrinsic>
 ): Promise<void> {

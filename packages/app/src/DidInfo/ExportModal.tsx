@@ -11,21 +11,23 @@ import React, { useCallback, useContext, useState } from 'react';
 
 import { DialogHeader, InputPassword } from '@credential/react-components';
 import { DidsContext } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 
 interface Props {
   onClose: () => void;
 }
 
 const ExportModal: React.FC<Props> = ({ onClose }) => {
-  const { backupDid } = useContext(DidsContext);
+  const { light } = useContext(DidsContext);
   const [password, setPassword] = useState<string>();
   const [error, setError] = useState<Error>();
 
   const handleExport = useCallback(() => {
     if (!password) return;
+    if (!light) return;
 
     try {
-      const json = backupDid(password);
+      const json = didManager.backupDid(light, password);
 
       if (!json) return;
       const blobSiningJson = new Blob([JSON.stringify(json)], {
@@ -37,7 +39,7 @@ const ExportModal: React.FC<Props> = ({ onClose }) => {
     } catch (error) {
       setError(error as Error);
     }
-  }, [backupDid, onClose, password]);
+  }, [light, onClose, password]);
 
   return (
     <Dialog maxWidth="md" onClose={onClose} open>

@@ -1,4 +1,4 @@
-import type { DidUri } from '@kiltprotocol/sdk-js';
+import type { Did } from '@kiltprotocol/sdk-js';
 
 import {
   alpha,
@@ -32,19 +32,19 @@ import StarIcon from './icon_star.svg';
 import KiltIcon from './pic_kilt.png';
 
 interface Props {
-  did: DidUri;
+  did: Did.DidDetails;
   anchorEl: Element | null;
   open: boolean;
   onClose: () => void;
 }
 
 const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
-  const { didDetails, logout } = useContext(DidsContext);
+  const { light, logout } = useContext(DidsContext);
   const [exportOpen, toggleExportOpen] = useToggle();
   const [scannerOpen, toggleScannerOpen] = useToggle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
-  const balances = useBalances(didDetails?.identifier);
+  const balances = useBalances(did.identifier);
 
   const handleScanner = useCallback(() => {
     toggleScannerOpen();
@@ -62,9 +62,10 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
   }, [navigate, onClose, pathname]);
 
   const handleLogout = useCallback(() => {
-    logout();
+    if (!light) return;
+    logout(light);
     onClose();
-  }, [logout, onClose]);
+  }, [light, logout, onClose]);
 
   return (
     <>
@@ -102,10 +103,10 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
           })}
         >
           <ListItemIcon>
-            <IdentityIcon value={did} />
+            <IdentityIcon value={did.uri} />
           </ListItemIcon>
-          <ListItemText primary={<DidName value={did} />} />
-          <Copy value={did} />
+          <ListItemText primary={<DidName value={did.uri} />} />
+          <Copy value={did.uri} />
         </ListItem>
         <Divider sx={{ marginTop: 3, marginBottom: 1 }} />
         <ListItem>
@@ -115,8 +116,8 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
           <ListItemText>KILT Address</ListItemText>
           <ListItemSecondaryAction>
             <Stack alignItems="center" direction="row" spacing={0.5}>
-              <Address value={didDetails?.identifier} />
-              <Copy value={didDetails?.identifier ?? ''} />
+              <Address value={did.identifier} />
+              <Copy value={did.identifier ?? ''} />
             </Stack>
           </ListItemSecondaryAction>
         </ListItem>

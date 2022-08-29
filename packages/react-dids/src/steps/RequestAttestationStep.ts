@@ -8,10 +8,10 @@ import {
 } from '@kiltprotocol/sdk-js';
 import { assert } from '@polkadot/util';
 
-import { Keyring } from '@credential/react-keystore/Keyring';
+import { DidManager } from '@zcloak/did-keyring';
 
 export async function requestAttestation(
-  keyring: Keyring,
+  keyring: DidManager,
   sender?: Did.DidDetails | null,
   ctype?: ICType | null,
   contents?: IClaimContents

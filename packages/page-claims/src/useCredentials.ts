@@ -1,11 +1,11 @@
-import { useContext, useMemo } from 'react';
+import { useMemo } from 'react';
 
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 import { useAttestationBatch, useClaimerRequests } from '@credential/react-hooks';
 
 export function useCredentials() {
-  const { didUri } = useContext(DidsContext);
-  const requests = useClaimerRequests(didUri);
+  const did = useDerivedDid();
+  const requests = useClaimerRequests(did?.uri);
   const claimHashs = useMemo(
     () =>
       requests

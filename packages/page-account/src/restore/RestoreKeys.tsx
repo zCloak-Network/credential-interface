@@ -10,13 +10,12 @@ import {
 import React, { useCallback, useContext, useState } from 'react';
 
 import { InputPassword, NotificationContext } from '@credential/react-components';
-import { DidsContext } from '@credential/react-dids';
+import { didManager } from '@credential/react-dids/initManager';
 
 const Restore: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
   const [password, setPassword] = useState<string>();
   const [file, setFile] = useState<File>();
   const { notifyError } = useContext(NotificationContext);
-  const { restoreDid } = useContext(DidsContext);
 
   const restore = useCallback(() => {
     if (!password) return;
@@ -25,13 +24,13 @@ const Restore: React.FC<{ onSuccess: () => void }> = ({ onSuccess }) => {
     file
       .text()
       .then((text) => {
-        restoreDid(text, password);
+        didManager.addDidFromJson(text, password);
       })
       .then(onSuccess)
       .catch((error) => {
         notifyError(error as Error);
       });
-  }, [file, notifyError, onSuccess, password, restoreDid]);
+  }, [file, notifyError, onSuccess, password]);
 
   return (
     <Stack spacing={5.5}>

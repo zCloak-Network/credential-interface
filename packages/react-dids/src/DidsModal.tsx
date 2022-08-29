@@ -5,6 +5,7 @@ import React, { useCallback, useContext, useState } from 'react';
 import { DialogHeader, InputPassword } from '@credential/react-components';
 
 import { DidsContext } from './DidsProvider';
+import { useDerivedDid } from './useDerivedDid';
 
 const DidsModal: React.FC<
   React.PropsWithChildren<{
@@ -14,14 +15,15 @@ const DidsModal: React.FC<
     onClose?: () => void;
   }>
 > = ({ children, onClose, open, steps, title }) => {
-  const { didUri, isLocked, unlockDid } = useContext(DidsContext);
+  const { isLocked, unlockDid } = useContext(DidsContext);
   const [password, setPassword] = useState<string>('');
+  const did = useDerivedDid();
 
   const unlock = useCallback(() => {
-    if (!didUri) return;
+    if (!did) return;
 
-    unlockDid(password);
-  }, [didUri, password, unlockDid]);
+    unlockDid(did, password);
+  }, [did, password, unlockDid]);
 
   return (
     <Dialog maxWidth="sm" open={open}>

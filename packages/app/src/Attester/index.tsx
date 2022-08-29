@@ -78,7 +78,7 @@ const Attester: React.FC = () => {
   return (
     <>
       <Box bgcolor="#fff" minHeight="100vh">
-        <Header isAttester showUpgrade toggleOpen={toggleOpen} unreads={unreads} />
+        <Header isAttester toggleOpen={toggleOpen} unreads={unreads} />
         <Sidebar accountType="attester" items={items} open={open} toggleOpen={toggleOpen} />
         <Box
           minHeight="100vh"
