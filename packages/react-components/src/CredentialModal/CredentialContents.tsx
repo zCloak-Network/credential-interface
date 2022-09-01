@@ -1,9 +1,9 @@
 import type { DidUri, Hash, IClaimContents } from '@kiltprotocol/sdk-js';
 
-import { Box, Divider, lighten, Link, Paper, Stack, SvgIcon, Typography } from '@mui/material';
+import { Box, Divider, lighten, Link, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 
-import { LogoCircleIcon } from '@credential/app-config/icons';
+import { IconLogoCircle } from '@credential/app-config/icons';
 import { DidName } from '@credential/react-dids';
 import { RequestStatus } from '@credential/react-hooks/types';
 
@@ -38,7 +38,7 @@ const CredentialContents: React.FC<Props> = ({
       variant="outlined"
     >
       <Stack alignItems="center" marginBottom={5.5} marginTop="-30px" spacing={2}>
-        <SvgIcon component={LogoCircleIcon} sx={{ fontSize: 60 }} viewBox="0 0 60 60" />
+        <IconLogoCircle sx={{ width: 60, height: 60 }} />
         <Box textAlign="center">
           <Typography variant="h3">
             <CTypeName cTypeHash={ctypeHash} />

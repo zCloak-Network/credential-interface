@@ -4,14 +4,13 @@ import { Attestation, Did, IEncryptedMessage, Message as MessageKilt } from '@ki
 import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
+import { IconApprove } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsModal, useDerivedDid, useDidDetails } from '@credential/react-dids';
 import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useStopPropagation, useToggle } from '@credential/react-hooks';
-
-import IconApprove from '../icons/icon_approve.svg';
 
 const Approve: React.FC<{
   type?: 'button' | 'menu';
@@ -100,7 +99,7 @@ const Approve: React.FC<{
       ) : (
         <MenuItem onClick={_toggleOpen} sx={({ palette }) => ({ color: palette.success.main })}>
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
-            <IconApprove />
+            <IconApprove color="success" />
           </ListItemIcon>
           <ListItemText>Approve</ListItemText>
         </MenuItem>

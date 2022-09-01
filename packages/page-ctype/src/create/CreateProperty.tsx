@@ -34,7 +34,7 @@ const CreateProperty: React.FC<{ onCreate: (value: Record<string, unknown>) => v
       </Button>
       <Dialog maxWidth="xs" onClose={toggleOpen} open={open}>
         <DialogHeader onClose={toggleOpen}>Create New Property</DialogHeader>
-        <Stack component={DialogContent} spacing={3} sx={{ width: 600, maxWidth: '100%' }}>
+        <Stack component={DialogContent} spacing={3}>
           <FormControl fullWidth variant="outlined">
             <InputLabel shrink>Data name</InputLabel>
             <OutlinedInput

@@ -9,10 +9,10 @@ import { IconButton, ListItemIcon, ListItemText, Menu, MenuItem } from '@mui/mat
 import React, { useCallback } from 'react';
 import { Link } from 'react-router-dom';
 
+import { IconDetails } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { RequestStatus } from '@credential/react-hooks/types';
 
-import IconDetails from './icons/icon_details.svg';
 import Approve from './RequestDetails/Approve';
 import Reject from './RequestDetails/Reject';
 import Revoke from './RequestDetails/Revoke';

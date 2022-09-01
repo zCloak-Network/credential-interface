@@ -1,11 +1,11 @@
 import type { ICType } from '@kiltprotocol/sdk-js';
 
 import AddBoxOutlinedIcon from '@mui/icons-material/AddBoxOutlined';
-import { Box, Button, Paper, Stack, SvgIcon, Typography } from '@mui/material';
+import { Box, Button, Paper, Stack, Typography } from '@mui/material';
 import React from 'react';
 import { Link } from 'react-router-dom';
 
-import { LogoCircleIcon } from '@credential/app-config/icons';
+import { IconLogoCircle } from '@credential/app-config/icons';
 import { ellipsisMixin } from '@credential/react-components/utils';
 import { DidName } from '@credential/react-dids';
 
@@ -46,11 +46,7 @@ const CTypes: React.FC<{ list: ICType[] }> = ({ list }) => {
                 [breakpoints.down('md')]: { width: '100%' }
               })}
             >
-              <SvgIcon
-                component={LogoCircleIcon}
-                sx={{ width: 35, height: 35 }}
-                viewBox="0 0 60 60"
-              />
+              <IconLogoCircle sx={{ width: 35, height: 35 }} />
               <Typography fontWeight={500}>{cType.schema.title}</Typography>
             </Stack>
             <Stack

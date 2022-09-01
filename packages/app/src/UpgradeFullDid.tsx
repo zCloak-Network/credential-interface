@@ -2,7 +2,7 @@ import { Button } from '@mui/material';
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import IconCorwn from './icon_corwn.svg';
+import { IconCorwn } from '@credential/app-config/icons';
 
 const UpgradeFullDid: React.FC = () => {
   const navigate = useNavigate();

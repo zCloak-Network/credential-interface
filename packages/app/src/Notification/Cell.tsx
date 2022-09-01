@@ -168,9 +168,9 @@ function Cell({
         {upSm && (
           <Box sx={{ width: 24, display: 'flex', alignSelf: 'center', flex: '0 0 auto' }}>
             {body.type === MessageBodyType.REQUEST_ATTESTATION ? (
-              <IconNewTask />
+              <IconNewTask color="primary" />
             ) : (
-              <IconNewMessage />
+              <IconNewMessage color="primary" />
             )}
           </Box>
         )}

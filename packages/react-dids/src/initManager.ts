@@ -48,6 +48,8 @@ function migrateDid() {
 
         localStorage.setItem(didKey(didUri), didUri);
       }
+
+      localStorage.removeItem('credential:didUri');
     }
 
     didManager.loadAll();

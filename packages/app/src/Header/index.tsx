@@ -15,7 +15,7 @@ import {
 } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
-import { LogoBlackIcon } from '@credential/app-config/icons';
+import { IconAttester, IconLogoBlack } from '@credential/app-config/icons';
 import { AppContext } from '@credential/react-components';
 import { useDerivedDid } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
@@ -25,7 +25,6 @@ import Network from '../Network';
 import Notification from '../Notification';
 import { UseNotification } from '../Notification/useNotification';
 import UpgradeFullDid from '../UpgradeFullDid';
-import AttesterIcon from './icon_attester.svg';
 
 function Logo() {
   const theme = useTheme();
@@ -41,7 +40,7 @@ function Logo() {
         cursor: 'pointer'
       }}
     >
-      <Box component={LogoBlackIcon} mr={upMd ? 1.5 : 1} />
+      <Box component={IconLogoBlack} mr={upMd ? 1.5 : 1} />
       {upMd && (
         <>
           Credential&nbsp;
@@ -124,7 +123,7 @@ function Header({
               color="primary"
               label={
                 <Stack alignItems="center" direction="row" spacing={0.5}>
-                  <AttesterIcon />
+                  <IconAttester />
                   <Box>Attester</Box>
                 </Stack>
               }

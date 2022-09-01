@@ -29,7 +29,7 @@ const UnlockModal: React.FC<{
   return (
     <Dialog maxWidth="md" onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Unlock account</DialogHeader>
-      <DialogContent sx={{ width: '578px', maxWidth: '100%' }}>
+      <DialogContent>
         <Stack spacing={4}>
           <OutlinedInput
             disabled

@@ -9,14 +9,13 @@ import { Attestation, Did, Message as MessageKilt } from '@kiltprotocol/sdk-js';
 import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useCallback, useContext, useMemo, useState } from 'react';
 
+import { IconRevoke } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsModal, useDerivedDid, useDidDetails } from '@credential/react-dids';
 import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, signAndSend, Steps } from '@credential/react-dids/steps';
 import { useStopPropagation, useToggle } from '@credential/react-hooks';
-
-import IconRevoke from '../icons/icon_revok.svg';
 
 const Revoke: React.FC<{
   type?: 'button' | 'menu';
@@ -101,7 +100,7 @@ const Revoke: React.FC<{
       ) : (
         <MenuItem onClick={_toggleOpen} sx={({ palette }) => ({ color: palette.error.main })}>
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
-            <IconRevoke />
+            <IconRevoke color="error" />
           </ListItemIcon>
           <ListItemText>Revoke</ListItemText>
         </MenuItem>

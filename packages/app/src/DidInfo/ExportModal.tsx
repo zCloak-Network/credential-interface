@@ -42,7 +42,7 @@ const ExportModal: React.FC<Props> = ({ onClose }) => {
   }, [light, onClose, password]);
 
   return (
-    <Dialog maxWidth="md" onClose={onClose} open>
+    <Dialog maxWidth="sm" onClose={onClose} open>
       <DialogHeader onClose={onClose}>Export did</DialogHeader>
       <DialogContent>
         <FormControl error={!!error} fullWidth variant="outlined">

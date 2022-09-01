@@ -1,10 +1,10 @@
 import type { Did } from '@kiltprotocol/sdk-js';
 
-import { Box, Button, SvgIcon, Typography } from '@mui/material';
+import { Box, Button, Typography } from '@mui/material';
 import React, { useCallback, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { LogoCircleIcon } from '@credential/app-config/icons';
+import { IconLogoCircle } from '@credential/app-config/icons';
 import { CType } from '@credential/app-db/ctype';
 import {
   FullScreenDialog,
@@ -44,7 +44,7 @@ function CreateClaim({ ctype }: { ctype: CType }) {
       <FullScreenDialog open={open}>
         <FullScreenDialogHeader
           desc={ctype.hash}
-          icon={<SvgIcon component={LogoCircleIcon} sx={{ fontSize: 50 }} viewBox="0 0 60 60" />}
+          icon={<IconLogoCircle sx={{ width: 50, height: 50 }} />}
           onClose={toggleOpen}
           title={ctype.schema.title}
         />

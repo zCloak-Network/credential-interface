@@ -25,7 +25,7 @@ const ImportCTypeModal: React.FC<{ open: boolean; onClose?: () => void }> = ({ o
   return (
     <Dialog maxWidth="sm" onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Import credential type</DialogHeader>
-      <DialogContent sx={{ width: 500, maxWidth: '100%' }}>
+      <DialogContent>
         <FormControl fullWidth>
           <InputLabel shrink>CType hash</InputLabel>
           <OutlinedInput

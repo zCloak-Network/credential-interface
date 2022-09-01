@@ -4,6 +4,7 @@ export { default as DidName } from './DidName';
 export { default as DidsModal } from './DidsModal';
 export { default as FullDidCreation } from './FullDidCreation';
 export { default as InputDid } from './InputDid';
+export { default as MultiDids } from './MultiDids';
 
 export * from './useDerivedDid';
 export * from './useDidDetails';

@@ -1,19 +1,9 @@
 import DeleteOutlineOutlinedIcon from '@mui/icons-material/DeleteOutlineOutlined';
-import {
-  alpha,
-  Box,
-  IconButton,
-  Paper,
-  Stack,
-  styled,
-  SvgIcon,
-  Tooltip,
-  Typography
-} from '@mui/material';
+import { alpha, Box, IconButton, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import React, { useCallback, useContext } from 'react';
 
-import { LogoCircleIcon } from '@credential/app-config/icons';
-import { BacCardImage, CtypeOfficialImage } from '@credential/app-config/images';
+import { IconLogoCircle } from '@credential/app-config/icons';
+import { PicCard, PicHeadportrait } from '@credential/app-config/images';
 import { CType } from '@credential/app-db/ctype';
 import { CTypeContext } from '@credential/react-components';
 import { ellipsisMixin } from '@credential/react-components/utils';
@@ -112,7 +102,7 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
       sx={
         cType.type === 'official'
           ? {
-              background: `url(${BacCardImage}) no-repeat, #fff`,
+              background: `url(${PicCard}) no-repeat, #fff`,
               backgroundSize: 'cover',
               backgroundPosition: 'center'
             }
@@ -131,9 +121,9 @@ const CTypeCell: React.FC<{ cType: CType }> = ({ cType }) => {
       <Stack spacing={1.5}>
         <Box className="CTypeCell_logo">
           {cType.type === 'official' ? (
-            <Box component="img" src={CtypeOfficialImage} sx={{ width: 50, height: 50 }} />
+            <Box component="img" src={PicHeadportrait} sx={{ width: 50, height: 50 }} />
           ) : (
-            <SvgIcon component={LogoCircleIcon} viewBox="0 0 60 60" />
+            <IconLogoCircle />
           )}
         </Box>
         <Tooltip title={cType.schema.title}>

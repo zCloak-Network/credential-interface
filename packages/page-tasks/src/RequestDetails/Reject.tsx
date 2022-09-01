@@ -4,14 +4,13 @@ import { Message as MessageKilt } from '@kiltprotocol/sdk-js';
 import { alpha, Button, ListItemIcon, ListItemText, MenuItem } from '@mui/material';
 import React, { useContext, useMemo, useState } from 'react';
 
+import { IconReject } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { AppContext, Recaptcha } from '@credential/react-components';
 import { DidsModal, useDerivedDid, useDidDetails } from '@credential/react-dids';
 import { didManager } from '@credential/react-dids/initManager';
 import { encryptMessage, sendMessage, Steps } from '@credential/react-dids/steps';
 import { useStopPropagation, useToggle } from '@credential/react-hooks';
-
-import IconReject from '../icons/icon_reject.svg';
 
 const Reject: React.FC<{
   type?: 'button' | 'menu';
@@ -71,7 +70,7 @@ const Reject: React.FC<{
       ) : (
         <MenuItem onClick={_toggleOpen} sx={({ palette }) => ({ color: palette.error.main })}>
           <ListItemIcon sx={{ minWidth: '0px !important', marginRight: 1 }}>
-            <IconReject />
+            <IconReject color="error" />
           </ListItemIcon>
           <ListItemText>Reject</ListItemText>
         </MenuItem>

@@ -2,6 +2,7 @@ import type { Did } from '@kiltprotocol/sdk-js';
 
 import {
   alpha,
+  Box,
   Button,
   Divider,
   Link,
@@ -18,18 +19,20 @@ import React, { useCallback, useContext } from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 
 import { endpoint } from '@credential/app-config/endpoints';
-import { IconScan } from '@credential/app-config/icons';
+import {
+  IconAddress,
+  IconExport,
+  IconLogout,
+  IconScan,
+  IconStar
+} from '@credential/app-config/icons';
+import { PicKilt } from '@credential/app-config/images';
 import { Address, Copy, FormatBalance, IdentityIcon } from '@credential/react-components';
-import { DidName, DidsContext } from '@credential/react-dids';
+import { DidName, DidsContext, MultiDids } from '@credential/react-dids';
 import { useBalances, useToggle } from '@credential/react-hooks';
 
-import AddressIcon from './address.svg';
 import CredentialScanner from './CredentialScanner';
 import ExportModal from './ExportModal';
-import ExportIcon from './icon_export.svg';
-import LogoutIcon from './icon_logout.svg';
-import StarIcon from './icon_star.svg';
-import KiltIcon from './pic_kilt.png';
 
 interface Props {
   did: Did.DidDetails;
@@ -42,6 +45,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
   const { light, logout } = useContext(DidsContext);
   const [exportOpen, toggleExportOpen] = useToggle();
   const [scannerOpen, toggleScannerOpen] = useToggle();
+  const [multiDidOpen, toggleMultiDid] = useToggle();
   const { pathname } = useLocation();
   const navigate = useNavigate();
   const balances = useBalances(did.identifier);
@@ -86,9 +90,14 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         onClose={onClose}
         open={open}
       >
-        <Typography fontWeight={500} variant="h6">
-          Did
-        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+          <Typography fontWeight={500} variant="h6">
+            Did
+          </Typography>
+          <Button onClick={toggleMultiDid} size="small">
+            Change
+          </Button>
+        </Box>
         <ListItem
           sx={({ palette }) => ({
             display: 'flex',
@@ -111,7 +120,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         <Divider sx={{ marginTop: 3, marginBottom: 1 }} />
         <ListItem>
           <ListItemIcon>
-            <AddressIcon />
+            <IconAddress sx={{ fill: 'transparent' }} />
           </ListItemIcon>
           <ListItemText>KILT Address</ListItemText>
           <ListItemSecondaryAction>
@@ -123,7 +132,7 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         </ListItem>
         <ListItem>
           <ListItemIcon>
-            <img src={KiltIcon} />
+            <img src={PicKilt} />
           </ListItemIcon>
           <ListItemText>KILT Balance</ListItemText>
           <ListItemSecondaryAction>
@@ -152,26 +161,27 @@ const DidMenu: React.FC<Props> = ({ anchorEl, did, onClose, open }) => {
         <Divider sx={{ marginY: 1 }} />
         <MenuItem onClick={handleProfile}>
           <ListItemIcon>
-            <StarIcon />
+            <IconStar color="error" />
           </ListItemIcon>
           <ListItemText>DID Profile</ListItemText>
         </MenuItem>
         <MenuItem onClick={handleExport}>
           <ListItemIcon>
-            <ExportIcon />
+            <IconExport />
           </ListItemIcon>
           <ListItemText>Export DID-Key</ListItemText>
         </MenuItem>
         <Divider />
         <MenuItem onClick={handleLogout}>
           <ListItemIcon>
-            <LogoutIcon />
+            <IconLogout />
           </ListItemIcon>
           <ListItemText>Logout</ListItemText>
         </MenuItem>
       </Menu>
       {exportOpen && <ExportModal onClose={toggleExportOpen} />}
       {scannerOpen && <CredentialScanner onClose={toggleScannerOpen} />}
+      {multiDidOpen && <MultiDids onClose={toggleMultiDid} />}
     </>
   );
 };

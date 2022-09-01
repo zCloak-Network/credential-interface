@@ -291,6 +291,10 @@ const createComponents: Func = () => ({
 
   MuiDialog: {
     styleOverrides: {
+      paper: ({ theme: { spacing } }) => ({
+        margin: spacing(2),
+        borderRadius: spacing(1)
+      }),
       paperFullScreen: ({ theme: { breakpoints, palette, spacing } }) => ({
         margin: 0,
         background: palette.grey[100],
@@ -335,6 +339,9 @@ const createComponents: Func = () => ({
   MuiDialogContent: {
     styleOverrides: {
       root: ({ theme: { breakpoints, spacing } }) => ({
+        minWidth: 280,
+        width: '100vw',
+        maxWidth: '100%',
         padding: spacing(7.5),
         [breakpoints.down('md')]: {
           padding: spacing(3)

@@ -15,10 +15,13 @@
   "workspaces": [
     "packages/*"
   ],
+  "bin": {
+    "build-assets": "./scripts/buildAssets.js"
+  },
   "scripts": {
     "build:release": "zcloak-ci-ghact-build",
     "build:code": "NODE_ENV=production yarn zcloak-dev-build-ts",
-    "build": "yarn build:code",
+    "build": "yarn build-assets && yarn build:code",
     "clean": "zcloak-dev-clean-build",
     "lint": "zcloak-dev-run-lint",
     "lint:css": "stylelint './packages/**/src/**/*.tsx'",
@@ -71,7 +74,10 @@
     "@zcloak/service": "^0.2.1",
     "concurrently": "^7.2.1",
     "devtron": "^1.4.0",
+    "fs-extra": "^10.1.0",
+    "humps": "^2.0.1",
     "material-ui-popup-state": "^4.0.2",
+    "node-html-parser": "^5.4.2",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-router-dom": "^6.3.0",

@@ -1,22 +1,12 @@
-import {
-  Box,
-  CircularProgress,
-  Stack,
-  SvgIcon,
-  Typography,
-  useMediaQuery,
-  useTheme
-} from '@mui/material';
+import { Box, CircularProgress, Stack, Typography, useMediaQuery, useTheme } from '@mui/material';
 import React, { useContext, useMemo } from 'react';
 import { Outlet, useLocation } from 'react-router-dom';
 
+import { IconMessage, IconMyctype, IconTask } from '@credential/app-config/icons';
 import { DidsContext } from '@credential/react-dids';
 import { useToggle } from '@credential/react-hooks';
 
 import Header from '../Header';
-import IconMessage from '../icon_message.svg';
-import IconCtype from '../icon_myctype.svg';
-import IconTask from '../icon_task.svg';
 import { useNotification } from '../Notification/useNotification';
 import Sidebar from '../Sidebar';
 
@@ -54,20 +44,20 @@ const Attester: React.FC = () => {
       {
         to: '/attester/ctypes',
         active: pathname.startsWith('/attester/ctypes'),
-        svgIcon: <SvgIcon component={IconCtype} fontSize="inherit" viewBox="0 0 15.502 15.502" />,
+        svgIcon: <IconMyctype />,
         text: 'My ctypes'
       },
       {
         to: '/attester/tasks',
         active: pathname.startsWith('/attester/tasks'),
-        svgIcon: <SvgIcon component={IconTask} fontSize="inherit" viewBox="0 0 16 12.799" />,
+        svgIcon: <IconTask />,
         text: 'Tasks',
         extra: unreads.taskUnread ? <Badge value={unreads.taskUnread} /> : undefined
       },
       {
         to: '/attester/message',
         active: pathname.startsWith('/attester/message'),
-        svgIcon: <SvgIcon component={IconMessage} fontSize="inherit" viewBox="0 0 14 14.22" />,
+        svgIcon: <IconMessage />,
         text: 'Message',
         extra: unreads.messageUnread ? <Badge value={unreads.messageUnread} /> : undefined
       }
