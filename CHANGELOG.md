@@ -1,5 +1,12 @@
 # CHANGELOG
 
+## 0.17.1 Sep 02, 2022
+
+Changes:
+
+- add FileUpload component
+- import credential
+
 ## 0.16.1 Aug 19, 2022
 
 Changes:

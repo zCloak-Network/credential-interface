@@ -14,9 +14,9 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.16.2-6",
+  "version": "0.17.0",
   "dependencies": {
-    "@credential/app-db": "0.16.2-6",
+    "@credential/app-db": "0.17.0",
     "socket.io-client": "^4.5.1"
   }
 }

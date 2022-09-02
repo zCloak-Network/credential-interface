@@ -14,10 +14,10 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.16.2-6",
+  "version": "0.17.0",
   "dependencies": {
-    "@credential/react-components": "0.16.2-6",
-    "@credential/react-dids": "0.16.2-6",
+    "@credential/react-components": "0.17.0",
+    "@credential/react-dids": "0.17.0",
     "@mui/lab": "^5.0.0-alpha.94",
     "@mui/material": "^5.10.0"
   }
