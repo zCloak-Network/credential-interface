@@ -3,7 +3,7 @@ import { useContext, useMemo } from 'react';
 import { DidsContext } from '@credential/react-dids';
 import { useAttestationBatch, useClaimerRequests } from '@credential/react-hooks';
 
-export function useCredentials() {
+export function useCredentialsFromMessage() {
   const { didUri } = useContext(DidsContext);
   const requests = useClaimerRequests(didUri);
   const claimHashs = useMemo(

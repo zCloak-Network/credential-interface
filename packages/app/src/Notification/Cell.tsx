@@ -1,4 +1,4 @@
-import { Hash, IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
+import { IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
 import Circle from '@mui/icons-material/Circle';
 import {
   alpha,
@@ -18,7 +18,7 @@ import { IconNewMessage, IconNewTask } from '@credential/app-config/icons';
 import { Message } from '@credential/app-db/message';
 import { CredentialModal, CTypeName } from '@credential/react-components';
 import { DidName } from '@credential/react-dids';
-import { useCredential, useReferenceMessages, useToggle } from '@credential/react-hooks';
+import { useReferenceMessages, useToggle } from '@credential/react-hooks';
 
 function Cell({
   message: { body, createdAt, isRead, references, sender },
@@ -30,20 +30,10 @@ function Cell({
   const theme = useTheme();
   const upSm = useMediaQuery(theme.breakpoints.up('sm'));
   const navigate = useNavigate();
-  const rootHash = useMemo((): Hash | null => {
-    return body.type === MessageBodyType.SUBMIT_ATTESTATION
-      ? body.content.attestation.claimHash
-      : body.type === MessageBodyType.REQUEST_ATTESTATION
-      ? body.content.requestForAttestation.rootHash
-      : body.type === MessageBodyType.REJECT_ATTESTATION
-      ? body.content
-      : null;
-  }, [body.content, body.type]);
-  const localCredential = useCredential(rootHash);
 
   const credential = useMemo(
-    () => (body.type === MessageBodyType.SUBMIT_CREDENTIAL ? body.content[0] : localCredential),
-    [body.content, body.type, localCredential]
+    () => (body.type === MessageBodyType.SUBMIT_CREDENTIAL ? body.content[0] : null),
+    [body.content, body.type]
   );
 
   const referenceMessages = useReferenceMessages(references);
