@@ -29,22 +29,24 @@ const Claims: React.FC = () => {
 
   const list = useMemo((): CredentialProps[] => {
     return unique(
-      credentials.map((credential) => ({
-        request: credential.request,
-        attestation: credential.attestation,
-        time: credential.attestedTime || credential.requestTime || credential.updateTime,
-        attester: credential.attestation.owner
-      })) as CredentialProps[]
-    )
-      .concat(
-        credentialsFromMessage.map(({ attestation, request }) => ({
-          request: request.body.content.requestForAttestation,
-          attestation,
-          time: request.createdAt,
-          attester: attestation?.owner || request.receiver
-        }))
+      (
+        credentials.map((credential) => ({
+          request: credential.request,
+          attestation: credential.attestation,
+          time: credential.attestedTime || credential.requestTime || credential.updateTime,
+          attester: credential.attestation.owner
+        })) as CredentialProps[]
       )
-      .filter((credential) => (type === 0 ? true : !!credential.attestation));
+        .concat(
+          credentialsFromMessage.map(({ attestation, request }) => ({
+            request: request.body.content.requestForAttestation,
+            attestation,
+            time: request.createdAt,
+            attester: attestation?.owner || request.receiver
+          }))
+        )
+        .filter((credential) => (type === 0 ? true : !!credential.attestation))
+    );
   }, [credentials, credentialsFromMessage, type]);
 
   return (
