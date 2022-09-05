@@ -3,7 +3,7 @@ import { useMemo } from 'react';
 import { useDerivedDid } from '@credential/react-dids';
 import { useAttestationBatch, useClaimerRequests } from '@credential/react-hooks';
 
-export function useCredentials() {
+export function useCredentialsFromMessage() {
   const did = useDerivedDid();
   const requests = useClaimerRequests(did?.uri);
   const claimHashs = useMemo(

@@ -1,39 +1,18 @@
-import { Hash, IRequestAttestation, MessageBody, MessageBodyType } from '@kiltprotocol/sdk-js';
-import { useCallback, useMemo } from 'react';
+import type { Credential } from '@credential/app-db/credential';
 
-import { Message } from '@credential/app-db/message';
+import { useLiveQuery } from 'dexie-react-hooks';
+import { useCallback, useContext, useMemo } from 'react';
 
-import { useAttestation } from './useAttestation';
-import { useMessages } from './useMessage';
+import { AppContext } from '@credential/react-components';
 
-export function useRequest(rootHash?: Hash | null) {
-  const filter = useCallback(
-    (message: Message<MessageBody>): boolean => {
-      return (
-        message.body.type === MessageBodyType.REQUEST_ATTESTATION &&
-        message.body.content.requestForAttestation.rootHash === rootHash
-      );
-    },
-    [rootHash]
+export function useCredentials(filter?: (message: Credential) => boolean) {
+  const { fetcher } = useContext(AppContext);
+  const getCredentials = useCallback(
+    () => fetcher?.query.credential.all(filter),
+    [fetcher, filter]
   );
 
-  const messages = useMessages<IRequestAttestation>(filter);
+  const data = useLiveQuery(getCredentials, [getCredentials]);
 
-  return useMemo(() => (messages.length > 0 ? messages[0] : null), [messages]);
-}
-
-export function useCredential(rootHash?: Hash | null) {
-  const request = useRequest(rootHash);
-  const attestation = useAttestation(rootHash);
-
-  return useMemo(
-    () =>
-      request && attestation
-        ? {
-            request: request.body.content.requestForAttestation,
-            attestation: attestation
-          }
-        : null,
-    [attestation, request]
-  );
+  return useMemo(() => data || [], [data]);
 }

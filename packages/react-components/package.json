@@ -14,9 +14,9 @@
   },
   "sideEffects": false,
   "type": "module",
-  "version": "0.16.2-4",
+  "version": "0.17.1",
   "dependencies": {
-    "@credential/react-hooks": "0.16.2-4",
+    "@credential/react-hooks": "0.17.1",
     "@date-io/date-fns": "^2.14.0",
     "@date-io/moment": "^2.14.0",
     "@emotion/react": "^11.10.0",
@@ -28,6 +28,7 @@
     "@mui/x-date-pickers": "^5.0.0-beta.4",
     "@zcloak/extension-core": "^0.2.1",
     "qr-scanner": "^1.4.1",
-    "qrcode-generator": "^1.4.4"
+    "qrcode-generator": "^1.4.4",
+    "react-dropzone": "^14.2.2"
   }
 }

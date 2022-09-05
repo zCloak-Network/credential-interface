@@ -14,7 +14,7 @@ const CTypeInputNumber: React.FC<ItemProps> = ({
   const [_value, _setValue] = useState<string>();
   const error = useMemo(() => {
     if (!_value) {
-      return new Error('Not be empty');
+      return new Error('Empty');
     }
 
     if (type === 'number') {

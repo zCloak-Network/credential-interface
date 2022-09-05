@@ -27,7 +27,7 @@ const UnlockModal: React.FC<{
   }, [did, onUnlock, password, unlockDid]);
 
   return (
-    <Dialog maxWidth="md" onClose={onClose} open={open}>
+    <Dialog maxWidth="sm" onClose={onClose} open={open}>
       <DialogHeader onClose={onClose}>Unlock account</DialogHeader>
       <DialogContent>
         <Stack spacing={4}>

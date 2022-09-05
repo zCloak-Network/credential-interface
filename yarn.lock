@@ -1490,7 +1490,7 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/app-db@0.16.2-4, @credential/app-db@workspace:packages/app-db":
+"@credential/app-db@0.17.1, @credential/app-db@workspace:packages/app-db":
   version: 0.0.0-use.local
   resolution: "@credential/app-db@workspace:packages/app-db"
   dependencies:
@@ -1503,7 +1503,7 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/app-sync@workspace:packages/app-sync"
   dependencies:
-    "@credential/app-db": 0.16.2-4
+    "@credential/app-db": 0.17.1
     socket.io-client: ^4.5.1
   languageName: unknown
   linkType: soft
@@ -1591,11 +1591,11 @@ __metadata:
   languageName: unknown
   linkType: soft
 
-"@credential/react-components@0.16.2-4, @credential/react-components@workspace:packages/react-components":
+"@credential/react-components@0.17.1, @credential/react-components@workspace:packages/react-components":
   version: 0.0.0-use.local
   resolution: "@credential/react-components@workspace:packages/react-components"
   dependencies:
-    "@credential/react-hooks": 0.16.2-4
+    "@credential/react-hooks": 0.17.1
     "@date-io/date-fns": ^2.14.0
     "@date-io/moment": ^2.14.0
     "@emotion/react": ^11.10.0
@@ -1608,6 +1608,7 @@ __metadata:
     "@zcloak/extension-core": ^0.2.1
     qr-scanner: ^1.4.1
     qrcode-generator: ^1.4.4
+    react-dropzone: ^14.2.2
   languageName: unknown
   linkType: soft
 
@@ -1615,29 +1616,29 @@ __metadata:
   version: 0.0.0-use.local
   resolution: "@credential/react-ctype@workspace:packages/react-ctype"
   dependencies:
-    "@credential/react-components": 0.16.2-4
-    "@credential/react-dids": 0.16.2-4
+    "@credential/react-components": 0.17.1
+    "@credential/react-dids": 0.17.1
     "@mui/lab": ^5.0.0-alpha.94
     "@mui/material": ^5.10.0
   languageName: unknown
   linkType: soft
 
-"@credential/react-dids@0.16.2-4, @credential/react-dids@workspace:packages/react-dids":
+"@credential/react-dids@0.17.1, @credential/react-dids@workspace:packages/react-dids":
   version: 0.0.0-use.local
   resolution: "@credential/react-dids@workspace:packages/react-dids"
   dependencies:
     "@kiltprotocol/sdk-js": ^0.28.0
     "@mui/material": ^5.10.0
     "@polkadot/util": ^10.1.3
-    "@zcloak/ui-did-keyring": ^0.2.2-7
+    "@zcloak/ui-did-keyring": ^0.2.2-8
   languageName: unknown
   linkType: soft
 
-"@credential/react-hooks@0.16.2-4, @credential/react-hooks@workspace:packages/react-hooks":
+"@credential/react-hooks@0.17.1, @credential/react-hooks@workspace:packages/react-hooks":
   version: 0.0.0-use.local
   resolution: "@credential/react-hooks@workspace:packages/react-hooks"
   dependencies:
-    "@credential/app-db": 0.16.2-4
+    "@credential/app-db": 0.17.1
     "@zcloak/service": ^0.2.1
     copy-to-clipboard: ^3.3.2
     dexie-react-hooks: ^1.1.1
@@ -4508,16 +4509,16 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/did-keyring@npm:^0.2.2-7":
-  version: 0.2.2-7
-  resolution: "@zcloak/did-keyring@npm:0.2.2-7"
+"@zcloak/did-keyring@npm:^0.2.2-8":
+  version: 0.2.2-8
+  resolution: "@zcloak/did-keyring@npm:0.2.2-8"
   dependencies:
     "@kiltprotocol/types": ^0.28.0
     "@polkadot/keyring": ^10.1.6
     "@polkadot/util": ^10.1.6
     "@polkadot/util-crypto": ^10.1.6
     eventemitter3: ^4.0.7
-  checksum: f402db4d974411bee91e8102c756828cf59f8f911a5677961a2fb1638f2dbbe270e6cb8a9d41f24120d22c583ef1817fabb91ed6e27aeb64a823c8b4fc0f4c03
+  checksum: b026cf708f93892aead545e064a6e122f242a9b817f673f379610cc5255be02deda5d5d6e6960a4b0c9f02a903325a1ba72f2b773a23f79c55c997ef6f9552fb
   languageName: node
   linkType: hard
 
@@ -4537,25 +4538,25 @@ __metadata:
   languageName: node
   linkType: hard
 
-"@zcloak/ui-did-keyring@npm:^0.2.2-7":
-  version: 0.2.2-7
-  resolution: "@zcloak/ui-did-keyring@npm:0.2.2-7"
+"@zcloak/ui-did-keyring@npm:^0.2.2-8":
+  version: 0.2.2-8
+  resolution: "@zcloak/ui-did-keyring@npm:0.2.2-8"
   dependencies:
     "@kiltprotocol/did": ^0.28.0
     "@polkadot/keyring": ^10.1.6
     "@polkadot/util": ^10.1.6
-    "@zcloak/did-keyring": ^0.2.2-7
-    "@zcloak/ui-store": ^0.2.2-7
-  checksum: 9ed537f36ece70856397f6571f6bcc269e98664d5a2591e8075618b3004d1ee8710ccfb32988266a0ecb644a40f167630433917f7a676e69e53d1247a50c7f08
+    "@zcloak/did-keyring": ^0.2.2-8
+    "@zcloak/ui-store": ^0.2.2-8
+  checksum: 457f78f7d00ac116f4d4c1b77618b60ebcc3d0a57ba53b5330c85b1f51f20fda6b9862682af95a815688fd7da181e0568da1219dfb6a174227ee27e15b3e6153
   languageName: node
   linkType: hard
 
-"@zcloak/ui-store@npm:^0.2.2-7":
-  version: 0.2.2-7
-  resolution: "@zcloak/ui-store@npm:0.2.2-7"
+"@zcloak/ui-store@npm:^0.2.2-8":
+  version: 0.2.2-8
+  resolution: "@zcloak/ui-store@npm:0.2.2-8"
   dependencies:
     store: ^2.0.12
-  checksum: 3f4b44cec86d6245ad25cec2135ade49a19c320dcd3171bb2425a6c2887dc813c0aa085fd0c590dd5dfaa777227932f15e44db8aa7faec47af8ec697b24e4e3d
+  checksum: 54da85b740e808e86b31266027d711b053b8be762c4212eb6cc6498068a8c6a419d72703553def6fc6e19318dfd6bb80a26b9c0e48eedd417ca4ac2ac86c6183
   languageName: node
   linkType: hard
 
@@ -5027,6 +5028,13 @@ __metadata:
   version: 0.4.0
   resolution: "asynckit@npm:0.4.0"
   checksum: 7b78c451df768adba04e2d02e63e2d0bf3b07adcd6e42b4cf665cb7ce899bedd344c69a1dcbce355b5f972d597b25aaa1c1742b52cffd9caccb22f348114f6be
+  languageName: node
+  linkType: hard
+
+"attr-accept@npm:^2.2.2":
+  version: 2.2.2
+  resolution: "attr-accept@npm:2.2.2"
+  checksum: 496f7249354ab53e522510c1dc8f67a1887382187adde4dc205507d2f014836a247073b05e9d9ea51e2e9c7f71b0d2aa21730af80efa9af2d68303e5f0565c4d
   languageName: node
   linkType: hard
 
@@ -8169,6 +8177,15 @@ __metadata:
   version: 2.0.5
   resolution: "file-saver@npm:2.0.5"
   checksum: c62d96e5cebc58b4bdf3ae8a60d5cf9607ad82f75f798c33a4ee63435ac2203002584d5256a2a780eda7feb5e19dc3b6351c2212e58b3f529e63d265a7cc79f7
+  languageName: node
+  linkType: hard
+
+"file-selector@npm:^0.6.0":
+  version: 0.6.0
+  resolution: "file-selector@npm:0.6.0"
+  dependencies:
+    tslib: ^2.4.0
+  checksum: 7d051b6e5d793f3c6e2ab287ba5e7c2c6a0971bccc9d56e044c8047ba483e18f60fc0b5771c951dc707c0d15f4f36ccb4f1f1aaf385d21ec8f7700dadf8325ba
   languageName: node
   linkType: hard
 
@@ -13055,6 +13072,19 @@ __metadata:
   languageName: node
   linkType: hard
 
+"react-dropzone@npm:^14.2.2":
+  version: 14.2.2
+  resolution: "react-dropzone@npm:14.2.2"
+  dependencies:
+    attr-accept: ^2.2.2
+    file-selector: ^0.6.0
+    prop-types: ^15.8.1
+  peerDependencies:
+    react: ">= 16.8 || 18.0.0"
+  checksum: ef9ea7b3b5734e8eade2d29efc26da410dd7d6d046216331f6a51e2df4459c35f3a8f950fa7f723f3db6b0ead8aa68f58f6adbd39b98575c9fc8d8dfe02b671f
+  languageName: node
+  linkType: hard
+
 "react-is@npm:^16.13.1, react-is@npm:^16.7.0":
   version: 16.13.1
   resolution: "react-is@npm:16.13.1"
@@ -15042,7 +15072,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0":
+"tslib@npm:^2.0.3, tslib@npm:^2.1.0, tslib@npm:^2.3.0, tslib@npm:^2.4.0":
   version: 2.4.0
   resolution: "tslib@npm:2.4.0"
   checksum: 8c4aa6a3c5a754bf76aefc38026134180c053b7bd2f81338cb5e5ebf96fefa0f417bff221592bf801077f5bf990562f6264fecbc42cd3309b33872cb6fc3b113

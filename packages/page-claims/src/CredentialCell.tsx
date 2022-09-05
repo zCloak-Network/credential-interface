@@ -1,9 +1,8 @@
-import { CType, IAttestation, IRequestAttestation } from '@kiltprotocol/sdk-js';
+import { CType, DidUri, IAttestation, IRequestForAttestation } from '@kiltprotocol/sdk-js';
 import { Box, Paper, Stack, styled, Tooltip, Typography } from '@mui/material';
 import moment from 'moment';
 import React, { useContext, useMemo } from 'react';
 
-import { Message } from '@credential/app-db/message';
 import {
   CredentialModal,
   CredentialStatus,
@@ -97,27 +96,28 @@ const Wrapper = styled(Paper)(({ theme }) => ({
   }
 }));
 
-const CredentialCell: React.FC<{
-  request: Message<IRequestAttestation>;
+export interface CredentialProps {
+  request: IRequestForAttestation;
   attestation?: IAttestation | null;
-}> = ({ attestation, request }) => {
+  time: number;
+  attester: DidUri;
+}
+
+function CredentialCell({ attestation, attester, request, time }: CredentialProps) {
   const [open, toggleOpen] = useToggle();
   const { cTypeList } = useContext(CTypeContext);
   const cType = useMemo(() => {
     return cTypeList.find(
-      (cType) =>
-        CType.fromSchema(cType.schema, cType.owner).hash ===
-        request.body.content.requestForAttestation.claim.cTypeHash
+      (cType) => CType.fromSchema(cType.schema, cType.owner).hash === request.claim.cTypeHash
     );
-  }, [cTypeList, request.body.content.requestForAttestation.claim.cTypeHash]);
+  }, [cTypeList, request.claim.cTypeHash]);
 
   const credential = useMemo(
-    () =>
-      attestation ? { attestation, request: request.body.content.requestForAttestation } : null,
+    () => (attestation ? { attestation, request: request } : null),
     [attestation, request]
   );
 
-  const requestStatus = useRequestStatus(request.body.content.requestForAttestation.rootHash);
+  const requestStatus = useRequestStatus(request.rootHash);
 
   return (
     <>
@@ -153,11 +153,11 @@ const CredentialCell: React.FC<{
               status={requestStatus}
             />
             <Typography className="CredentialCell_Time" variant="inherit">
-              {moment(request.createdAt).format('YYYY-MM-DD HH:mm:ss')}
+              {moment(time).format('YYYY-MM-DD HH:mm:ss')}
             </Typography>
           </Box>
           <Typography className="CredentialCell_title" mt={2} variant="h3">
-            <CTypeName cTypeHash={request.body.content.requestForAttestation.claim.cTypeHash} />
+            <CTypeName cTypeHash={request.claim.cTypeHash} />
           </Typography>
           <Stack
             className="CredentialCell_attester"
@@ -172,7 +172,7 @@ const CredentialCell: React.FC<{
               </Typography>
               <Tooltip placement="top" title={cType?.owner ?? 'Unknown CType'}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  <DidName value={attestation?.owner ?? request.receiver} />
+                  <DidName value={attester} />
                 </Typography>
               </Tooltip>
             </Box>
@@ -180,9 +180,9 @@ const CredentialCell: React.FC<{
               <Typography sx={({ palette }) => ({ color: palette.grey[500] })} variant="inherit">
                 Claim hash
               </Typography>
-              <Tooltip placement="top" title={request.body.content.requestForAttestation.rootHash}>
+              <Tooltip placement="top" title={request.rootHash}>
                 <Typography sx={{ fontWeight: 500, ...ellipsisMixin() }}>
-                  {request.body.content.requestForAttestation.rootHash}
+                  {request.rootHash}
                 </Typography>
               </Tooltip>
             </Box>
@@ -210,6 +210,6 @@ const CredentialCell: React.FC<{
       )}
     </>
   );
-};
+}
 
 export default React.memo(CredentialCell);
