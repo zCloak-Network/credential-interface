@@ -7,7 +7,7 @@ import React, { useContext, useEffect, useState } from 'react';
 import { endpoint } from '@credential/app-config/endpoints';
 import { CredentialSource } from '@credential/app-db/credential';
 import { AppContext, DialogHeader } from '@credential/react-components';
-import { DidsContext } from '@credential/react-dids';
+import { useDerivedDid } from '@credential/react-dids';
 
 import FileUpload from './FileUpload';
 
@@ -17,7 +17,7 @@ const ImportCredentialModal: React.FC<{ open: boolean; onClose?: () => void }> =
 }) => {
   const { fetcher } = useContext(AppContext);
   const [value, setValue] = useState<File[]>([]);
-  const { didUri } = useContext(DidsContext);
+  const did = useDerivedDid();
   const [result, setResult] = useState<
     { error: null; credential: Credential } | { error: Error; credential: null }
   >();
@@ -37,7 +37,7 @@ const ImportCredentialModal: React.FC<{ open: boolean; onClose?: () => void }> =
         .then(async (credential) => {
           const verifiedData = credential.verifyData();
           const verifiedAttestation = await credential.attestation.checkValidity();
-          const verifiedOwn = credential.request.claim.owner === didUri;
+          const verifiedOwn = credential.request.claim.owner === did?.uri;
 
           if (verifiedData && verifiedAttestation && verifiedOwn) {
             setResult({ error: null, credential });
@@ -53,7 +53,7 @@ const ImportCredentialModal: React.FC<{ open: boolean; onClose?: () => void }> =
           setResult({ error, credential: null });
         });
     }
-  }, [didUri, value]);
+  }, [did, value]);
 
   return (
     <Dialog maxWidth="sm" onClose={onClose} open={open}>
