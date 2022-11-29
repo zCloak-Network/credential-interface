@@ -6,7 +6,7 @@ export const endpoints: Record<string, Endpoint> = isRelease
   ? {
       'KILT Peregrine': {
         name: 'KILT Peregrine',
-        endpoint: 'wss://testnet.kilt.zkid.app/',
+        endpoint: 'wss://peregrine.kilt.io/parachain-public-ws/',
         service: 'https://testnet.credential-service.zkid.app',
         messageWs: 'wss://wss.testnet.credential-service.zkid.app/ws',
         faucetLink: 'https://faucet.peregrine.kilt.io/'
@@ -21,7 +21,7 @@ export const endpoints: Record<string, Endpoint> = isRelease
   : {
       'KILT Peregrine': {
         name: 'KILT Peregrine',
-        endpoint: 'wss://testnet.kilt.zkid.app/',
+        endpoint: 'wss://peregrine.kilt.io/parachain-public-ws/',
         service: 'https://credential-service.starks.network',
         messageWs: 'wss://wss.credential-service.starks.network/ws',
         faucetLink: 'https://faucet.peregrine.kilt.io/'
