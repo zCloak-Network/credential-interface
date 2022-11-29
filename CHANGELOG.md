@@ -1,5 +1,11 @@
 # CHANGELOG
 
+## 0.18.1 Sep 02, 2022
+
+Changes:
+
+- update kilt endpoint
+
 ## 0.17.1 Sep 02, 2022
 
 Changes:
